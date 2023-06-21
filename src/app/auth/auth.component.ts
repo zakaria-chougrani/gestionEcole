@@ -5,11 +5,13 @@ import {MatToolbarModule} from "@angular/material/toolbar";
 import {SidemenuComponent} from "../core/sidemenu/sidemenu.component";
 import {ToolbarComponent} from "../core/toolbar/toolbar.component";
 import {RouterOutlet} from "@angular/router";
+import {NgScrollbarModule} from "ngx-scrollbar";
+import {SidebarComponent} from "../core/sidebar/sidebar.component";
 
 @Component({
   selector: 'ec-auth',
   standalone: true,
-  imports: [CommonModule, MatSidenavModule, MatToolbarModule, SidemenuComponent, ToolbarComponent, RouterOutlet, NgOptimizedImage],
+  imports: [CommonModule, MatSidenavModule, MatToolbarModule, SidemenuComponent, ToolbarComponent, RouterOutlet, NgOptimizedImage, NgScrollbarModule, SidebarComponent],
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.scss']
 })

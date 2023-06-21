@@ -1,0 +1,65 @@
+<div fxLayout="column" fxLayoutAlign="space-between stretch" fxFill class="components-container-gt-xs">
+  <div fxLayout="row" fxLayoutAlign="space-between stretch" fxFill fxLayoutGap="20px">
+    <div fxFlex="100" fxLayout="column" class="mat-elevation-z2 contact-list-container">
+      <div fxFlex="10" fxLayoutAlign="start center" fxLayout="row">
+        <h3 class="mat-headline">Contacts</h3>
+        <h3 class="mat-headline">|</h3>
+        <h6 class="mat-title"> {{nbrContacts}} contacts</h6>
+      </div>
+      <mat-divider></mat-divider>
+      <br>
+      <div fxFlex="10" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="space-between stretch">
+        <div class="full">
+          <mat-form-field class="full">
+            <input matInput [(ngModel)]="searchValue" name="search" (input)="search()" placeholder="Search contacts">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </div>
+        <div fxFlex="30" fxLayout="row" fxLayoutAlign="center center">
+          <button mat-raised-button color="primary" (click)="openAddContactDialog({})">ADD NEW CONTACT</button>
+        </div>
+      </div>
+      <br>
+      <div class="contact-list" fxLayout.lt-lg="column" fxLayout="row" *ngFor="let contactInfo of contacts" fxLayoutAlign="space-between stretche">
+        <div fxFlex="10" fxLayoutAlign="center center">
+          <img class="avatar" [src]="contactInfo?.status=='staff'?'assets/images/avatars/staff.png':
+              contactInfo?.status=='teacher'?'assets/images/avatars/teacher.png':
+              contactInfo?.status=='student'?'assets/images/avatars/students.png':
+              contactInfo?.status=='stagiaire'?'assets/images/avatars/students.png':
+              'assets/images/avatars/noavatar.png'" width="40" height="40" alt="status">
+        </div>
+        <div fxFlex="30">
+          <h3 class="mat-subheading-1"> {{contactInfo?.lastName}} {{contactInfo?.firstName}}</h3>
+          <p class="mat-body-1">
+            Gender: {{contactInfo?.gender }}
+            {{contactInfo?.scholarLevel ? '| scholar Level:' + contactInfo?.scholarLevel : null}}
+          </p>
+        </div>
+        <div fxFlex="20" fxLayoutAlign="start center">
+          Tel: {{contactInfo?.phoneNumber}}
+        </div>
+        <div fxFlex="30" fxLayoutAlign="center center">
+          <mat-chip-listbox>
+            <mat-chip *ngFor="let spe of contactInfo?.specialties">
+              {{spe|titlecase}}
+            </mat-chip>
+          </mat-chip-listbox>
+        </div>
+        <div fxFlex="20" fxLayoutAlign="center center">
+          <mat-chip-listbox>
+            <mat-chip>{{contactInfo?.status}}</mat-chip>
+          </mat-chip-listbox>
+        </div>
+        <div fxFlex="10" fxLayoutAlign="center center">
+          <button mat-icon-button (click)="openAddContactDialog(contactInfo)">
+            <mat-icon>send</mat-icon>
+          </button>
+        </div>
+        <hr>
+      </div>
+
+      <mat-paginator [length]="totalContacts" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+                     (page)="onPageChanged($event)"></mat-paginator>
+    </div>
+  </div>
+</div>

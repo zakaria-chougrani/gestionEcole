@@ -1,0 +1,104 @@
+<mat-progress-bar mode="indeterminate" *ngIf="isLoading" style="width: 100%"></mat-progress-bar>
+<div mat-dialog-title style="padding: 5px">
+  <h3 class="mat-headline" fxFlex="80">{{contactForm.controls['id'].value ? 'Update Contact' : 'Add New Contact'}}</h3>
+  <div fxLayout="row" fxLayoutAlign="end center" fxFlex="10">
+    <button mat-icon-button (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</div>
+<div mat-dialog-content>
+  <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+    <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center">
+      <div fxFlex="40">
+        <img class="avatar" [src]="contactForm.controls['status'].value=='staff'?'assets/images/avatars/staff.png':
+                contactForm.controls['status'].value=='teacher'?'assets/images/avatars/teacher.png':
+                contactForm.controls['status'].value=='student'?'assets/images/avatars/students.png':
+                contactForm.controls['status'].value=='stagiaire'?'assets/images/avatars/students.png':
+                'assets/images/avatars/noavatar.png'" width="100" height="100" alt="profile">
+
+      </div>
+      <div fxFlex="60" fxLayout="column" fxLayoutAlign="center start">
+        <h3
+          class="mat-title">{{contactForm.controls['lastName'].value |uppercase}} {{contactForm.controls['firstName'].value |titlecase}}</h3>
+        <h3 class="mat-body-2">{{contactForm.controls['status'].value |uppercase}}</h3>
+      </div>
+    </div>
+
+    <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center">
+      <mat-form-field class="full" subscriptSizing="dynamic">
+        <mat-label>First Name</mat-label>
+        <input matInput formControlName="firstName" required>
+      </mat-form-field>
+      <mat-form-field class="full" subscriptSizing="dynamic">
+        <mat-label>Last Name</mat-label>
+        <input matInput formControlName="lastName" required>
+      </mat-form-field>
+    </div>
+    <br>
+    <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center">
+      <mat-form-field class="full" subscriptSizing="dynamic" *ngIf="data">
+        <mat-label>Gender</mat-label>
+        <mat-select formControlName="gender">
+          <mat-option [value]="Gender.Male">Male</mat-option>
+          <mat-option [value]="Gender.Female">Female</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="full" subscriptSizing="dynamic" *ngIf="data">
+        <mat-label>Contact Status</mat-label>
+        <mat-select formControlName="status">
+          <mat-option [value]="'staff'">Staff</mat-option>
+          <mat-option [value]="'teacher'">Teacher</mat-option>
+          <mat-option [value]="'student'">Student</mat-option>
+          <mat-option [value]="'stagiaire'">Stagiaire</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="full" subscriptSizing="dynamic">
+        <mat-label>Phone Number</mat-label>
+        <input matInput formControlName="phoneNumber">
+      </mat-form-field>
+    </div>
+    <br>
+    <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center">
+      <mat-form-field class="full"
+                      *ngIf="contactForm.controls['status'].value == 'staff' || contactForm.controls['status'].value == 'teacher'"
+                      subscriptSizing="dynamic">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" name="email">
+      </mat-form-field>
+      <mat-form-field  class="full" *ngIf="contactForm.controls['status'].value === 'teacher'"
+                       subscriptSizing="dynamic">
+        <mat-label>Specialties</mat-label>
+        <mat-chip-grid #chipList>
+          <mat-chip-row *ngFor="let specialty of contactForm.controls['specialties'].value" [removable]="true" (removed)="removeSpecialty(specialty)">
+            {{ specialty |titlecase}}
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip-row>
+          <input matInput [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                 [matChipInputAddOnBlur]="true" (matChipInputTokenEnd)="addSpecialty($event)">
+        </mat-chip-grid>
+      </mat-form-field>
+
+    </div>
+    <br>
+    <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center"
+         *ngIf="contactForm.controls['status'].value === 'student' || contactForm.controls['status'].value === 'stagiaire'">
+      <mat-form-field class="full" subscriptSizing="dynamic">
+        <mat-label>Date of Birth</mat-label>
+        <input matInput [matDatepicker]="datePicker" formControlName="dateOfBirth">
+        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+        <mat-datepicker #datePicker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field class="full" subscriptSizing="dynamic">
+        <mat-label>Scholar Level</mat-label>
+        <input matInput formControlName="scholarLevel">
+      </mat-form-field>
+    </div>
+    <br>
+    <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center">
+      <button mat-raised-button color="primary">{{ data.id ? 'Update' : 'Add' }} Contact</button>
+
+      <button mat-raised-button (click)="onCancel()">CANCEL</button>
+    </div>
+  </form>
+</div>

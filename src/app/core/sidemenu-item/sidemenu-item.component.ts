@@ -1,15 +1,15 @@
 import {Component, Input} from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {MatListModule} from "@angular/material/list";
 import {MatIconModule} from "@angular/material/icon";
-import {RouterLink} from "@angular/router";
-import {MatLegacyChipsModule} from "@angular/material/legacy-chips";
-import {MatLegacyListModule} from "@angular/material/legacy-list";
+import {RouterLink, RouterLinkActive} from "@angular/router";
+import {MatChipsModule} from "@angular/material/chips";
+import {MatGridListModule} from "@angular/material/grid-list";
 
 @Component({
   selector: 'ec-sidemenu-item',
   standalone: true,
-  imports: [CommonModule, MatListModule, MatIconModule, RouterLink, MatLegacyChipsModule, MatLegacyListModule],
+  imports: [CommonModule, MatListModule, MatIconModule, RouterLink, MatChipsModule, MatGridListModule, RouterLinkActive, NgOptimizedImage],
   templateUrl: './sidemenu-item.component.html',
   styleUrls: ['./sidemenu-item.component.scss']
 })

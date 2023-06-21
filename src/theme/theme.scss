@@ -8,30 +8,11 @@
 //@import '../app/dashboard-widget/round-progressbar/round-progressbar.component.scss';
 //@import '../app/dashboard-widget/sales-list/sales-list.component.scss';
 
-//mat.$light-theme-background-palette:(
-//  status-bar:map_get(mat.$grey-palette, 300),
-//  app-bar:map_get(mat.$grey-palette, 100),
-//  background: map_get(mat.$indigo-palette, 50),
-//  hover:      rgba(black, 0.04), // TODO(kara): check style with Material Design UX
-//  card:       white,
-//  dialog:     white,
-//  disabled-button: rgba(black, 0.12),
-//  raised-button: white,
-//  focused-button: rgba(black, 0.06),
-//  selected-button: map_get(mat.$grey-palette, 300),
-//  selected-disabled-button: map_get(mat.$grey-palette, 400),
-//  disabled-button-toggle: map_get(mat.$grey-palette, 200),
-//  unselected-chip: map_get(mat.$grey-palette, 300),
-//  disabled-list-option: map_get(mat.$grey-palette, 200),
-//);
-
 @include mat.core();
 
 $primary : mat.$indigo-palette;
 $accent  : mat.$orange-palette;
 $warn    : mat.$red-palette;
-
-
 
 $primary-app-primary: mat.define-palette($primary , 400);
 $primary-app-accent:  mat.define-palette($accent , 900);
@@ -43,27 +24,24 @@ $ec-theme:   mat.define-light-theme((
     accent: $primary-app-accent,
     warn: $primary-app-warn
   ),
-  typography: mat.define-typography-config(),
   density: 0,
 ));
 ec-sidemenu{
-    $sidemenu-app-primary: mat.define-palette($primary , 400);
+    $sidemenu-app-primary: mat.define-palette(mat.$grey-palette , 900);
     $sidemenu-app-accent:  mat.define-palette($accent , 900);
     $sidemenu-app-warn:    mat.define-palette($warn );
     $ec-sidemenu-theme:   mat.define-dark-theme((
       color: (
         primary: $sidemenu-app-primary,
         accent:  $sidemenu-app-accent
-      ),
-      typography: mat.define-typography-config(),
-      density: 0,
+      )
     ));
     @include mat.list-theme($ec-sidemenu-theme);
 }
 
 
 ec-sidemenu-item{
-    @include sidemenu-item($ec-theme,20px)
+    @include sidemenu-item($ec-theme,40px)
 }
 
 
@@ -95,6 +73,7 @@ body{
   padding: 0 !important;
   margin: 0 !important;
   height:100%;
+  font-family: "system-ui";
 }
 .components-container-gt-xs {
     padding: 20px;
@@ -110,7 +89,9 @@ body{
 .ps-content {
   height: 100%;
 }
-
+.full {
+  width: 100%;
+}
 .loader-container {
     background-color: white;
     width: 100vw;
