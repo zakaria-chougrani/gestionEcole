@@ -1,0 +1,7 @@
+<mat-nav-list>
+  <mat-list-item style="padding: 0;" [routerLink]='[menu.link]' [routerLinkActive]="'active-link'">
+    <mat-icon matListItemIcon *ngIf="!menu.img">{{menu.icon}}</mat-icon>
+    <img matListItemIcon *ngIf="menu.img" ngSrc="{{menu.img}}" alt="sidM" width="24" height="24">
+    <h3 matLine *ngIf='!iconOnly'>{{ menu.name | titlecase}} </h3>
+  </mat-list-item>
+</mat-nav-list>

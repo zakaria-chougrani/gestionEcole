@@ -1,0 +1,36 @@
+
+.contact-list-container {
+  background-color: white;
+  padding: 10px;
+
+  .contact-list {
+    //height: 400px;
+    //overflow: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #cccbcb;
+
+    div {
+      margin: 0;
+    }
+
+    h3 {
+      margin: 0;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+  }
+}
+
+.contact-add {
+  padding: 10px;
+  background: white;
+}

@@ -1,0 +1,9 @@
+<ng-scrollbar style="height: calc(100% - 33px);">
+  <div *ngIf="!iconOnly" fxLayoutAlign="space-around center" [style.margin]="'10px 0px'" >
+    <img [ngStyle]="{'border-radius':'50%'}" ngSrc="./assets/images/avatars/khalid.png" alt="user"  width="100"  height="100">
+  </div>
+  <div *ngIf="iconOnly" style="height: 100px;" fxLayoutAlign="space-around center"  >
+    <img [ngStyle]="{'border-radius':'50%'}" ngSrc="./assets/images/avatars/khalid.png" alt="user" width="50" height="50">
+  </div>
+  <ec-sidemenu-item *ngFor="let menu of menus" [menu]="menu" [iconOnly]="iconOnly"></ec-sidemenu-item>
+</ng-scrollbar>

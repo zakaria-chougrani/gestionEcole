@@ -1,0 +1,18 @@
+@use '@angular/material' as mat;
+@mixin mat-mdc-list-item-icon($size: 40px) {
+  font-size: $size;
+  height: $size;
+  width: $size;
+}
+
+@mixin sidemenu-item($theme,$icon-size) {
+  .mat-mdc-nav-list .mat-mdc-list-item .mat-mdc-list-item-icon{
+    @include mat-mdc-list-item-icon($icon-size);
+  }
+  .mat-mdc-nav-list .mat-mdc-list-item {
+    font-size: 14px;
+  }
+  .active-link{
+    background: #444444;
+  }
+}
