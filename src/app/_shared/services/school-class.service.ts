@@ -5,6 +5,7 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {SchoolClass} from "../models/school-class";
 import {Page} from "../models/page";
 import {ContactInfo} from "../models/contact-info";
+import {Level} from "../models/level";
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +14,19 @@ export class SchoolClassService {
   private apiUrl = environment.apiUrl+'classes';
 
   private refreshSchoolClass$ = new Subject<void>();
+  private refreshLevels$ = new Subject<void>();
 
   get refreshSchoolClass(): Observable<void> {
     return this.refreshSchoolClass$.asObservable();
   }
+  get refreshLevels(): Observable<void> {
+    return this.refreshLevels$.asObservable();
+  }
   triggerRefreshSchoolClass(): void {
     this.refreshSchoolClass$.next();
+  }
+  triggerRefreshLevels(): void {
+    this.refreshLevels$.next();
   }
   constructor(private http: HttpClient) { }
 
@@ -38,5 +46,17 @@ export class SchoolClassService {
   }
   deleteClass(id: string): Observable<string> {
     return this.http.delete<string>(`${this.apiUrl}/${id}`);
+  }
+
+  getLevelsBySchoolClass(schoolClassId: string, page: number, size: number): Observable<Page<Level>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    return this.http.get<Page<Level>>(`${this.apiUrl}/${schoolClassId}/levels`, { params });
+  }
+
+  addLevelToSchoolClass(schoolClassId: string, levelRequest: Level): Observable<Level> {
+    return this.http.post<Level>(`${this.apiUrl}/${schoolClassId}/levels`, levelRequest);
   }
 }

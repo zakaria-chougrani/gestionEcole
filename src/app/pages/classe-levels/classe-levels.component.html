@@ -1,1 +1,47 @@
-<p>classe-levels works!</p>
+<mat-progress-bar mode="indeterminate" *ngIf="isLoading" style="width: 100%"></mat-progress-bar>
+
+<div fxLayout="column" *ngIf="classDto">
+  <div class="service-header" fxLayout="column" fxLayoutAlign="center stretch">
+    <div fxFlex class="content" fxLayout.lt-sm="column" style="padding: 20px" fxLayout="row" fxLayoutAlign="start center">
+      <div fxFlex="35" fxFlex.lt-sm="100" fxLayout="row" class="box" fxLayoutAlign="center center">
+        <img style="width: 70px;" [src]="classDto.imageByte" alt="imCla" height="70" width="70">
+
+        <div>
+          <h3 class="mat-display-1">{{classDto.name}} Levels</h3>
+          <mat-divider></mat-divider>
+          <p class="mat-body-2">
+            <button mat-raised-button color="warn" (click)="openAddLevelDialog({})">ADD LEVEL</button>
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div fxLayout="column" class="service-card-content">
+
+    <div fxLayout="row wrap" class="service-card-container" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutAlign="center stretch">
+      <div fxFlex="100%" fxFlex.gt-sm="33%" fxFlex.gt-md="20%" fxFlex.lt-md="100" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="20px"
+           class="mat-elevation-z4 service-card " *ngFor="let levelItem of levels">
+        <button mat-icon-button aria-label="icon delete" class="btn-delete" (click)="deleteItem(levelItem.id)">
+          <mat-icon>delete_outline</mat-icon>
+        </button>
+        <div class="box-level text-center" [ngStyle] = "colorUtilsService.getBoxColor()">
+          <span [ngStyle]="fonSizeUtilsService.getFontSize(levelItem.name)" >
+            {{ levelItem.name | uppercase}}
+          </span>
+        </div>
+
+        <h3 class="mat-title" fxFlex>{{levelItem.name| titlecase}}</h3>
+        <p>{{ levelItem.description | titlecase}}</p>
+
+      </div>
+
+    </div>
+
+    <mat-paginator style="margin-bottom: 50px;" [length]="totalLevels" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+                   (page)="onPageChanged($event)"></mat-paginator>
+  </div>
+</div>
+

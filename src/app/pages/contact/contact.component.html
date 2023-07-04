@@ -4,7 +4,7 @@
       <div fxFlex="10" fxLayoutAlign="start center" fxLayout="row">
         <h3 class="mat-headline">Contacts</h3>
         <h3 class="mat-headline">|</h3>
-        <h6 class="mat-title"> {{nbrContacts}} contacts</h6>
+        <h6 class="mat-title"> {{totalContacts}} contacts</h6>
       </div>
       <mat-divider></mat-divider>
       <br>
@@ -22,17 +22,21 @@
       <br>
       <div class="contact-list" fxLayout.lt-lg="column" fxLayout="row" *ngFor="let contactInfo of contacts" fxLayoutAlign="space-between stretche">
         <div fxFlex="10" fxLayoutAlign="center center">
-          <img class="avatar" [src]="contactInfo?.status=='staff'?'assets/images/avatars/staff.png':
-              contactInfo?.status=='teacher'?'assets/images/avatars/teacher.png':
-              contactInfo?.status=='student'?'assets/images/avatars/students.png':
-              contactInfo?.status=='stagiaire'?'assets/images/avatars/students.png':
-              'assets/images/avatars/noavatar.png'" width="40" height="40" alt="status">
+          <img class="avatar" [src]="contactInfo.imageByte?contactInfo.imageByte:
+              contactInfo?.task=='staff'?'assets/images/avatars/staff.png':
+              contactInfo?.task=='teacher'?'assets/images/avatars/teacher.png':
+              contactInfo?.task=='student'?'assets/images/avatars/students.png':
+              contactInfo?.task=='trainee_student'?'assets/images/avatars/students.png':
+              'assets/images/avatars/noavatar.png'" width="40" height="40" alt="task">
         </div>
         <div fxFlex="30">
           <h3 class="mat-subheading-1"> {{contactInfo?.lastName}} {{contactInfo?.firstName}}</h3>
           <p class="mat-body-1">
             Gender: {{contactInfo?.gender }}
             {{contactInfo?.scholarLevel ? '| scholar Level:' + contactInfo?.scholarLevel : null}}
+          </p>
+          <p class="mat-body-1" [ngStyle]="{'color': contactInfo?.status ? 'green' : 'red'}">
+            {{contactInfo?.status?'Active Account':'Inactive Account'}}
           </p>
         </div>
         <div fxFlex="20" fxLayoutAlign="start center">
@@ -47,12 +51,15 @@
         </div>
         <div fxFlex="20" fxLayoutAlign="center center">
           <mat-chip-listbox>
-            <mat-chip>{{contactInfo?.status}}</mat-chip>
+            <mat-chip>{{contactInfo?.task}}</mat-chip>
           </mat-chip-listbox>
         </div>
         <div fxFlex="10" fxLayoutAlign="center center">
           <button mat-icon-button (click)="openAddContactDialog(contactInfo)">
             <mat-icon>send</mat-icon>
+          </button>
+          <button mat-icon-button aria-label="icon delete" class="btn-delete" (click)="deleteItem(contactInfo.id || '')">
+            <mat-icon>delete_outline</mat-icon>
           </button>
         </div>
         <hr>

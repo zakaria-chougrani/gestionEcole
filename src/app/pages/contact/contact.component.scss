@@ -23,13 +23,15 @@
     }
 
     .avatar {
-      width: 40px;
-      height: 40px;
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
     }
   }
 }
-
+.btn-delete{
+  color: red;
+}
 .contact-add {
   padding: 10px;
   background: white;

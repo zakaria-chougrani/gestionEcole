@@ -1,1 +1,38 @@
-<p>add-level works!</p>
+<mat-progress-bar mode="indeterminate" *ngIf="isLoading" style="width: 100%"></mat-progress-bar>
+<div mat-dialog-title style="padding: 5px">
+  <h3 class="mat-headline" fxFlex="80">{{levelForm.controls['id'].value ? 'Update Level' : 'Add New Level'}}</h3>
+  <div fxLayout="row" fxLayoutAlign="end center" fxFlex="10">
+    <button mat-icon-button (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</div>
+<div mat-dialog-content>
+  <form [formGroup]="levelForm" (ngSubmit)="onSubmit()">
+    <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="start center" class="mg-md-bt" *ngIf="levelForm.controls['name'].value">
+      <div class="box-level" [ngStyle] = "colorUtilsService.getBoxColor()">
+        <span [ngStyle]="fonSizeUtilsService.getFontSize(levelForm.controls['name'].value)" >
+            {{ levelForm.controls['name'].value | uppercase}}
+          </span>
+      </div>
+    </div>
+    <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center" class="mg-md-bt">
+      <mat-form-field class="full" subscriptSizing="dynamic">
+        <mat-label>Name:</mat-label>
+        <input matInput id="nameInput" formControlName="name" required>
+      </mat-form-field>
+    </div>
+    <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center" class="mg-md-bt">
+      <mat-form-field class="full" subscriptSizing="dynamic">
+        <mat-label>Description:</mat-label>
+        <input matInput id="descriptionInput" formControlName="description">
+      </mat-form-field>
+    </div>
+    <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center" class="mg-md-bt">
+      <button mat-raised-button color="primary" [disabled]="levelForm.invalid">{{ data.levelDto.id ? 'Update' : 'Add' }} Level</button>
+
+      <button mat-raised-button type="button" (click)="onCancel()">CANCEL</button>
+    </div>
+  </form>
+</div>
+

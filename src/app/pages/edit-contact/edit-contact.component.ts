@@ -1,6 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ContactInfo, Gender} from "../../_shared/models/contact-info";
+import {ContactInfo, GenderEnum} from "../../_shared/models/contact-info";
 import {FlexModule} from "@angular/flex-layout";
 import {MatButtonModule} from "@angular/material/button";
 import {MatDividerModule} from "@angular/material/divider";
@@ -26,8 +26,10 @@ import {COMMA, ENTER} from "@angular/cdk/keycodes";
 export class EditContactComponent {
   contactForm!: FormGroup;
   isLoading: boolean = false;
-  Gender = Gender;
+  Gender = GenderEnum;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  selectedImage: File | null = null;
+  selectedFileDataURL: string | null = null;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -37,19 +39,45 @@ export class EditContactComponent {
   ) {
     this.contactForm = this.formBuilder.group({
       id: [null],
+      imageByte: [null],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       gender: ['', Validators.required],
       email: ['', Validators.compose([Validators.email])],
       phoneNumber: ['', Validators.required],
+      task: ['', Validators.required],
       scholarLevel: [''],
       dateOfBirth: [''],
-      status: ['', Validators.required],
-      specialties: new FormControl([])
+      typeOfContract: [''],
+      contractStartDate: [''],
+      contractEndDate: [''],
+      specialties: new FormControl([]),
+      startOfInsurance: [''],
+      expirationOfInsurance: ['']
     });
 
     if (this.data.id) {
       this.contactForm.patchValue(this.data);
+    }
+  }
+
+  onImageChange(event: any) {
+    if (event.target.files && event.target.files.length) {
+      this.selectedImage = event.target.files[0];
+      if (this.selectedImage) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.selectedFileDataURL = reader.result as string;
+          this.contactForm.patchValue({imageByte: this.selectedFileDataURL});
+
+        };
+        reader.readAsDataURL(this.selectedImage);
+
+      } else {
+        this.selectedFileDataURL = null;
+        this.contactForm.patchValue({imageByte: null});
+
+      }
     }
   }
 
@@ -60,25 +88,31 @@ export class EditContactComponent {
     }
     let formFinal: ContactInfo = {
       id: this.contactForm.controls['id'].value,
+      imageByte: this.contactForm.controls['imageByte'].value,
       lastName: this.contactForm.controls['lastName'].value,
       firstName: this.contactForm.controls['firstName'].value,
       gender: this.contactForm.controls['gender'].value,
       phoneNumber: this.contactForm.controls['phoneNumber'].value,
-      status: this.contactForm.controls['status'].value
+      task: this.contactForm.controls['task'].value
     };
-    if (this.contactForm.controls['status'].value == 'staff') {
+    if (this.contactForm.controls['task'].value == 'staff' || this.contactForm.controls['task'].value == 'trainee_staff') {
       formFinal.email = this.contactForm.controls['email'].value;
-    } else if (this.contactForm.controls['status'].value == 'teacher') {
+      formFinal.typeOfContract = this.contactForm.controls['typeOfContract'].value;
+      formFinal.contractStartDate = this.contactForm.controls['contractStartDate'].value;
+      formFinal.contractEndDate = this.contactForm.controls['contractEndDate'].value;
+    } else if (this.contactForm.controls['task'].value == 'teacher') {
       formFinal.email = this.contactForm.controls['email'].value;
       formFinal.specialties = this.contactForm.controls['specialties'].value;
 
-    } else if (this.contactForm.controls['status'].value == 'student' || this.contactForm.controls['status'].value == 'stagiaire') {
+    } else if (this.contactForm.controls['task'].value == 'student' || this.contactForm.controls['task'].value == 'trainee_student') {
       formFinal.dateOfBirth = this.contactForm.controls['dateOfBirth'].value;
       formFinal.scholarLevel = this.contactForm.controls['scholarLevel'].value;
+      formFinal.startOfInsurance = this.contactForm.controls['startOfInsurance'].value;
+      formFinal.expirationOfInsurance = this.contactForm.controls['expirationOfInsurance'].value;
 
     } else return;
-    this.isLoading = true;
 
+    this.isLoading = true;
     this.contactService.saveContact(formFinal).subscribe({
       next: () => {
         this.contactService.triggerRefreshContacts();

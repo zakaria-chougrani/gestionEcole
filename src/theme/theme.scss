@@ -92,6 +92,25 @@ body{
 .full {
   width: 100%;
 }
+.mg-md-bt{
+  margin-bottom: 20px;
+}
+.box-level{
+  width: 100px;
+  height: 100px;
+  padding: 10px;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  span {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
 .loader-container {
     background-color: white;
     width: 100vw;
@@ -106,7 +125,32 @@ body{
     -o-animation: cssAnimation 1s ease-in 3s forwards;
     animation-fill-mode: forwards;
 }
+.service-header {
+  //height: 200px;
+  width: 100%;
+  color: white;
+  .content {
+    background-color: #151515;
+    background-size: cover;
+    .box{
+      padding: 20px;
+      background-color: rgb(37 37 37);
+      box-shadow: 2px 2px 6px #292828;
+    }
+  }
+  h3 {
+    margin: 0 0 10px;
+    text-align: center;
+  }
+  p {
+    margin: 0;
+    text-align: center;
+  }
+  mat-divider {
+    border-top-color: white;
+  }
 
+}
 @keyframes cssAnimation {
     to {
         opacity:0;

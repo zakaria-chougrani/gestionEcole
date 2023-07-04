@@ -1,0 +1,37 @@
+<div fxLayout="column" fxFlexFill fxLayoutAlign="center center" style="background-image:url('../../../assets/login11.jpg');
+height: 100%;
+background-repeat: no-repeat;
+background-position: center;
+background-size: cover;">
+  <div fxLayout="column"  fxLayoutAlign="center center">
+    <mat-card class="card-container">
+      <mat-card-title class="card-title">
+        <img [ngSrc]="'./assets/highUp.jpg'" [width]="36" alt="logo" [height]="36" priority>
+        <h1>User login</h1>
+      </mat-card-title>
+      <mat-card-content>
+        <form fxLayout="column" fxLayoutAlign="start stretch" [formGroup]="userForm" (ngSubmit)="login()">
+          <mat-form-field class="full">
+            <input type="email" id="email" class="input" placeholder="Please enter your email"
+                   formControlName="email" required matInput>
+          </mat-form-field>
+          <div *ngIf="formErrors.email" class="help is-danger">
+            {{ formErrors.email }}
+          </div>
+          <mat-form-field class="full">
+            <input type="password" id="password" class="input" placeholder="please  enter your password"
+                   formControlName="password" required matInput>
+          </mat-form-field>
+          <div *ngIf="formErrors.password" class="help is-danger">
+            {{ formErrors.password }}
+          </div>
+          <button mat-raised-button class="btn-submit" type="submit"  (click)="login()">log in</button>
+        </form>
+      </mat-card-content>
+      <mat-card-actions>
+        <a class="redirect" [routerLink]="['/sigup']">Register an account</a>
+      </mat-card-actions>
+    </mat-card>
+
+  </div>
+</div>

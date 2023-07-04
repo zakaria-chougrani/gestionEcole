@@ -1,6 +1,6 @@
 <mat-progress-bar mode="indeterminate" *ngIf="isLoading" style="width: 100%"></mat-progress-bar>
 <div mat-dialog-title style="padding: 5px">
-  <h3 class="mat-headline" fxFlex="80">{{classForm.controls['id'].value ? 'Update Contact' : 'Add New Contact'}}</h3>
+  <h3 class="mat-headline" fxFlex="80">{{classForm.controls['id'].value ? 'Update Class' : 'Add New Class'}}</h3>
   <div fxLayout="row" fxLayoutAlign="end center" fxFlex="10">
     <button mat-icon-button (click)="onCancel()">
       <mat-icon>close</mat-icon>
@@ -21,7 +21,7 @@
     <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center">
       <button mat-raised-button color="primary" [disabled]="classForm.invalid">{{ data.id ? 'Update' : 'Add' }} Class</button>
 
-      <button mat-raised-button (click)="onCancel()">CANCEL</button>
+      <button mat-raised-button type="button" (click)="onCancel()">CANCEL</button>
     </div>
   </form>
 </div>

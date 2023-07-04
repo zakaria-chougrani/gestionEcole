@@ -1,0 +1,119 @@
+<mat-progress-bar mode="indeterminate" *ngIf="isLoading" style="width: 100%"></mat-progress-bar>
+
+<div fxLayout="column">
+  <div class="service-header" fxLayout="column" fxLayoutAlign="center stretch">
+    <div fxFlex class="content" fxLayout.lt-sm="column" style="padding: 20px" fxLayout="row"
+         fxLayoutAlign="space-around center">
+
+      <div fxFlex="35" fxFlex.lt-sm="100" fxLayout="row" fxLayoutAlign="center center" class="box">
+        <div>
+          <h3 class="mat-display-1">Our Programs</h3>
+          <mat-divider></mat-divider>
+          <p class="mat-body-2">
+            <button mat-raised-button color="warn" (click)="openAddProgramDialog({})">ADD PROGRAM</button>
+          </p>
+        </div>
+      </div>
+      <div fxFlex="50" fxFlex.lt-sm="100" fxLayout="column" fxLayoutAlign="start center" class="box">
+        <h3 class="mat-display-1">Search</h3>
+        <div fxLayout="row wrap" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutAlign="space-around center">
+          <div fxFlex fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
+            <mat-form-field class="full" subscriptSizing="dynamic">
+              <mat-label>Title</mat-label>
+              <input matInput name="title" [(ngModel)]="title">
+            </mat-form-field>
+          </div>
+          <div fxFlex fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
+            <mat-form-field class="full" subscriptSizing="dynamic">
+              <mat-label>Teacher</mat-label>
+              <input type="text" matInput [(ngModel)]="teacherSearch" [matAutocomplete]="auto" (input)="loadTeachers()">
+              <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayTeacherFn">
+                <mat-option [value]="''"></mat-option>
+                <mat-option *ngFor="let teacher of teachers " [value]="teacher">
+                  <img class="option-img"
+                       [src]="teacher.imageByte?teacher.imageByte:'assets/images/avatars/teacher.png'"
+                       width="30" height="30" alt="task">
+                  <span
+                    class="teacherSearch">{{ teacher.lastName | uppercase }} {{ teacher.firstName | titlecase }}</span>
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+          <div fxFlex fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
+            <button mat-mini-fab color="warn" (click)="search()">
+              <mat-icon>
+                search
+              </mat-icon>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div fxLayout="column">
+
+    <div fxLayout="row wrap" class="program-card-container" fxLayout.lt-md="column" fxLayoutGap="20px"
+         fxLayoutAlign="start  stretch">
+      <div fxFlex="100%" fxFlex.gt-sm="50%" fxFlex.gt-md="33%" fxFlex.lt-md="100" fxLayout="row"
+           fxLayoutAlign="start start"
+           class="mat-elevation-z4 service-card" *ngFor="let program of programs">
+
+        <div class="left-sid">
+          <div class="box-title mg-md-bt">
+            <p>{{program.title | uppercase}}</p>
+            <p>{{program.schoolYear}}</p>
+          </div>
+          <div class="box-info mg-md-bt">
+            <img class="avatar" [src]="program.classLevel.schoolClass.imageByte" alt="imgC" width="50">
+            <div>
+              <p class="info">{{program.classLevel.schoolClass.name|titlecase}}</p>
+              <p class="sub-info">{{program.classLevel.name|uppercase}}</p>
+            </div>
+          </div>
+          <div class="box-info mg-md-bt">
+            <img class="avatar"
+                 [src]="program.teacher.imageByte?program.teacher.imageByte:'assets/images/avatars/teacher.png'"
+                 alt="imgT" width="50">
+            <div>
+              <p class="info">{{program.teacher.lastName|uppercase}} {{program.teacher.firstName|titlecase}}</p>
+              <p class="sub-info">Tél: {{program.teacher.phoneNumber}}</p>
+            </div>
+          </div>
+
+          <div class="box-sessions" *ngFor="let session of program.sessions; let i = index">
+            <h4>-Session #{{i + 1}}</h4>
+            <p>{{session.day}}</p>
+            <p>
+              Start At:<span>{{session.startOfSession}}</span>
+              End At:<span>{{session.endOfSession}}</span>
+            </p>
+          </div>
+
+        </div>
+        <div class="right-sid">
+          <hr>
+          <button mat-mini-fab color="primary" (click)="navigateToStudents(program)">
+            <mat-icon>group_add</mat-icon>
+          </button>
+          <hr>
+          <button mat-mini-fab color="accent" (click)="openAddProgramDialog(program)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <hr>
+          <button mat-mini-fab color="warn" (click)="deleteItem(program.id)">
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+          <hr>
+        </div>
+      </div>
+
+    </div>
+
+    <mat-paginator style="margin-bottom: 50px;" [length]="totalPrograms" [pageSize]="pageSize"
+                   [pageSizeOptions]="pageSizeOptions"
+                   (page)="onPageChanged($event)" *ngIf="totalPrograms"></mat-paginator>
+  </div>
+</div>
+
