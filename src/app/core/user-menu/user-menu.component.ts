@@ -5,6 +5,7 @@ import {FlexLayoutModule} from "@angular/flex-layout";
 import {MatIconModule} from "@angular/material/icon";
 import {MatListModule} from "@angular/material/list";
 import {MatGridListModule} from "@angular/material/grid-list";
+import {UserService} from "../../_shared/utils/user.service";
 
 @Component({
   selector: 'ec-user-menu',
@@ -28,6 +29,12 @@ export class UserMenuComponent {
       this.isOpen = false;
     }
   }
-  constructor(private elementRef: ElementRef) { }
+  constructor(
+    private elementRef: ElementRef,
+    private userService:UserService
+  ) { }
 
+  logout() {
+    this.userService.logout();
+  }
 }

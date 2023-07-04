@@ -28,8 +28,28 @@ export class ContactService {
 
     return this.http.get<Page<ContactInfo>>(this.apiUrl, { params });
   }
+
   saveContact(contact: ContactInfo): Observable<ContactInfo> {
     return this.http.post<ContactInfo>(this.apiUrl, contact);
   }
+  deleteContact(id: string): Observable<string> {
+    return this.http.delete<string>(`${this.apiUrl}/${id}`);
+  }
+  getActiveTeachersBySearchValue(pageIndex: number, pageSize: number, searchValue: string): Observable<Page<ContactInfo>>{
+    const params = new HttpParams()
+      .set('page', pageIndex.toString())
+      .set('size', pageSize.toString())
+      .set('search', searchValue);
 
+    return this.http.get<Page<ContactInfo>>(`${this.apiUrl}/teachers`, { params });
+  }
+  getStudentsNotInProgram(pageIndex: number, pageSize: number, programId: string,searchValue: string): Observable<Page<ContactInfo>> {
+    const params = new HttpParams()
+      .set('page', pageIndex.toString())
+      .set('size', pageSize.toString())
+      .set('search', searchValue)
+    ;
+
+    return this.http.get<Page<ContactInfo>>(`${this.apiUrl}/studentsNotInProgram/${programId}`, { params });
+  }
 }

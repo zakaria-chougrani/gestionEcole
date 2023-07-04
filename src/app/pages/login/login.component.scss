@@ -1,0 +1,51 @@
+//$gray-lighter: #eceeef !default;
+//$image_path: "/assets/images/" !default;
+//
+//$prefix: 'sigin';
+//
+//.#{$prefix} {
+//
+//  &-conainer {
+//    min-height: 100%;
+//    background-size: cover;
+//    padding: 100px;
+//  }
+//
+//  &-main {
+//    position: relative;
+//    margin: 0 auto;
+//    width: 500px;
+//  }
+//}
+.card-container{
+  background-color: black;
+  color: white;
+  padding: 30px;
+  width: 400px;
+  .card-title{
+    margin: 20px 0;
+    text-align: center;
+    img{
+      width: 60px;
+      height: 60px;
+    }
+  }
+}
+.btn-submit {
+  font-size: 18px;
+  text-transform: capitalize;
+
+  &:not(:disabled){
+    background-color: #bb8f3e;
+    color: white;
+  }
+  &[disabled][disabled]{
+    background-color: #5d4f34;
+    color: #939191;
+  }
+}
+.redirect {
+  font-size: 14px;
+  margin-left: 10px;
+  color: #00AAAA;
+}

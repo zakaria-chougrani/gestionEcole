@@ -1,22 +1,36 @@
 export interface ContactInfo {
   id?:string;
+  imageByte?:string;
   firstName?: string;
   lastName?: string;
-  gender?: Gender;
+  gender?: GenderEnum;
   email?: string;
   phoneNumber?: string;
   scholarLevel?: string;
   dateOfBirth?: Date;
-  status?: Status;
+  contractStartDate?: Date;
+  contractEndDate?: Date;
+  typeOfContract?: TypeContractEnum;
+  task?: taskEnum;
   specialties?: string[];
+  startOfInsurance?: Date;
+  expirationOfInsurance?: Date;
+  status?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
-export enum Gender {
+export enum GenderEnum {
   Male = 'male',
   Female = 'female'
 }
-export enum Status {
+export enum taskEnum {
   Staff = 'staff',
+  trainee_staff = 'trainee_staff',
   Teacher = 'teacher',
   Student = 'student',
-  Stagiaire = 'stagiaire'
+  trainee_student = 'trainee_student'
+}
+export enum TypeContractEnum{
+  CDI,
+  CDD
 }

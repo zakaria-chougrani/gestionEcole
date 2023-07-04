@@ -21,7 +21,7 @@ import {HttpClientModule} from "@angular/common/http";
     MatMomentDateModule
   ],
   providers: [
-    { provide: MAT_DATE_LOCALE, useValue: 'fr' }
+    {provide: MAT_DATE_LOCALE, useValue: 'fr'}
   ],
   bootstrap: [AppComponent]
 })

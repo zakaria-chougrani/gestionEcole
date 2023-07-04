@@ -14,6 +14,7 @@ import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {MatPaginatorModule, PageEvent} from "@angular/material/paginator";
 import {ContactService} from "../../_shared/services/contact.service";
 import {FormsModule} from "@angular/forms";
+import Swal from "sweetalert2";
 
 
 
@@ -25,7 +26,8 @@ import {FormsModule} from "@angular/forms";
   styleUrls: ['./contact.component.scss']
 })
 export class ContactComponent implements OnInit {
-  editOpen: boolean = false;
+  isLoading: boolean = false;
+
   constructor(private dialog: MatDialog,private contactService: ContactService) { }
   contacts: ContactInfo[] = [];
   totalContacts = 0;
@@ -33,7 +35,6 @@ export class ContactComponent implements OnInit {
   currentPage = 0;
   pageSizeOptions: number[] = [5, 10, 25, 50];
   searchValue = '';
-  nbrContacts: number = this.contacts.length;
   ngOnInit(): void {
     this.loadContacts();
     this.contactService.refreshContacts.subscribe(() => {
@@ -59,18 +60,37 @@ export class ContactComponent implements OnInit {
   }
 
   openAddContactDialog(contact:ContactInfo){
-    const dialogRef = this.dialog.open(EditContactComponent, {
+    this.dialog.open(EditContactComponent, {
       width: '600px',
       data: contact,
     });
-    //
-    // dialogRef.afterClosed().subscribe((newContact) => {
-    //   if (newContact) {
-    //     // Handle the new contact object returned from the dialog
-    //     console.log(newContact);
-    //     // Add the new contact to your list or perform any other operations
-    //   }
-    // });
+  }
+  deleteItem(id: string) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won\'t be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // User confirmed the deletion, proceed with the delete operation
+        this.isLoading = true;
+        this.contactService.deleteContact(id).subscribe({
+          next: () => {
+            this.contactService.triggerRefreshContacts();
+            Swal.fire('Success', 'Class deleted successfully', 'success').then();
+          },
+          error: err => {
+            console.log(err);
+          },
+          complete: () => {
+            this.isLoading = false;
+          }
+        });
+      }
+    });
   }
 }
 // const contacts: ContactInfo[] = [
@@ -80,7 +100,7 @@ export class ContactComponent implements OnInit {
 //     lastName: 'Doe',
 //     email: 'johndoe@example.com',
 //     phoneNumber: '1234567890',
-//     status: 'teacher',
+//     task: 'teacher',
 //     specialties: ['Mathematics', 'Physics']
 //   },
 //   {
@@ -90,7 +110,7 @@ export class ContactComponent implements OnInit {
 //     phoneNumber: '9876543210',
 //     scholarLevel: 'High School',
 //     dateOfBirth: new Date(2002, 8, 25),
-//     status: 'student'
+//     task: 'student'
 //   },
 //   {
 //     id: '3',
@@ -99,7 +119,7 @@ export class ContactComponent implements OnInit {
 //     phoneNumber: '4567891230',
 //     scholarLevel: 'Primary School',
 //     dateOfBirth: new Date(2010, 3, 10),
-//     status: 'student'
+//     task: 'student'
 //   },
 //   {
 //     id: '4',
@@ -108,7 +128,7 @@ export class ContactComponent implements OnInit {
 //     email: 'emily@example.com',
 //     phoneNumber: '7891234560',
 //     dateOfBirth: new Date(1995, 10, 8),
-//     status: 'teacher',
+//     task: 'teacher',
 //     specialties: ['English', 'Literature']
 //   },
 //   {
@@ -118,6 +138,6 @@ export class ContactComponent implements OnInit {
 //     email: 'michael@example.com',
 //     phoneNumber: '3216549870',
 //     dateOfBirth: new Date(1998, 7, 20),
-//     status: 'staff'
+//     task: 'staff'
 //   }
 // ];

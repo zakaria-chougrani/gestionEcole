@@ -14,12 +14,12 @@ export const menus = [
     name: 'contacts',
     icon: 'contacts',
     img:'./assets/images/sidebarmenu/contacts.png',
-    link: '/contact'
+    link: '/contacts'
   },
   {
     name: 'programs',
-    icon: 'contacts',
+    icon: 'programs',
     img:'./assets/images/sidebarmenu/program.png',
-    link: '/contact'
+    link: '/programs'
   }
 ];

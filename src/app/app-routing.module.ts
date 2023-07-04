@@ -16,10 +16,26 @@ const routes: Routes = [
         loadComponent: () => import('./pages/classes/classes.component').then(m => m.ClassesComponent)
       },
       {
-        path: 'contact',
+        path: 'levels',
+        loadComponent: () => import('./pages/classe-levels/classe-levels.component').then(m => m.ClasseLevelsComponent)
+      },
+      {
+        path: 'contacts',
         loadComponent: () => import('./pages/contact/contact.component').then(m => m.ContactComponent)
+      },
+      {
+        path: 'programs',
+        loadComponent: () => import('./pages/programs/programs.component').then(m => m.ProgramsComponent)
+      },
+      {
+        path: 'programs/:id',
+        loadComponent: () => import('./pages/students-program/students-program.component').then(m => m.StudentsProgramComponent)
       }
     ]
+  },
+  {
+    path: 'login',
+    loadComponent: () => import('./pages/login/login.component').then(m => m.LoginComponent)
   },
   {
     path: '**',

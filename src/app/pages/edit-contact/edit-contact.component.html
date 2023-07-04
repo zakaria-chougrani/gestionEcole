@@ -9,23 +9,26 @@
 </div>
 <div mat-dialog-content>
   <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+    <label for="imageInput">Image:</label>
     <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center">
       <div fxFlex="40">
-        <img class="avatar" [src]="contactForm.controls['status'].value=='staff'?'assets/images/avatars/staff.png':
-                contactForm.controls['status'].value=='teacher'?'assets/images/avatars/teacher.png':
-                contactForm.controls['status'].value=='student'?'assets/images/avatars/students.png':
-                contactForm.controls['status'].value=='stagiaire'?'assets/images/avatars/students.png':
+        <img class="avatar" [src]="contactForm.controls['imageByte'].value?contactForm.controls['imageByte'].value:
+                contactForm.controls['task'].value=='staff'?'assets/images/avatars/staff.png':
+                contactForm.controls['task'].value=='teacher'?'assets/images/avatars/teacher.png':
+                contactForm.controls['task'].value=='student'?'assets/images/avatars/students.png':
+                contactForm.controls['task'].value=='stagiaire'?'assets/images/avatars/students.png':
                 'assets/images/avatars/noavatar.png'" width="100" height="100" alt="profile">
 
       </div>
       <div fxFlex="60" fxLayout="column" fxLayoutAlign="center start">
         <h3
           class="mat-title">{{contactForm.controls['lastName'].value |uppercase}} {{contactForm.controls['firstName'].value |titlecase}}</h3>
-        <h3 class="mat-body-2">{{contactForm.controls['status'].value |uppercase}}</h3>
+        <h3 class="mat-body-2">{{contactForm.controls['task'].value |uppercase}}</h3>
       </div>
     </div>
+    <input type="file" id="imageInput" (change)="onImageChange($event)" accept="image/*" class="mg-md-bt">
 
-    <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center">
+    <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center" class="mg-md-bt">
       <mat-form-field class="full" subscriptSizing="dynamic">
         <mat-label>First Name</mat-label>
         <input matInput formControlName="firstName" required>
@@ -35,8 +38,7 @@
         <input matInput formControlName="lastName" required>
       </mat-form-field>
     </div>
-    <br>
-    <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center">
+    <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center" class="mg-md-bt">
       <mat-form-field class="full" subscriptSizing="dynamic" *ngIf="data">
         <mat-label>Gender</mat-label>
         <mat-select formControlName="gender">
@@ -45,12 +47,13 @@
         </mat-select>
       </mat-form-field>
       <mat-form-field class="full" subscriptSizing="dynamic" *ngIf="data">
-        <mat-label>Contact Status</mat-label>
-        <mat-select formControlName="status">
+        <mat-label>Contact Task</mat-label>
+        <mat-select formControlName="task">
           <mat-option [value]="'staff'">Staff</mat-option>
+          <mat-option [value]="'trainee_staff'">Trainee Staff</mat-option>
           <mat-option [value]="'teacher'">Teacher</mat-option>
           <mat-option [value]="'student'">Student</mat-option>
-          <mat-option [value]="'stagiaire'">Stagiaire</mat-option>
+          <mat-option [value]="'trainee_student'">Trainee Student</mat-option>
         </mat-select>
       </mat-form-field>
       <mat-form-field class="full" subscriptSizing="dynamic">
@@ -58,19 +61,19 @@
         <input matInput formControlName="phoneNumber">
       </mat-form-field>
     </div>
-    <br>
-    <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center">
+    <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center" class="mg-md-bt">
       <mat-form-field class="full"
-                      *ngIf="contactForm.controls['status'].value == 'staff' || contactForm.controls['status'].value == 'teacher'"
+                      *ngIf="contactForm.controls['task'].value == 'staff' || contactForm.controls['task'].value == 'teacher'"
                       subscriptSizing="dynamic">
         <mat-label>Email</mat-label>
         <input matInput type="email" formControlName="email" name="email">
       </mat-form-field>
-      <mat-form-field  class="full" *ngIf="contactForm.controls['status'].value === 'teacher'"
-                       subscriptSizing="dynamic">
+      <mat-form-field class="full" *ngIf="contactForm.controls['task'].value === 'teacher'"
+                      subscriptSizing="dynamic">
         <mat-label>Specialties</mat-label>
         <mat-chip-grid #chipList>
-          <mat-chip-row *ngFor="let specialty of contactForm.controls['specialties'].value" [removable]="true" (removed)="removeSpecialty(specialty)">
+          <mat-chip-row *ngFor="let specialty of contactForm.controls['specialties'].value" [removable]="true"
+                        (removed)="removeSpecialty(specialty)">
             {{ specialty |titlecase}}
             <mat-icon matChipRemove>cancel</mat-icon>
           </mat-chip-row>
@@ -78,11 +81,32 @@
                  [matChipInputAddOnBlur]="true" (matChipInputTokenEnd)="addSpecialty($event)">
         </mat-chip-grid>
       </mat-form-field>
-
     </div>
-    <br>
-    <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center"
-         *ngIf="contactForm.controls['status'].value === 'student' || contactForm.controls['status'].value === 'stagiaire'">
+    <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center" class="mg-md-bt"
+         *ngIf="contactForm.controls['task'].value === 'staff' || contactForm.controls['task'].value === 'trainee_staff'">
+      <mat-form-field class="full" subscriptSizing="dynamic" *ngIf="data">
+        <mat-label>Type Of Contract</mat-label>
+        <mat-select formControlName="typeOfContract">
+          <mat-option [value]="'CDI'">CDI</mat-option>
+          <mat-option [value]="'CDD'">CDD</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="full" subscriptSizing="dynamic">
+        <mat-label>Date begin of Contrat</mat-label>
+        <input matInput [matDatepicker]="contractStartDate" formControlName="contractStartDate">
+        <mat-datepicker-toggle matSuffix [for]="contractStartDate"></mat-datepicker-toggle>
+        <mat-datepicker #contractStartDate></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field class="full" subscriptSizing="dynamic">
+        <mat-label>Date end of Contrat</mat-label>
+        <input matInput [matDatepicker]="contractEndDate" formControlName="contractEndDate">
+        <mat-datepicker-toggle matSuffix [for]="contractEndDate"></mat-datepicker-toggle>
+        <mat-datepicker #contractEndDate></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center" class="mg-md-bt"
+         *ngIf="contactForm.controls['task'].value === 'student' || contactForm.controls['task'].value === 'trainee_student'">
       <mat-form-field class="full" subscriptSizing="dynamic">
         <mat-label>Date of Birth</mat-label>
         <input matInput [matDatepicker]="datePicker" formControlName="dateOfBirth">
@@ -94,8 +118,22 @@
         <input matInput formControlName="scholarLevel">
       </mat-form-field>
     </div>
-    <br>
-    <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center">
+    <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center" class="mg-md-bt"
+         *ngIf="contactForm.controls['task'].value === 'student' || contactForm.controls['task'].value === 'trainee_student'">
+      <mat-form-field class="full" subscriptSizing="dynamic">
+        <mat-label>Start of Insurance</mat-label>
+        <input matInput [matDatepicker]="startOfInsurance" formControlName="startOfInsurance">
+        <mat-datepicker-toggle matSuffix [for]="startOfInsurance"></mat-datepicker-toggle>
+        <mat-datepicker #startOfInsurance></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field class="full" subscriptSizing="dynamic">
+        <mat-label>Expiration of Insurance</mat-label>
+        <input matInput [matDatepicker]="expirationOfInsurance" formControlName="expirationOfInsurance">
+        <mat-datepicker-toggle matSuffix [for]="expirationOfInsurance"></mat-datepicker-toggle>
+        <mat-datepicker #expirationOfInsurance></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center" class="mg-md-bt">
       <button mat-raised-button color="primary">{{ data.id ? 'Update' : 'Add' }} Contact</button>
 
       <button mat-raised-button (click)="onCancel()">CANCEL</button>

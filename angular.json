@@ -37,7 +37,11 @@
               "src/theme/theme.scss",
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "sweetalert2",
+              "moment"
+            ]
           },
           "configurations": {
             "production": {

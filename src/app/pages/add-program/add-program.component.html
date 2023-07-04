@@ -1,0 +1,94 @@
+<mat-progress-bar mode="indeterminate" *ngIf="isLoading" style="width: 100%"></mat-progress-bar>
+<div mat-dialog-content>
+  <form [formGroup]="programForm" (ngSubmit)="onSubmit()">
+    <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center" class="mg-md-bt">
+      <mat-form-field class="full" subscriptSizing="dynamic">
+        <mat-label>Title:</mat-label>
+        <input matInput id="nameInput" formControlName="title">
+      </mat-form-field>
+      <mat-form-field class="full" subscriptSizing="dynamic">
+        <mat-label>School Year:</mat-label>
+        <input matInput id="schoolYearInput" formControlName="schoolYear" ecSchoolYear>
+      </mat-form-field>
+    </div>
+    <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center" class="mg-md-bt">
+      <mat-form-field class="full" subscriptSizing="dynamic" *ngIf="data">
+        <mat-label>Class</mat-label>
+        <mat-select formControlName="schoolclass" (selectionChange)="loadLevelsByClassId()" >
+          <mat-option *ngFor="let schoolClass of classes" [value]="schoolClass">
+            <img alt="" class="option-img" [src]="schoolClass.imageByte" height="25">
+            <span>{{schoolClass.name}}</span>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="full" subscriptSizing="dynamic" *ngIf="levels.length">
+        <mat-label>Level</mat-label>
+        <mat-select formControlName="classLevel">
+          <mat-option *ngFor="let level of levels" [value]="level">
+            <span>{{level.name |uppercase}}</span>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center" class="mg-md-bt">
+      <mat-form-field class="full" subscriptSizing="dynamic">
+        <mat-label>Teacher</mat-label>
+        <input type="text" matInput [formControl]="teacherSearch" [matAutocomplete]="auto" (input)="loadTeachers()">
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayTeacherFn">
+          <mat-option *ngFor="let teacher of teachers " [value]="teacher">
+            <img class="option-img" [src]="teacher.imageByte?teacher.imageByte:'assets/images/avatars/teacher.png'"
+                 width="60" height="60" alt="task">
+            <span>{{ teacher.lastName | uppercase }} {{ teacher.firstName | titlecase }}</span> |
+            <small>Phone N°: {{ teacher.phoneNumber }}</small>
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+    <ng-container formArrayName="sessions">
+      <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center" class="mg-md-bt"
+           *ngFor="let sessionGroup of sessionControls.controls; let i = index" [formGroupName]="i">
+        <mat-card class="full">
+          <mat-card-header>
+            <mat-card-title>
+              Session #{{i + 1}}
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center"
+                 class="mg-md-bt">
+              <mat-button-toggle-group class="fontStyle" formControlName="day" required>
+                <mat-button-toggle *ngFor="let day of dayOptions" [value]="day">{{day}}</mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+            <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center"
+                 class="mg-md-bt">
+              <mat-form-field class="full" subscriptSizing="dynamic">
+                <mat-label>Start</mat-label>
+                <input type="time" matInput name="sessionStart{{i+1}}" formControlName="startOfSession" required/>
+              </mat-form-field>
+              <mat-form-field class="full" subscriptSizing="dynamic">
+                <mat-label>End</mat-label>
+                <input type="time" matInput name="sessionEnd{{i+1}}" formControlName="endOfSession" required/>
+              </mat-form-field>
+            </div>
+            <button mat-mini-fab color="accent" type="button" (click)="removeSession(i)" class="remove-session" *ngIf="i">
+              <mat-icon>remove</mat-icon>
+            </button>
+          </mat-card-content>
+        </mat-card>
+
+      </div>
+    </ng-container>
+    <button mat-raised-button color="primary" type="button" (click)="addSession()">
+      Add Session
+      <mat-icon>add</mat-icon>
+    </button>
+
+    <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center" class="mg-md-bt">
+      <button mat-raised-button color="primary" [disabled]="programForm.invalid">{{ data.id ? 'Update' : 'Add' }}
+        Program
+      </button>
+      <button mat-raised-button type="button" (click)="onCancel()">CANCEL</button>
+    </div>
+  </form>
+</div>

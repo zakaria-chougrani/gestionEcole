@@ -11,6 +11,7 @@ import {MatPaginatorModule, PageEvent} from "@angular/material/paginator";
 import {MatIconModule} from "@angular/material/icon";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import Swal from 'sweetalert2';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'ec-classes',
@@ -27,7 +28,7 @@ export class ClassesComponent implements OnInit {
   pageSizeOptions: number[] = [4, 8, 12, 25, 50];
   isLoading: boolean = false;
 
-  constructor(private dialog: MatDialog, private schoolClassService: SchoolClassService) {
+  constructor(private dialog: MatDialog, private schoolClassService: SchoolClassService, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -56,6 +57,10 @@ export class ClassesComponent implements OnInit {
       width: '600px',
       data: classDto,
     });
+  }
+
+  navigateToLevels(classDto: SchoolClass) {
+    this.router.navigateByUrl('/levels', {state: {classDto: classDto}}).then();
   }
 
   deleteItem(id: string) {
