@@ -1,9 +1,16 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
+import {authGuard} from "./_shared/guard/auth.guard";
 
 const routes: Routes = [
   {
+    path: 'login',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/login/login.component').then(m => m.LoginComponent)
+  },
+  {
     path: '',
+    canActivate: [authGuard],
     loadComponent: () => import('./auth/auth.component').then(mod => mod.AuthComponent),
     children: [
       {
@@ -31,11 +38,7 @@ const routes: Routes = [
         path: 'programs/:id',
         loadComponent: () => import('./pages/students-program/students-program.component').then(m => m.StudentsProgramComponent)
       }
-    ]
-  },
-  {
-    path: 'login',
-    loadComponent: () => import('./pages/login/login.component').then(m => m.LoginComponent)
+    ],
   },
   {
     path: '**',
