@@ -12,11 +12,11 @@ background-size: cover;">
       <mat-card-content>
         <form fxLayout="column" fxLayoutAlign="start stretch" [formGroup]="userForm" (ngSubmit)="login()">
           <mat-form-field class="full">
-            <input type="email" id="email" class="input" placeholder="Please enter your email"
-                   formControlName="email" required matInput>
+            <input id="usernameOrEmail" class="input" placeholder="Please enter your username or email"
+                   formControlName="usernameOrEmail" required matInput>
           </mat-form-field>
-          <div *ngIf="formErrors.email" class="help is-danger">
-            {{ formErrors.email }}
+          <div *ngIf="formErrors.username" class="help is-danger">
+            {{ formErrors.username }}
           </div>
           <mat-form-field class="full">
             <input type="password" id="password" class="input" placeholder="please  enter your password"
