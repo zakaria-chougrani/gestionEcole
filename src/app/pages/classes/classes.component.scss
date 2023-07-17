@@ -24,13 +24,9 @@
       h3 {
         margin: 0;
       }
-      p {
-        margin: 0;
-        text-align: center;
-      }
       &:hover {
         transform: translate(0, -8px);
-        box-shadow: 0 20px 20px rgba(0, 0, 0, .16)
+        box-shadow: 0 20px 20px rgba(0, 0, 0, .16);
       }
     }
   }

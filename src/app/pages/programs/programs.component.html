@@ -81,7 +81,12 @@
               <p class="sub-info">Tél: {{program.teacher.phoneNumber}}</p>
             </div>
           </div>
-
+          <div class="box-info mg-md-bt">
+            <mat-icon>groups</mat-icon>
+            <div>
+              <p class="info">Count of Students : {{program.students.length}}</p>
+            </div>
+          </div>
           <div class="box-sessions" *ngFor="let session of program.sessions; let i = index">
             <h4>-Session #{{i + 1}}</h4>
             <p>{{session.day}}</p>
@@ -94,8 +99,12 @@
         </div>
         <div class="right-sid">
           <hr>
+          <button mat-mini-fab color="primary" style="background-color: green" (click)="navigateToSessions(program)">
+            <mat-icon>fact_check</mat-icon>
+          </button>
+          <hr>
           <button mat-mini-fab color="primary" (click)="navigateToStudents(program)">
-            <mat-icon>group_add</mat-icon>
+            <mat-icon>groups</mat-icon>
           </button>
           <hr>
           <button mat-mini-fab color="accent" (click)="openAddProgramDialog(program)">
@@ -116,4 +125,3 @@
                    (page)="onPageChanged($event)" *ngIf="totalPrograms"></mat-paginator>
   </div>
 </div>
-

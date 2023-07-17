@@ -4,77 +4,6 @@
 
 .program-card-container {
   padding: 20px;
-  //.service-card {
-  //  transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
-  //  cursor: default;
-  //  background-color: white;
-  //  padding: 20px;
-  //  margin: 10px 0;
-  //  position: relative;
-  //  &:hover {
-  //    transform: translate(0, -8px);
-  //    box-shadow: 0 20px 20px rgba(0, 0, 0, .16)
-  //  }
-  //  .left-sid{
-  //    width: 80%;
-  //    float: left;
-  //    padding: 10px;
-  //
-  //    .box-title{
-  //      display: flex;
-  //      justify-content: space-between;
-  //      p{
-  //        font-size: 18px;
-  //        font-weight: bold;
-  //        margin: 0;
-  //        text-align: center;
-  //      }
-  //    }
-  //    .box-info{
-  //      display: flex;
-  //      align-items: center;
-  //      .avatar {
-  //        width: 50px;
-  //        height: 50px;
-  //        border-radius: 50%;
-  //      }
-  //      div{
-  //        margin: 0 10px;
-  //        p{
-  //          margin: 0;
-  //        }
-  //        .info{
-  //          font-size: medium;
-  //          font-weight: bold;
-  //        }
-  //        .sub-info{
-  //          font-size: smaller;
-  //          font-weight: lighter;
-  //        }
-  //      }
-  //    }
-  //    .box-sessions{
-  //      h4{
-  //        margin: 5px 0;
-  //        text-decoration: underline;
-  //      }
-  //      p{
-  //        font-size: 14px;
-  //        margin: 0 5px;
-  //        span{
-  //          font-weight: bold;
-  //          padding: 0 5px;
-  //        }
-  //      }
-  //    }
-  //  }
-  //  .right-sid{
-  //    width: 20%;
-  //    float: left;
-  //    text-align: center;
-  //  }
-  //
-  //}
 }
 .option-img {
   vertical-align: middle;
@@ -84,8 +13,18 @@
   border-radius: 50%;
 }
 
-span.teacherSearch{
+span.studentSearch{
   font-size: 14px;
 }
 
 
+table {
+  width: 100%;
+}
+
+.mat-mdc-form-field {
+  font-size: 14px;
+}
+.mat-column-position,.mat-column-phoneNumber,.mat-column-gender,.mat-column-age,.mat-column-scholarLevel{
+  text-align: center;
+}

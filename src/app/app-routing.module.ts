@@ -37,6 +37,10 @@ const routes: Routes = [
       {
         path: 'programs/:id',
         loadComponent: () => import('./pages/students-program/students-program.component').then(m => m.StudentsProgramComponent)
+      },
+      {
+        path: 'sessions/:id',
+        loadComponent: () => import('./pages/session-program/session-program.component').then(m => m.SessionProgramComponent)
       }
     ],
   },

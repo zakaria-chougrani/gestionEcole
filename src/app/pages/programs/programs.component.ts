@@ -121,4 +121,7 @@ export class ProgramsComponent implements OnInit{
   navigateToStudents(program: Program) {
     this.router.navigateByUrl(`/programs/${program.id}`).then();
   }
+  navigateToSessions(program: Program) {
+    this.router.navigateByUrl(`/sessions/${program.id}`).then();
+  }
 }

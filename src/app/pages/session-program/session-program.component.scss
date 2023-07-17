@@ -1,0 +1,90 @@
+.service-header .content {
+  background-image: url("../../../assets/images/bg/black1.jpg");
+}
+.student-card-content{
+  .student-card-container{
+    padding: 20px;
+    .student-card{
+      transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+      cursor: default;
+      padding: 20px;
+      margin: 10px 0;
+      position: relative;
+      text-align: center;
+      .img-box{
+        height: 100px;
+        width: 100px;
+        overflow: hidden;
+        border: 1px solid gray;
+        border-radius: 50%;
+        img {
+          height: 100%;
+          width: auto;
+        }
+      }
+
+      h3 {
+        margin: 0;
+      }
+      &:hover {
+        transform: translate(0, -8px);
+        box-shadow: 0 20px 20px rgba(0, 0, 0, .16);
+        background-color: #ffffdc;
+        cursor: pointer;
+        color: black;
+      }
+    }
+  }
+}
+.box-title{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  p{
+    font-size: 28px;
+    font-weight: bold;
+    margin: 0;
+    text-align: center;
+  }
+}
+.box-info{
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-evenly;
+  .avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+  }
+  div{
+    margin: 0 10px;
+    p{
+      margin: 0;
+    }
+    .info{
+      font-size: large;
+      font-weight: bold;
+    }
+    .sub-info{
+      font-size: medium;
+      font-weight: lighter;
+    }
+  }
+}
+.highlight-red {
+  background-color: red;
+  color: white;
+}
+
+.highlight-green {
+  background-color: green;
+  color: white;
+}
+
+
+
+
+
+
+

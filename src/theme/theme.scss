@@ -126,7 +126,7 @@ body{
     animation-fill-mode: forwards;
 }
 .service-header {
-  //height: 200px;
+  min-height: 200px;
   width: 100%;
   color: white;
   .content {

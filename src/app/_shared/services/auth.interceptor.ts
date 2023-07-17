@@ -25,10 +25,8 @@ export class AuthInterceptor implements HttpInterceptor {
     }
 
     return next.handle(request).pipe(
-      tap(data=> console.log(request)) ,
-    catchError((error: HttpErrorResponse) => {
+      catchError((error: HttpErrorResponse) => {
         if (error.status === 401 || error.status === 403) {
-          console.log(403)
           // Redirect to the login page if unauthorized
           this.authService.removeToken();
           this.router.navigateByUrl('login').then();
