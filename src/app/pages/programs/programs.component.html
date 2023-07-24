@@ -55,7 +55,7 @@
   <div fxLayout="column">
 
     <div fxLayout="row wrap" class="program-card-container" fxLayout.lt-md="column" fxLayoutGap="20px"
-         fxLayoutAlign="start  stretch">
+         fxLayoutAlign="start stretch">
       <div fxFlex="100%" fxFlex.gt-sm="50%" fxFlex.gt-md="33%" fxFlex.lt-md="100" fxLayout="row"
            fxLayoutAlign="start start"
            class="mat-elevation-z4 service-card" *ngFor="let program of programs">
@@ -99,19 +99,22 @@
         </div>
         <div class="right-sid">
           <hr>
-          <button mat-mini-fab color="primary" style="background-color: green" (click)="navigateToSessions(program)">
+          <button mat-mini-fab color="primary" style="background-color: green;margin-right: 5px;" (click)="navigateToSessions(program)" matTooltip="create session and check presences">
             <mat-icon>fact_check</mat-icon>
           </button>
+          <button mat-mini-fab color="primary" (click)="navigateToHistoryOfSession(program)" matTooltip="history of sessions">
+            <mat-icon>history</mat-icon>
+          </button>
           <hr>
-          <button mat-mini-fab color="primary" (click)="navigateToStudents(program)">
+          <button mat-mini-fab color="primary" (click)="navigateToStudents(program)" matTooltip="history of sessions">
             <mat-icon>groups</mat-icon>
           </button>
+<!--          <hr>-->
+<!--          <button mat-mini-fab color="accent" (click)="openAddProgramDialog(program)">-->
+<!--            <mat-icon>edit</mat-icon>-->
+<!--          </button>-->
           <hr>
-          <button mat-mini-fab color="accent" (click)="openAddProgramDialog(program)">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <hr>
-          <button mat-mini-fab color="warn" (click)="deleteItem(program.id)">
+          <button mat-mini-fab color="warn" (click)="deleteItem(program.id)" matTooltip="delete of program">
             <mat-icon>delete_outline</mat-icon>
           </button>
           <hr>

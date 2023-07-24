@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FlexModule} from "@angular/flex-layout";
 import {FormsModule} from "@angular/forms";
@@ -17,39 +17,56 @@ import {ActivatedRoute} from "@angular/router";
 import {ProgramSession} from "../../_shared/models/program-session";
 import {Program} from "../../_shared/models/program";
 import {ProgramService} from "../../_shared/services/program.service";
+import Swal from "sweetalert2";
+import {QRCodeModule} from "angularx-qrcode";
+import {IMqttMessage, MqttService} from "ngx-mqtt";
+import {Subscription} from "rxjs";
+
+
 
 @Component({
   selector: 'ec-session-program',
   standalone: true,
-  imports: [CommonModule, FlexModule, FormsModule, MatAutocompleteModule, MatButtonModule, MatDividerModule, MatFormFieldModule, MatIconModule, MatInputModule, MatOptionModule, MatPaginatorModule, MatProgressBarModule],
+  imports: [CommonModule, FlexModule, FormsModule, MatAutocompleteModule, MatButtonModule, MatDividerModule, MatFormFieldModule, MatIconModule, MatInputModule, MatOptionModule, MatPaginatorModule, MatProgressBarModule, QRCodeModule],
   templateUrl: './session-program.component.html',
-  styleUrls: ['./session-program.component.scss']
+  styleUrls: ['./session-program.component.scss'],
 })
-export class SessionProgramComponent implements OnInit{
+export class SessionProgramComponent implements OnInit,OnDestroy{
   isLoading: boolean = false;
   noActiveSession:boolean = false;
   students: ContactInfo[] = [];
   programId: string | null = null;
   session!: ProgramSession;
   program!: Program;
+  private subscription!: Subscription;
+  private audio!: HTMLAudioElement;
+  zoomState: boolean = false;
+
   constructor(
     private sessionService:ProgramSessionService,
     private programService:ProgramService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private _mqttService: MqttService
+
   ) {
     this.route.paramMap.subscribe(params => {
       this.programId = params.get('id');
     });
+
   }
 
   ngOnInit(): void {
+    this.audio = new Audio('../assets/audio/notification.mp3');
+
     this.loadProgramById();
     this.loadLastSessionActive();
     this.sessionService.refreshProgramSession.subscribe(() => {
       this.loadLastSessionActive();
     });
   }
-
+  public ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
   createSession() {
     this.isLoading = true;
     this.sessionService.createProgramSession(this.programId || '').subscribe({
@@ -69,6 +86,7 @@ export class SessionProgramComponent implements OnInit{
     this.sessionService.checkStudent(this.session.id,studentId).subscribe({
       next: () =>{
         this.sessionService.triggerRefreshProgramSession();
+        this._mqttService.unsafePublish(`highup/presence/${this.session.id}`, 'true', {qos: 1, retain: true});
       },
       error: err => {
         this.isLoading = false;
@@ -78,7 +96,30 @@ export class SessionProgramComponent implements OnInit{
     })
   }
 
-  closeSession(){
+  deactivateSession(){
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won\'t be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, deactivate it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        this.sessionService.deactivateSession(this.session.id).subscribe({
+          next: () =>{
+            this.sessionService.triggerRefreshProgramSession();
+            this._mqttService.unsafePublish(`highup/presence/${this.session.id}`, 'true', {qos: 1, retain: true});
+          },
+          error: err => {
+            this.isLoading = false;
+            console.error('erreur deactivateSession',err);
+          },
+          complete: () => this.isLoading = false
+        })
+      }
+    });
 
   }
 
@@ -88,8 +129,15 @@ export class SessionProgramComponent implements OnInit{
       next: session =>{
         if (!session){
           this.noActiveSession = true;
+
         }else{
           this.session = session;
+          this.subscription = this._mqttService.observe(`highup/presence/${this.session.id}`).subscribe((message: IMqttMessage) => {
+            // console.log(message.payload.toString());
+
+            this.sessionService.triggerRefreshProgramSession();
+            this.audio.play().then();
+          });
           this.noActiveSession = false;
         }
       },
@@ -121,5 +169,13 @@ export class SessionProgramComponent implements OnInit{
     return this.session.students && this.session.students.some(s1 => {
       return studentPre.id === s1.student.id && s1.present;
     });
+  }
+
+  getCurrentUrl(): string {
+    return `${window.location.protocol}${window.location.host}/check-presence/${this.session ? this.session.id : ''}`;
+  }
+
+  toggleZoomState() {
+    this.zoomState = !this.zoomState;
   }
 }

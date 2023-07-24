@@ -20,11 +20,12 @@ import {MatOptionModule} from "@angular/material/core";
 import {ContactInfo} from "../../_shared/models/contact-info";
 import {ContactService} from "../../_shared/services/contact.service";
 import {Router} from "@angular/router";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 @Component({
   selector: 'ec-programs',
   standalone: true,
-  imports: [CommonModule, FlexModule, MatButtonModule, MatDividerModule, MatIconModule, MatPaginatorModule, MatProgressBarModule, MatDialogModule, MatCardModule, FormsModule, MatAutocompleteModule, MatFormFieldModule, MatInputModule, MatOptionModule],
+  imports: [CommonModule, FlexModule, MatButtonModule, MatDividerModule, MatIconModule, MatPaginatorModule, MatProgressBarModule, MatDialogModule, MatCardModule, FormsModule, MatAutocompleteModule, MatFormFieldModule, MatInputModule, MatOptionModule, MatTooltipModule],
   templateUrl: './programs.component.html',
   styleUrls: ['./programs.component.scss']
 })
@@ -123,5 +124,9 @@ export class ProgramsComponent implements OnInit{
   }
   navigateToSessions(program: Program) {
     this.router.navigateByUrl(`/sessions/${program.id}`).then();
+  }
+
+  navigateToHistoryOfSession(program: Program) {
+
   }
 }

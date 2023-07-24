@@ -33,3 +33,8 @@
 .is-danger{
   color: #d74a4a;
 }
+@media screen and (max-width: 768px) {
+  .card-container{
+    width: 300px;
+  }
+}

@@ -1,0 +1,56 @@
+<div class="portal-container">
+  <mat-toolbar class="mat-elevation-z4 toolbar">
+    <img [ngSrc]="'./assets/highUp.jpg'" [width]="36" alt="logo" [height]="36">
+    <h1 class="logo">
+      <div class="txt" id="txt">
+        <b>H</b><b>I</b><b>G</b><b>H</b><b>U</b><b>P</b><b>.</b>
+      </div>
+      <div class="txt-2" id="txt-2">
+        <b>a</b><b>c</b><b>a</b><b>d</b><b>e</b><b>m</b><b>y</b>
+      </div>
+    </h1>
+    <p class="title desktop-only">{{session && !isCheckSuccess?'Welcome to the HighUp Academy Portal Of Presence':'Thank you for registering your presence'}}</p>
+  </mat-toolbar>
+  <div class="content-container">
+    <p class="title-body mobile-only">{{session && !isCheckSuccess?'Welcome to the HighUp Academy Portal Of Presence':'Thank you for registering your presence'}}</p>
+    <div class="container-card" *ngIf="session && !isCheckSuccess else checkSuccess">
+      <mat-progress-bar color="warn" mode="indeterminate" *ngIf="isLoading" style="width: 100%"></mat-progress-bar>
+      <div class="pres-card black">
+        <h2>Class:</h2>
+        <div class="box-info mg-md-bt">
+          <img class="avatar" [src]="session.classImage" alt="imgC" width="50">
+          <div>
+            <p class="info">{{session.className|titlecase}}</p>
+            <p class="sub-info">{{session.levelName |uppercase}}</p>
+          </div>
+        </div>
+        <h2>Teacher:</h2>
+        <div class="box-info mg-md-bt">
+          <img class="avatar"
+               [src]="session.teacherImage?session.teacherImage:'assets/images/avatars/teacher.png'"
+               alt="imgT" width="50">
+          <div>
+            <p class="info">{{session.teacherName |uppercase}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="pres-card">
+        <h2>Student Name:</h2>
+        <mat-form-field appearance="fill" class="form-group">
+          <mat-label>Select your Name:</mat-label>
+          <mat-select [(ngModel)]="student">
+            <mat-option *ngFor="let st of students" [value]="st">{{ st.name | titlecase }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-raised-button color="primary" [disabled]="!student" (click)="checkStudent(student.id)">Check Presence</button>
+      </div>
+    </div>
+    <ng-template #checkSuccess>
+      <img id="img-success" ngSrc="assets/success.png" alt="success" height="512" width="512">
+    </ng-template>
+  </div>
+  <footer>
+    <p>&copy; 2023 HighUp Academy. All rights reserved. <span style="font-size: 8px">website developed by chougrani zakaria.</span>
+    </p>
+  </footer>
+</div>

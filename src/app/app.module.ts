@@ -8,8 +8,13 @@ import {MAT_DATE_LOCALE} from "@angular/material/core";
 import {MatMomentDateModule} from "@angular/material-moment-adapter";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AuthInterceptor} from "./_shared/services/auth.interceptor";
+import {IMqttServiceOptions, MqttModule} from "ngx-mqtt";
 
-
+export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
+  hostname: 'broker.hivemq.com',
+  port: 8000,
+  path: '/mqtt'
+};
 @NgModule({
   declarations: [
     AppComponent
@@ -19,7 +24,8 @@ import {AuthInterceptor} from "./_shared/services/auth.interceptor";
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    MatMomentDateModule
+    MatMomentDateModule,
+    MqttModule.forRoot(MQTT_SERVICE_OPTIONS)
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},

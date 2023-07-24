@@ -9,13 +9,18 @@ const routes: Routes = [
     loadComponent: () => import('./pages/login/login.component').then(m => m.LoginComponent)
   },
   {
+    path: 'check-presence/:id',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/check-presence/check-presence.component').then(m => m.CheckPresenceComponent)
+  },
+  {
     path: '',
     canActivate: [authGuard],
     loadComponent: () => import('./auth/auth.component').then(mod => mod.AuthComponent),
     children: [
       {
         path: '',
-        redirectTo: '/classes',
+        redirectTo: '/programs',
         pathMatch: 'full'
       },
       {

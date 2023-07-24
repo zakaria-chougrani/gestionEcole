@@ -1,6 +1,7 @@
 export interface ContactInfo {
   id?:string;
   imageByte?:string;
+  tagId?: string;
   firstName?: string;
   lastName?: string;
   gender?: GenderEnum;
