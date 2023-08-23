@@ -1,3 +1,5 @@
+<mat-progress-bar mode="indeterminate" *ngIf="isLoading" style="width: 100%"></mat-progress-bar>
+
 <div fxLayout="column" fxLayoutAlign="space-between stretch" fxFill class="components-container-gt-xs">
   <div fxLayout="row" fxLayoutAlign="space-between stretch" fxFill fxLayoutGap="20px">
     <div fxFlex="100" fxLayout="column" class="mat-elevation-z2 contact-list-container">
@@ -20,7 +22,8 @@
         </div>
       </div>
       <br>
-      <div class="contact-list" fxLayout.lt-lg="column" fxLayout="row" *ngFor="let contactInfo of contacts" fxLayoutAlign="space-between stretche">
+      <div class="contact-list" fxLayout.lt-lg="column" fxLayout="row" *ngFor="let contactInfo of contacts"
+           fxLayoutAlign="space-between stretche">
         <div fxFlex="10" fxLayoutAlign="center center">
           <img class="avatar" [src]="contactInfo.imageByte?contactInfo.imageByte:
               contactInfo?.task=='staff'?'assets/images/avatars/staff.png':
@@ -29,40 +32,41 @@
               contactInfo?.task=='trainee_student'?'assets/images/avatars/students.png':
               'assets/images/avatars/noavatar.png'" width="40" height="40" alt="task">
         </div>
-        <div fxFlex="30">
+        <div fxFlex="20">
           <h3 class="mat-subheading-1"> {{contactInfo?.lastName}} {{contactInfo?.firstName}}</h3>
           <p class="mat-body-1">
             Gender: {{contactInfo?.gender }}
             {{contactInfo?.scholarLevel ? '| scholar Level:' + contactInfo?.scholarLevel : null}}
           </p>
           <p class="mat-body-1" [ngStyle]="{'color': contactInfo?.status ? 'green' : 'red'}">
-            {{contactInfo?.status?'Active Account':'Inactive Account'}}
+            {{contactInfo?.status ? 'Active Account' : 'Inactive Account'}}
           </p>
         </div>
-        <div fxFlex="20" fxLayoutAlign="start center">
+        <div fxFlex="10" fxLayoutAlign="start center">
           Tel: {{contactInfo?.phoneNumber}}
         </div>
-        <div fxFlex="30" fxLayoutAlign="center center">
+        <div fxFlex="10" fxLayoutAlign="center center">
           <mat-chip-listbox>
             <mat-chip *ngFor="let spe of contactInfo?.specialties">
               {{spe|titlecase}}
             </mat-chip>
           </mat-chip-listbox>
         </div>
-        <div fxFlex="20" fxLayoutAlign="center center">
+        <div fxFlex="15" fxLayoutAlign="center center">
           <mat-chip-listbox>
             <mat-chip>{{contactInfo?.task}}</mat-chip>
           </mat-chip-listbox>
         </div>
+        <hr>
         <div fxFlex="10" fxLayoutAlign="center center">
           <button mat-icon-button (click)="openAddContactDialog(contactInfo)">
             <mat-icon>send</mat-icon>
           </button>
-          <button mat-icon-button aria-label="icon delete" class="btn-delete" (click)="deleteItem(contactInfo.id || '')">
+          <button mat-icon-button aria-label="icon delete" class="btn-delete"
+                  (click)="deleteItem(contactInfo.id || '')">
             <mat-icon>delete_outline</mat-icon>
           </button>
         </div>
-        <hr>
       </div>
 
       <mat-paginator [length]="totalContacts" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"

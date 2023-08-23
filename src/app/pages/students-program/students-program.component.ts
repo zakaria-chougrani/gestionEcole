@@ -60,9 +60,8 @@ export class StudentsProgramComponent implements OnInit {
     this.studentsNotInProgram = [];
     this.programService.getStudentsNotInProgram(0, 10, this.programId || '', this.studentSearch || '')
       .subscribe({
-        next: (page) => {
-          this.studentsNotInProgram = page.content;
-        },
+        next: (page) => this.studentsNotInProgram = page.content,
+        error: () => this.isLoading = false,
         complete: () => this.isLoading = false
       });
   }
@@ -71,9 +70,8 @@ export class StudentsProgramComponent implements OnInit {
     this.isLoading = true;
     this.programService.getStudentsInProgram(this.programId || '')
       .subscribe({
-        next: (data) => {
-          this.dataSource = new MatTableDataSource(data);
-        },
+        next: (data) => this.dataSource = new MatTableDataSource(data),
+        error: () => this.isLoading = false,
         complete: () => this.isLoading = false
       });
   }
@@ -88,6 +86,7 @@ export class StudentsProgramComponent implements OnInit {
         this.programService.triggerRefreshStudentsInProgram();
         this.programService.triggerRefreshStudentsNotInProgram();
       },
+      error: () => this.isLoading = false,
       complete: () => this.isLoading = false
     })
   }
@@ -110,6 +109,7 @@ export class StudentsProgramComponent implements OnInit {
             this.programService.triggerRefreshStudentsInProgram();
             this.programService.triggerRefreshStudentsNotInProgram();
           },
+          error: () => this.isLoading = false,
           complete: () => this.isLoading = false
         })
       }

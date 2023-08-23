@@ -42,9 +42,10 @@ constructor(private formBuilder: FormBuilder,
       alert('incorrect form');
       return;
     }
-    this.isLoading = true;
     const name = this.classForm.controls['name'].value;
     const image = this.classForm.controls['image'].value;
+
+    this.isLoading = true;
     this.schoolClassService.createClass(name, image).subscribe({
       next: () => {
         this.classForm.reset();
@@ -52,7 +53,7 @@ constructor(private formBuilder: FormBuilder,
         this.schoolClassService.triggerRefreshSchoolClass();
         this.onCancel();
       },
-      error: err => console.log(err),
+      error: () => this.isLoading = false,
       complete: () => this.isLoading = false
     })
   }

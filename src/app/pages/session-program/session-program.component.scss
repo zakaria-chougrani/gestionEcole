@@ -3,17 +3,18 @@
 }
 .student-card-content{
   .student-card-container{
-    padding: 20px;
+    padding: 1.4rem;
     .student-card{
       transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
       cursor: default;
-      padding: 20px;
-      margin: 10px 0;
+      padding: 1.4rem;
+      margin: .7rem 0;
       position: relative;
       text-align: center;
+      font-size: .8rem;
       .img-box{
-        height: 100px;
-        width: 100px;
+        height: 6rem;
+        width: 6rem;
         overflow: hidden;
         border: 1px solid gray;
         border-radius: 50%;
@@ -39,7 +40,7 @@
   justify-content: space-between;
   width: 100%;
   p{
-    font-size: 28px;
+    font-size: 1rem;
     font-weight: bold;
     margin: 0;
     text-align: center;
@@ -51,21 +52,21 @@
   width: 100%;
   justify-content: space-evenly;
   .avatar {
-    width: 70px;
-    height: 70px;
+    width: 3.5rem;
+    height: 3.5rem;
     border-radius: 50%;
   }
   div{
-    margin: 0 10px;
+    margin: 0 .7rem;
     p{
       margin: 0;
     }
     .info{
-      font-size: large;
+      font-size: 1.2rem;
       font-weight: bold;
     }
     .sub-info{
-      font-size: medium;
+      font-size: 1rem;
       font-weight: lighter;
     }
   }

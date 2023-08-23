@@ -3,89 +3,103 @@
 }
 
 .program-card-container {
-  padding: 20px;
+  padding: 1.4rem;
 
   .service-card {
     transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
     cursor: default;
     background-color: white;
-    padding: 20px;
-    margin: 10px 0;
+    padding: 1.4rem;
+    margin: .7rem 0;
     position: relative;
+
     &:hover {
       transform: translate(0, -8px);
       box-shadow: 0 20px 20px rgba(0, 0, 0, .16)
     }
-    .left-sid{
+
+    .left-sid {
       width: 80%;
       float: left;
-      padding: 10px;
+      padding: .7rem;
 
-      .box-title{
+      .box-title {
         display: flex;
         justify-content: space-between;
-        p{
-          font-size: 18px;
+
+        p {
+          font-size: 1.4rem;
           font-weight: bold;
           margin: 0;
           text-align: center;
         }
       }
-      .box-info{
+
+      .box-info {
         display: flex;
         align-items: center;
+
         .avatar {
-          width: 50px;
-          height: 50px;
+          width: 3.5rem;
+          height: 3.5rem;
           border-radius: 50%;
         }
-        div{
-          margin: 0 10px;
-          p{
+
+        div {
+          margin: 0 .7rem;
+
+          p {
             margin: 0;
           }
-          .info{
+
+          .info {
             font-size: medium;
             font-weight: bold;
           }
-          .sub-info{
+
+          .sub-info {
             font-size: smaller;
             font-weight: lighter;
           }
         }
       }
-      .box-sessions{
-        h4{
+
+      .box-sessions {
+        h4 {
           margin: 5px 0;
           text-decoration: underline;
         }
-        p{
-          font-size: 14px;
+
+        p {
+          font-size: .8rem;
           margin: 0 5px;
-          span{
+
+          span {
             font-weight: bold;
             padding: 0 5px;
           }
         }
       }
     }
-    .right-sid{
+
+    .right-sid {
       width: 20%;
       float: left;
       text-align: center;
     }
   }
 }
+
 .option-img {
   vertical-align: middle;
   margin: 2px 4px 2px 0;
-  width: 30px;
-  height: 30px;
+  width: 1.8rem;
+  height: 1.8rem;
   border-radius: 50%;
 }
 
-span.teacherSearch{
-  font-size: 14px;
+span.teacherSearch {
+  font-size: .8rem;
 }
 
 

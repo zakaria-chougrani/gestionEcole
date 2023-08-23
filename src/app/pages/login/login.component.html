@@ -15,17 +15,17 @@ background-size: cover;">
             <input id="usernameOrEmail" class="input" placeholder="Please enter your username or email"
                    formControlName="usernameOrEmail" required matInput>
           </mat-form-field>
-          <div *ngIf="formErrors.username" class="help is-danger">
+          <div *ngIf="formErrors.username" class="is-danger">
             {{ formErrors.username }}
           </div>
           <mat-form-field class="full">
             <input type="password" id="password" class="input" placeholder="please  enter your password"
                    formControlName="password" required matInput>
           </mat-form-field>
-          <div *ngIf="formErrors.password" class="help is-danger">
-            {{ formErrors.password }}
-          </div>
           <button mat-raised-button class="btn-submit" type="submit"  (click)="login()">log in</button>
+          <div *ngIf="message" class="is-danger">
+            {{ message }}
+          </div>
         </form>
       </mat-card-content>
       <mat-card-actions>

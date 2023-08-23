@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {CommonModule} from '@angular/common';
 import {FlexModule} from "@angular/flex-layout";
 import {MatButtonModule} from "@angular/material/button";
 import {MatDividerModule} from "@angular/material/divider";
@@ -29,24 +29,25 @@ import {MatTooltipModule} from "@angular/material/tooltip";
   templateUrl: './programs.component.html',
   styleUrls: ['./programs.component.scss']
 })
-export class ProgramsComponent implements OnInit{
+export class ProgramsComponent implements OnInit {
   programs: Program[] = [];
   totalPrograms = 0;
   pageSize = 10;
   currentPage = 0;
-  pageSizeOptions: number[] = [10,15, 25, 50];
+  pageSizeOptions: number[] = [10, 15, 25, 50];
   isLoading: boolean = false;
-  teacherSearch:string='';
-  levelId!:string;
-  title!:string;
+  teacherSearch: string = '';
+  levelId!: string;
+  title!: string;
   teachers: ContactInfo[] = [];
 
   constructor(
-    private programService:ProgramService,
+    private programService: ProgramService,
     private contactService: ContactService,
     private router: Router,
     private dialog: MatDialog) {
   }
+
   ngOnInit(): void {
     this.loadPrograms();
     this.loadTeachers();
@@ -54,26 +55,35 @@ export class ProgramsComponent implements OnInit{
       this.loadPrograms();
     });
   }
+
   loadPrograms(): void {
+    this.isLoading = true;
     let teacher = (this.teacherSearch as ContactInfo).id;
-    this.programService.getAllPrograms(this.currentPage, this.pageSize,this.title||'',this.levelId,teacher||'')
-      .subscribe((page) => {
-        this.programs = page.content;
-        this.totalPrograms = page.totalElements;
+    this.programService.getAllPrograms(this.currentPage, this.pageSize, this.title || '', this.levelId, teacher || '')
+      .subscribe({
+        next: (page) => {
+          this.programs = page.content;
+          this.totalPrograms = page.totalElements;
+        },
+        error: () => this.isLoading = false,
+        complete: () => this.isLoading = false
       });
   }
+
   onPageChanged(event: PageEvent): void {
     this.currentPage = event.pageIndex;
     this.pageSize = event.pageSize;
     this.loadPrograms();
   }
+
   openAddProgramDialog(programDto: {}) {
     this.dialog.open(AddProgramComponent, {
       width: '800px',
       data: programDto,
-      disableClose:true
+      disableClose: true
     });
   }
+
   deleteItem(id: string) {
     Swal.fire({
       title: 'Are you sure?',
@@ -100,6 +110,7 @@ export class ProgramsComponent implements OnInit{
       }
     });
   }
+
   loadTeachers(): void {
     this.isLoading = true;
     this.teachers = [];
@@ -108,9 +119,11 @@ export class ProgramsComponent implements OnInit{
         next: (page) => {
           this.teachers = page.content;
         },
+        error: () => this.isLoading = false,
         complete: () => this.isLoading = false
       });
   }
+
   displayTeacherFn(teacher: ContactInfo): string {
     return teacher && teacher.lastName && teacher.firstName ? teacher.lastName.toUpperCase() + ' ' + teacher.firstName.toLowerCase() : '';
   }
@@ -122,11 +135,13 @@ export class ProgramsComponent implements OnInit{
   navigateToStudents(program: Program) {
     this.router.navigateByUrl(`/programs/${program.id}`).then();
   }
+
   navigateToSessions(program: Program) {
     this.router.navigateByUrl(`/sessions/${program.id}`).then();
   }
 
   navigateToHistoryOfSession(program: Program) {
+    this.router.navigateByUrl(`/history-sessions/${program.id}`).then();
 
   }
 }

@@ -10,15 +10,15 @@
 
 @include mat.core();
 
-$primary : mat.$indigo-palette;
-$accent  : mat.$orange-palette;
-$warn    : mat.$red-palette;
+$primary: mat.$indigo-palette;
+$accent: mat.$orange-palette;
+$warn: mat.$red-palette;
 
-$primary-app-primary: mat.define-palette($primary , 400);
-$primary-app-accent:  mat.define-palette($accent , 900);
-$primary-app-warn:    mat.define-palette($warn );
+$primary-app-primary: mat.define-palette($primary, 400);
+$primary-app-accent: mat.define-palette($accent, 900);
+$primary-app-warn: mat.define-palette($warn);
 
-$ec-theme:   mat.define-light-theme((
+$ec-theme: mat.define-light-theme((
   color: (
     primary: $primary-app-primary,
     accent: $primary-app-accent,
@@ -26,22 +26,22 @@ $ec-theme:   mat.define-light-theme((
   ),
   density: 0,
 ));
-ec-sidemenu{
-    $sidemenu-app-primary: mat.define-palette(mat.$grey-palette , 900);
-    $sidemenu-app-accent:  mat.define-palette($accent , 900);
-    $sidemenu-app-warn:    mat.define-palette($warn );
-    $ec-sidemenu-theme:   mat.define-dark-theme((
-      color: (
-        primary: $sidemenu-app-primary,
-        accent:  $sidemenu-app-accent
-      )
-    ));
-    @include mat.list-theme($ec-sidemenu-theme);
+ec-sidemenu {
+  $sidemenu-app-primary: mat.define-palette(mat.$grey-palette, 900);
+  $sidemenu-app-accent: mat.define-palette($accent, 900);
+  $sidemenu-app-warn: mat.define-palette($warn);
+  $ec-sidemenu-theme: mat.define-dark-theme((
+    color: (
+      primary: $sidemenu-app-primary,
+      accent: $sidemenu-app-accent
+    )
+  ));
+  @include mat.list-theme($ec-sidemenu-theme);
 }
 
 
-ec-sidemenu-item{
-    @include sidemenu-item($ec-theme,40px)
+ec-sidemenu-item {
+  @include sidemenu-item($ec-theme, 40px)
 }
 
 
@@ -67,35 +67,44 @@ ec-sidemenu-item{
 //@include sales-list($ec-theme);
 
 html {
-  height:100%;
+  height: 100%;
+  font-size: 16px;
 }
-body{
+
+body {
   padding: 0 !important;
   margin: 0 !important;
-  height:100%;
+  height: 100%;
   font-family: "system-ui";
 }
+
 .components-container-gt-xs {
-    padding: 20px;
-    // background-color: #fdfdfd;
+  padding: 20px;
+  // background-color: #fdfdfd;
 }
+
 .components-container-xs {
-    padding: 5px !important;
-    // background-color: #fdfdfd;
+  padding: 5px !important;
+  // background-color: #fdfdfd;
 }
+
 .component-preview {
-    padding: 20px;
+  padding: 20px;
 }
+
 .ps-content {
   height: 100%;
 }
+
 .full {
   width: 100%;
 }
-.mg-md-bt{
-  margin-bottom: 20px;
+
+.mg-md-bt {
+  margin-bottom: 1.4rem;
 }
-.box-level{
+
+.box-level {
   width: 100px;
   height: 100px;
   padding: 10px;
@@ -104,6 +113,7 @@ body{
   display: flex;
   align-items: center;
   justify-content: center;
+
   span {
     display: inline-block;
     overflow: hidden;
@@ -111,65 +121,79 @@ body{
     text-overflow: ellipsis;
   }
 }
-.loader-container {
-    background-color: white;
-    width: 100vw;
-    height: 100vh;
-    z-index: 2000;
-    position: absolute;
 
-    -moz-animation: cssAnimation 1s ease-in 3s forwards;
-    /* Firefox */
-    animation: cssAnimation 1s ease-in 3s forwards;
-    /* Safari and Chrome */
-    -o-animation: cssAnimation 1s ease-in 3s forwards;
-    animation-fill-mode: forwards;
+.loader-container {
+  background-color: #101010;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 2000;
+  position: fixed;
+
+  -moz-animation: cssAnimation 1s ease-in 3s forwards;
+  /* Firefox */
+  animation: cssAnimation 1s ease-in 3s forwards;
+  /* Safari and Chrome */
+  -o-animation: cssAnimation 1s ease-in 3s forwards;
+  animation-fill-mode: forwards;
 }
+
 .service-header {
-  min-height: 200px;
+  min-height: 14rem;
   width: 100%;
   color: white;
+
   .content {
     background-color: #151515;
     background-size: cover;
-    .box{
-      padding: 20px;
+
+    .box {
+      padding: 1.4rem;
       background-color: rgb(37 37 37);
       box-shadow: 2px 2px 6px #292828;
     }
   }
+
   h3 {
-    margin: 0 0 10px;
+    margin: 0 0 .7rem;
     text-align: center;
   }
+
   p {
     margin: 0;
     text-align: center;
   }
+
   mat-divider {
     border-top-color: white;
   }
 
 }
+
 @keyframes cssAnimation {
-    to {
-        opacity:0;
-        display: none;
-        visibility:hidden;
-    }
+  to {
+    opacity: 0;
+    display: none;
+    visibility: hidden;
+  }
 }
+
 .spinner {
-    margin: 50vh auto 0;
-    width: 70px;
-    text-align: center;
+  margin: 50vh auto 0;
+  width: 70px;
+  text-align: center;
+
   .bounce1 {
     background-color: blue;
     animation-delay: -0.32s;
   }
+
   .bounce2 {
     background-color: red;
     animation-delay: -0.16s;
   }
+
   > div {
     width: 18px;
     height: 18px;
@@ -180,19 +204,24 @@ body{
 }
 
 .bounce3 {
-    background-color: orange;
+  background-color: orange;
 }
 
 
 @keyframes sk-bouncedelay {
-  0%, 80%, 100% { transform: scale(0) }
-  40% { transform: scale(1.0) }
+  0%, 80%, 100% {
+    transform: scale(0)
+  }
+  40% {
+    transform: scale(1.0)
+  }
 }
 
 @keyframes sk-bouncedelay {
   0%, 80%, 100% {
     transform: scale(0);
-  } 40% {
+  }
+  40% {
     transform: scale(1.0);
   }
 }

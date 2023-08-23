@@ -118,7 +118,7 @@ export class EditContactComponent {
         this.contactService.triggerRefreshContacts();
         this.onCancel();
       },
-      error: err => console.log(err),
+      error: () => this.isLoading = false,
       complete: () => this.isLoading = false
     })
   }

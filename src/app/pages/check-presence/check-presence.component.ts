@@ -14,8 +14,21 @@ import {FlexModule} from "@angular/flex-layout";
 import {IMqttMessage, MqttService} from "ngx-mqtt";
 import {Subscription} from "rxjs";
 
-export interface StudentDto { id:string, name:string }
-export interface SessionDto {  id:string; teacherName:string; teacherImage:string; className:string; classImage:string;programTitle:string;levelName:string; }
+export interface StudentDto {
+  id: string,
+  name: string
+}
+
+export interface SessionDto {
+  id: string;
+  teacherName: string;
+  teacherImage: string;
+  className: string;
+  classImage: string;
+  programTitle: string;
+  levelName: string;
+}
+
 @Component({
   selector: 'ec-check-presence',
   standalone: true,
@@ -23,7 +36,7 @@ export interface SessionDto {  id:string; teacherName:string; teacherImage:strin
   templateUrl: './check-presence.component.html',
   styleUrls: ['./check-presence.component.scss']
 })
-export class CheckPresenceComponent implements OnInit,OnDestroy {
+export class CheckPresenceComponent implements OnInit, OnDestroy {
   isLoading: boolean = false;
   isCheckSuccess: boolean = false;
   students: StudentDto[] = [];
@@ -31,6 +44,7 @@ export class CheckPresenceComponent implements OnInit,OnDestroy {
   student!: StudentDto;
   session!: SessionDto;
   private subscription: Subscription;
+
   constructor(
     private snackBar: MatSnackBar,
     private sessionService: ProgramSessionService,
@@ -51,52 +65,46 @@ export class CheckPresenceComponent implements OnInit,OnDestroy {
     this.loadSession();
     this.loadStudent();
   }
+
   public ngOnDestroy() {
     this.subscription.unsubscribe();
   }
-  checkStudent(studentId:string){
+
+  checkStudent(studentId: string) {
     if (!this.sessionId)
       return;
     this.isLoading = true;
-    this.sessionService.checkStudent(this.sessionId,studentId).subscribe({
-      next: () =>{
+    this.sessionService.checkStudent(this.sessionId, studentId).subscribe({
+      next: () => {
         this.isCheckSuccess = true;
         this._mqttService.unsafePublish(`highup/presence/${this.sessionId}`, 'true', {qos: 1, retain: true});
       },
       error: err => {
         this.isLoading = false;
-        console.error('erreur checkStudent',err);
+        console.error('erreur checkStudent', err);
       },
       complete: () => this.isLoading = false
     })
   }
+
   loadSession() {
     if (!this.sessionId)
       return;
     this.isLoading = true;
     this.sessionService.getSession(this.sessionId).subscribe({
-      next: session =>{
-        this.session = session;
-      },
-      error: err => {
-        this.isLoading = false;
-        console.error('erreur loadSession',err);
-      },
+      next: session => this.session = session,
+      error: () => this.isLoading = false,
       complete: () => this.isLoading = false
     })
   }
+
   loadStudent() {
     if (!this.sessionId)
       return;
     this.isLoading = true;
     this.sessionService.getStudentsNotCheck(this.sessionId).subscribe({
-      next: students =>{
-        this.students = students;
-      },
-      error: err => {
-        this.isLoading = false;
-        console.error('erreur loadStudent',err);
-      },
+      next: students => this.students = students,
+      error: () => this.isLoading = false,
       complete: () => this.isLoading = false
     })
   }

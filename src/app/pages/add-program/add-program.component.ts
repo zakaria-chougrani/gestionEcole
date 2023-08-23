@@ -81,6 +81,7 @@ export class AddProgramComponent implements OnInit {
         next: (page) => {
           this.classes = page.content;
         },
+        error: () => this.isLoading = false,
         complete: () => this.isLoading = false
       });
   }
@@ -106,12 +107,15 @@ export class AddProgramComponent implements OnInit {
         next: (page) => {
           this.teachers = page.content;
         },
+        error: () => this.isLoading = false,
         complete: () => this.isLoading = false
       });
   }
+
   get sessionControls() {
     return this.programForm.get('sessions') as FormArray;
   }
+
   addSession() {
     const sessionGroup = this.formBuilder.group({
       day: [null, Validators.required],
@@ -120,9 +124,11 @@ export class AddProgramComponent implements OnInit {
     });
     this.sessionControls.push(sessionGroup);
   }
+
   removeSession(index: number) {
     this.sessionControls.removeAt(index);
   }
+
   onSubmit() {
     if (this.programForm.invalid) {
       alert('incorrect form');
@@ -135,7 +141,7 @@ export class AddProgramComponent implements OnInit {
         this.programService.triggerRefreshProgram();
         this.onCancel();
       },
-      error: err => console.log(err),
+      error: () => this.isLoading = false,
       complete: () => this.isLoading = false
     })
   }
@@ -147,9 +153,5 @@ export class AddProgramComponent implements OnInit {
   displayTeacherFn(teacher: ContactInfo): string {
     return teacher && teacher.lastName && teacher.firstName ? teacher.lastName.toUpperCase() + ' ' + teacher.firstName.toLowerCase() : '';
   }
-  displayClassFn(schoolClass: SchoolClass): boolean {
-    console.log(schoolClass.id );
-    console.log(this.data);
-    return schoolClass.id == this.data.classLevel.schoolClass.id;
-  }
+
 }

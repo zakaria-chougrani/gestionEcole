@@ -24,7 +24,7 @@ import {FonSizeUtilsService} from "../../_shared/utils/fon-size-utils.service";
   templateUrl: './classe-levels.component.html',
   styleUrls: ['./classe-levels.component.scss']
 })
-export class ClasseLevelsComponent implements OnInit{
+export class ClasseLevelsComponent implements OnInit {
   levels: Level[] = [];
   totalLevels = 0;
   pageSize = 4;
@@ -32,22 +32,24 @@ export class ClasseLevelsComponent implements OnInit{
   pageSizeOptions: number[] = [4, 8, 12, 25, 50];
   isLoading: boolean = false;
   classDto!: SchoolClass;
+
   constructor(
     private dialog: MatDialog,
     private schoolClassService: SchoolClassService,
     private classLevelService: ClassLevelService,
     public fonSizeUtilsService: FonSizeUtilsService,
     public colorUtilsService: ColorUtilsService,
-    private router:Router) {
+    private router: Router) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation && navigation.extras && navigation.extras.state && navigation.extras.state['classDto']) {
       this.classDto = navigation.extras.state['classDto'];
-    }else{
+    } else {
       router.navigateByUrl('classes').then();
     }
   }
+
   ngOnInit(): void {
-    if (this.classDto && this.classDto.id){
+    if (this.classDto && this.classDto.id) {
       this.loadLevels();
       this.schoolClassService.refreshLevels.subscribe(() => {
         this.loadLevels();
@@ -56,10 +58,14 @@ export class ClasseLevelsComponent implements OnInit{
   }
 
   loadLevels(): void {
-    this.schoolClassService.getLevelsBySchoolClass(this.classDto.id,this.currentPage, this.pageSize)
-      .subscribe((page) => {
-        this.levels = page.content;
-        this.totalLevels = page.totalElements;
+    this.schoolClassService.getLevelsBySchoolClass(this.classDto.id, this.currentPage, this.pageSize)
+      .subscribe({
+        next: (page) => {
+          this.levels = page.content;
+          this.totalLevels = page.totalElements;
+        },
+        error: () => this.isLoading = false,
+        complete: () => this.isLoading = false
       });
   }
 
@@ -72,7 +78,7 @@ export class ClasseLevelsComponent implements OnInit{
   openAddLevelDialog(levelDto: {}) {
     this.dialog.open(AddLevelComponent, {
       width: '600px',
-      data: {levelDto:levelDto,classDto:this.classDto},
+      data: {levelDto: levelDto, classDto: this.classDto},
     });
   }
 
@@ -92,12 +98,8 @@ export class ClasseLevelsComponent implements OnInit{
             this.schoolClassService.triggerRefreshLevels();
             Swal.fire('Success', 'Level deleted successfully', 'success').then();
           },
-          error: err => {
-            console.log(err);
-          },
-          complete: () => {
-            this.isLoading = false;
-          }
+          error: () => this.isLoading = false,
+          complete: () => this.isLoading = false
         });
       }
     });

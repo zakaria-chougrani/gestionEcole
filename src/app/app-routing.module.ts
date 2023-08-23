@@ -47,6 +47,11 @@ const routes: Routes = [
         path: 'sessions/:id',
         loadComponent: () => import('./pages/session-program/session-program.component').then(m => m.SessionProgramComponent)
       }
+      ,
+      {
+        path: 'history-sessions/:id',
+        loadComponent: () => import('./pages/history-sessions/history-sessions.component').then(m => m.HistorySessionsComponent)
+      }
     ],
   },
   {

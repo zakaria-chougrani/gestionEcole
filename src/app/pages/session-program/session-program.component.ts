@@ -21,6 +21,8 @@ import Swal from "sweetalert2";
 import {QRCodeModule} from "angularx-qrcode";
 import {IMqttMessage, MqttService} from "ngx-mqtt";
 import {Subscription} from "rxjs";
+import {Session} from "../../_shared/models/session";
+import {StudentPresence} from "../../_shared/models/student-presence";
 
 
 
@@ -88,10 +90,7 @@ export class SessionProgramComponent implements OnInit,OnDestroy{
         this.sessionService.triggerRefreshProgramSession();
         this._mqttService.unsafePublish(`highup/presence/${this.session.id}`, 'true', {qos: 1, retain: true});
       },
-      error: err => {
-        this.isLoading = false;
-        console.error('erreur checkStudent',err);
-      },
+      error: () => this.isLoading = false,
       complete: () => this.isLoading = false
     })
   }
@@ -112,10 +111,7 @@ export class SessionProgramComponent implements OnInit,OnDestroy{
             this.sessionService.triggerRefreshProgramSession();
             this._mqttService.unsafePublish(`highup/presence/${this.session.id}`, 'true', {qos: 1, retain: true});
           },
-          error: err => {
-            this.isLoading = false;
-            console.error('erreur deactivateSession',err);
-          },
+          error: () => this.isLoading = false,
           complete: () => this.isLoading = false
         })
       }
@@ -141,10 +137,7 @@ export class SessionProgramComponent implements OnInit,OnDestroy{
           this.noActiveSession = false;
         }
       },
-      error: err => {
-        this.isLoading = false;
-        console.error('erreur loadLastSessionActive',err);
-      },
+      error: () => this.isLoading = false,
       complete: () => this.isLoading = false
     })
   }
@@ -154,13 +147,8 @@ export class SessionProgramComponent implements OnInit,OnDestroy{
       return;
     this.isLoading = true;
     this.programService.getProgramById(this.programId || '').subscribe({
-      next: program =>{
-        this.program = program;
-      },
-      error: err => {
-        this.isLoading = false;
-        console.error('erreur getProgramById',err);
-      },
+      next: program =>this.program = program,
+      error: () => this.isLoading = false,
       complete: () => this.isLoading = false
     });
   }
@@ -170,7 +158,14 @@ export class SessionProgramComponent implements OnInit,OnDestroy{
       return studentPre.id === s1.student.id && s1.present;
     });
   }
-
+  getCountStudentPresent(students:StudentPresence[]):number{
+    let cpt = 0;
+    students.forEach(value => {
+      if (value.present)
+        cpt++;
+    })
+    return cpt;
+  }
   getCurrentUrl(): string {
     return `${window.location.protocol}${window.location.host}/check-presence/${this.session ? this.session.id : ''}`;
   }

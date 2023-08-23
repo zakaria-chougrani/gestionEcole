@@ -54,7 +54,7 @@
 }
 .title-body{
   color: white;
-  font-size: 32px;
+  font-size: 1.4rem;
   font-weight: bold;
   display: flex!important;
   justify-content: center;
@@ -62,19 +62,19 @@
   text-align: center;
 }
 #img-success{
-  width: 250px;
-  height: 250px;
+  width: 18rem;
+  height: 18rem;
 }
 .box-info{
   display: flex;
   align-items: center;
   .avatar {
-    width: 50px;
-    height: 50px;
+    width: 3rem;
+    height: 3rem;
     border-radius: 50%;
   }
   div{
-    margin: 0 10px;
+    margin: 0 .7rem;
     p{
       margin: 0;
     }

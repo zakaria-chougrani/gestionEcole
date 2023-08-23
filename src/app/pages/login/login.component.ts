@@ -24,6 +24,7 @@ export class LoginComponent implements OnInit {
     'username': '',
     'password': ''
   };
+  message!: string;
 
   constructor(
     private authService: AuthService,
@@ -52,8 +53,8 @@ export class LoginComponent implements OnInit {
           this.authService.saveToken(token);
           this.router.navigate(['/']).then();
         },
-        error: err => {
-          // console.error('Login failed', err);
+        error: () => {
+          this.message = "Invalid username or password.";
         }
       });
 

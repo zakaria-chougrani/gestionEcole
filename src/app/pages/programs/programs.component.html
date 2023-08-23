@@ -84,7 +84,7 @@
           <div class="box-info mg-md-bt">
             <mat-icon>groups</mat-icon>
             <div>
-              <p class="info">Count of Students : {{program.students.length}}</p>
+              <p class="info">Count of Students : {{program.students ? program.students.length : 0}}</p>
             </div>
           </div>
           <div class="box-sessions" *ngFor="let session of program.sessions; let i = index">
@@ -99,20 +99,22 @@
         </div>
         <div class="right-sid">
           <hr>
-          <button mat-mini-fab color="primary" style="background-color: green;margin-right: 5px;" (click)="navigateToSessions(program)" matTooltip="create session and check presences">
+          <button mat-mini-fab color="primary" style="background-color: green;margin-right: 5px;"
+                  (click)="navigateToSessions(program)" matTooltip="create session and check presences">
             <mat-icon>fact_check</mat-icon>
           </button>
-          <button mat-mini-fab color="primary" (click)="navigateToHistoryOfSession(program)" matTooltip="history of sessions">
+          <button mat-mini-fab color="primary" (click)="navigateToHistoryOfSession(program)"
+                  matTooltip="history of sessions">
             <mat-icon>history</mat-icon>
           </button>
           <hr>
-          <button mat-mini-fab color="primary" (click)="navigateToStudents(program)" matTooltip="history of sessions">
+          <button mat-mini-fab color="primary" (click)="navigateToStudents(program)" matTooltip="list of students">
             <mat-icon>groups</mat-icon>
           </button>
-<!--          <hr>-->
-<!--          <button mat-mini-fab color="accent" (click)="openAddProgramDialog(program)">-->
-<!--            <mat-icon>edit</mat-icon>-->
-<!--          </button>-->
+          <!--          <hr>-->
+          <!--          <button mat-mini-fab color="accent" (click)="openAddProgramDialog(program)">-->
+          <!--            <mat-icon>edit</mat-icon>-->
+          <!--          </button>-->
           <hr>
           <button mat-mini-fab color="warn" (click)="deleteItem(program.id)" matTooltip="delete of program">
             <mat-icon>delete_outline</mat-icon>

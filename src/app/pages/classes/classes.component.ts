@@ -40,9 +40,13 @@ export class ClassesComponent implements OnInit {
 
   loadClasses(): void {
     this.schoolClassService.getAllClasses(this.currentPage, this.pageSize)
-      .subscribe((page) => {
-        this.classes = page.content;
-        this.totalContacts = page.totalElements;
+      .subscribe({
+        next: (page) => {
+          this.classes = page.content;
+          this.totalContacts = page.totalElements;
+        },
+        error: () => this.isLoading = false,
+        complete: () => this.isLoading = false
       });
   }
 
