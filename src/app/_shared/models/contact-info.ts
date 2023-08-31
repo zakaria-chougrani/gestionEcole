@@ -1,3 +1,5 @@
+import {GenderEnum, StatusEnum, TaskEnum, TypeContractEnum} from "../enum";
+
 export interface ContactInfo {
   id?:string;
   imageByte?:string;
@@ -12,26 +14,11 @@ export interface ContactInfo {
   contractStartDate?: Date;
   contractEndDate?: Date;
   typeOfContract?: TypeContractEnum;
-  task?: taskEnum;
+  task?: TaskEnum;
   specialties?: string[];
   startOfInsurance?: Date;
   expirationOfInsurance?: Date;
-  status?: boolean;
+  status?:StatusEnum;
   createdAt?: Date;
   updatedAt?: Date;
-}
-export enum GenderEnum {
-  Male = 'male',
-  Female = 'female'
-}
-export enum taskEnum {
-  Staff = 'staff',
-  trainee_staff = 'trainee_staff',
-  Teacher = 'teacher',
-  Student = 'student',
-  trainee_student = 'trainee_student'
-}
-export enum TypeContractEnum{
-  CDI,
-  CDD
 }

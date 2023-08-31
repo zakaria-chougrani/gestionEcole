@@ -16,27 +16,31 @@ import {ContactService} from "../../_shared/services/contact.service";
 import {FormsModule} from "@angular/forms";
 import Swal from "sweetalert2";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {GenderEnum, StatusEnum} from "../../_shared/enum";
+import {COMMA, ENTER} from "@angular/cdk/keycodes";
+import {MatSelectModule} from "@angular/material/select";
 
 
 @Component({
   selector: 'ec-contact',
   standalone: true,
-  imports: [CommonModule, MatDividerModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatCheckboxModule, MatChipsModule, FlexModule, NgOptimizedImage, EditContactComponent, MatDialogModule, MatPaginatorModule, FormsModule, MatProgressBarModule],
+  imports: [CommonModule, MatDividerModule, MatFormFieldModule, MatInputModule, MatIconModule, MatButtonModule, MatCheckboxModule, MatChipsModule, FlexModule, NgOptimizedImage, EditContactComponent, MatDialogModule, MatPaginatorModule, FormsModule, MatProgressBarModule, MatSelectModule],
   templateUrl: './contact.component.html',
   styleUrls: ['./contact.component.scss']
 })
 export class ContactComponent implements OnInit {
   isLoading: boolean = false;
-
-  constructor(private dialog: MatDialog, private contactService: ContactService) {
-  }
-
   contacts: ContactInfo[] = [];
   totalContacts = 0;
   pageSize = 5;
   currentPage = 0;
   pageSizeOptions: number[] = [5, 10, 25, 50];
   searchValue = '';
+  statusList: StatusEnum[] = [StatusEnum.ACTIVE, StatusEnum.INACTIVE, StatusEnum.DELL];
+  statusOptions: StatusEnum = StatusEnum.ACTIVE;
+
+  constructor(private dialog: MatDialog, private contactService: ContactService) {
+  }
 
   ngOnInit(): void {
     this.loadContacts();
@@ -47,7 +51,7 @@ export class ContactComponent implements OnInit {
 
   loadContacts(): void {
     this.isLoading = true;
-    this.contactService.getAllContacts(this.currentPage, this.pageSize, this.searchValue)
+    this.contactService.getAllContacts(this.currentPage, this.pageSize, this.searchValue,this.statusOptions.toString())
       .subscribe({
         next: (page) => {
           this.contacts = page.content;
@@ -100,4 +104,6 @@ export class ContactComponent implements OnInit {
       }
     });
   }
+
+  protected readonly StatusEnum = StatusEnum;
 }

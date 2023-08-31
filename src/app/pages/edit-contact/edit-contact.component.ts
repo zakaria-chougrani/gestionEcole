@@ -1,6 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ContactInfo, GenderEnum} from "../../_shared/models/contact-info";
+import {ContactInfo} from "../../_shared/models";
 import {FlexModule} from "@angular/flex-layout";
 import {MatButtonModule} from "@angular/material/button";
 import {MatDividerModule} from "@angular/material/divider";
@@ -9,12 +9,14 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatInputModule} from "@angular/material/input";
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatSelectModule} from "@angular/material/select";
-import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {ContactService} from "../../_shared/services/contact.service";
 import {MatChipInputEvent, MatChipsModule} from "@angular/material/chips";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
+import {GenderEnum} from "../../_shared/enum";
+import {ImageCropperComponent} from "../../core/image-cropper/image-cropper.component";
 
 @Component({
   selector: 'ec-edit-contact',
@@ -28,12 +30,12 @@ export class EditContactComponent {
   isLoading: boolean = false;
   Gender = GenderEnum;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
-  selectedImage: File | null = null;
   selectedFileDataURL: string | null = null;
 
   constructor(
     private formBuilder: FormBuilder,
     private dialogRef: MatDialogRef<EditContactComponent>,
+    private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: ContactInfo,
     private contactService: ContactService
   ) {
@@ -61,24 +63,24 @@ export class EditContactComponent {
     }
   }
 
-  onImageChange(event: any) {
-    if (event.target.files && event.target.files.length) {
-      this.selectedImage = event.target.files[0];
-      if (this.selectedImage) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          this.selectedFileDataURL = reader.result as string;
-          this.contactForm.patchValue({imageByte: this.selectedFileDataURL});
+  onImageChange() {
+    const dialogRef = this.dialog.open(ImageCropperComponent, {
+      // width: '60rem',
+      // height: '30rem',
+      panelClass:'background-dialog-copper',
+      disableClose: true
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+          const reader = new FileReader();
+          reader.onload = () => {
+            this.selectedFileDataURL = reader.result as string;
+            this.contactForm.patchValue({imageByte: this.selectedFileDataURL});
 
-        };
-        reader.readAsDataURL(this.selectedImage);
-
-      } else {
-        this.selectedFileDataURL = null;
-        this.contactForm.patchValue({imageByte: null});
-
+          };
+          reader.readAsDataURL(result);
       }
-    }
+    });
   }
 
   onSubmit() {

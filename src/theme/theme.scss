@@ -99,7 +99,6 @@ body {
 .full {
   width: 100%;
 }
-
 .mg-md-bt {
   margin-bottom: 1.4rem;
 }
@@ -170,7 +169,9 @@ body {
   }
 
 }
-
+.background-dialog-copper{
+  background-color: #282828;
+}
 @keyframes cssAnimation {
   to {
     opacity: 0;

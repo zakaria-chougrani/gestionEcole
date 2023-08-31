@@ -10,7 +10,6 @@ import {MatInputModule} from "@angular/material/input";
 import {MatPaginator, MatPaginatorModule, PageEvent} from "@angular/material/paginator";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {ContactInfo} from "../../_shared/models/contact-info";
 import {Program} from "../../_shared/models/program";
 import {MatTableDataSource, MatTableModule} from "@angular/material/table";
 import {MatSort, MatSortModule} from "@angular/material/sort";
@@ -36,7 +35,7 @@ export class HistorySessionsComponent implements OnInit{
   dataSource!: MatTableDataSource<Program>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort) sort!: MatSort;
   constructor() {
 
   }

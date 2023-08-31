@@ -4,6 +4,7 @@ background-repeat: no-repeat;
 background-position: center;
 background-size: cover;">
   <div fxLayout="column"  fxLayoutAlign="center center">
+
     <mat-card class="card-container">
       <mat-card-title class="card-title">
         <img [ngSrc]="'./assets/highUp.jpg'" [width]="36" alt="logo" [height]="36" priority>
@@ -31,6 +32,11 @@ background-size: cover;">
       <mat-card-actions>
         <a class="redirect" [routerLink]="['/sigup']">Register an account</a>
       </mat-card-actions>
+      <mat-card-footer>
+        <mat-progress-bar color="warn" mode="indeterminate" *ngIf="isLoading" style="width: 100%"></mat-progress-bar>
+
+      </mat-card-footer>
+
     </mat-card>
 
   </div>

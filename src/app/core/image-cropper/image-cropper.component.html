@@ -1,0 +1,22 @@
+<div id="container-traitement" class="background-dialog-copper">
+  <div id="img-event" *ngIf="this.imageChangeEvent">
+    <image-cropper
+      [imageChangedEvent]="imageChangeEvent"
+      [maintainAspectRatio]="true"
+      [aspectRatio]="8 / 10"
+      [resizeToWidth]="150"
+      [cropperMinWidth]="50"
+      format="jpeg"
+      (imageCropped)="imageCropped($event)"
+    ></image-cropper>
+  </div>
+
+  <div id="croppedImage">
+    <input type="file" (change)="handleImageChange($event)" accept="image/*" />
+
+    <div id="action">
+      <button type="button" mat-raised-button color="primary" (click)="valideBtn()"> Ok </button>
+      <button type="button" mat-stroked-button  color="accent" (click)="close()"> Cancel </button>
+    </div>
+  </div>
+</div>

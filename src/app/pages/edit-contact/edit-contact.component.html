@@ -9,7 +9,6 @@
 </div>
 <div mat-dialog-content>
   <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
-    <label for="imageInput">Image:</label>
     <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center">
       <div fxFlex="40">
         <img class="avatar" [src]="contactForm.controls['imageByte'].value?contactForm.controls['imageByte'].value:
@@ -26,7 +25,7 @@
         <h3 class="mat-body-2">{{contactForm.controls['task'].value |uppercase}}</h3>
       </div>
     </div>
-    <input type="file" id="imageInput" (change)="onImageChange($event)" accept="image/*" class="mg-md-bt">
+    <button type="button" mat-raised-button color="primary" (click)="onImageChange()"> Profile Image </button>
 
     <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center" class="mg-md-bt">
       <mat-form-field class="full" subscriptSizing="dynamic">

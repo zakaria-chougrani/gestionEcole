@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {ContactInfo} from "../models/contact-info";
+import {ContactInfo} from "../models";
 import {Observable, Subject} from "rxjs";
 import {environment} from "../../../environments/environment";
-import {Page} from "../models/page";
+import {Page} from "../models";
+import {StatusEnum} from "../enum";
 
 @Injectable({
   providedIn: 'root'
@@ -20,11 +21,12 @@ export class ContactService {
     this.refreshContacts$.next();
   }
   constructor(private http: HttpClient) { }
-  getAllContacts(pageIndex: number, pageSize: number, searchValue: string): Observable<Page<ContactInfo>> {
+  getAllContacts(pageIndex: number, pageSize: number, searchValue: string,status:string): Observable<Page<ContactInfo>> {
     const params = new HttpParams()
       .set('page', pageIndex.toString())
       .set('size', pageSize.toString())
-      .set('search', searchValue);
+      .set('search', searchValue)
+      .set('status', status);
 
     return this.http.get<Page<ContactInfo>>(this.apiUrl, { params });
   }

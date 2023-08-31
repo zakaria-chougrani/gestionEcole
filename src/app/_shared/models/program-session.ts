@@ -1,5 +1,6 @@
 import {Program} from "./program";
 import {StudentPresence} from "./student-presence";
+import {StatusEnum} from "../enum";
 
 export interface ProgramSession {
   id:string;
@@ -9,7 +10,4 @@ export interface ProgramSession {
   createdAt?: Date;
   updatedAt?: Date;
 }
-export enum StatusEnum{
-  ACTIVE,
-  INACTIVE
-}
+

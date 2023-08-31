@@ -10,16 +10,26 @@
       </div>
       <mat-divider></mat-divider>
       <br>
-      <div fxFlex="10" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="space-between stretch">
-        <div class="full">
-          <mat-form-field class="full">
+      <div fxFlex="10" style="margin-bottom: 4rem;" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="space-between stretch">
+        <div style="width: 35%;margin: 0 2rem;">
+          <mat-form-field class="full" subscriptSizing="dynamic">
             <input matInput [(ngModel)]="searchValue" name="search" (input)="search()" placeholder="Search contacts">
             <mat-icon matSuffix>search</mat-icon>
           </mat-form-field>
         </div>
-        <div fxFlex="30" fxLayout="row" fxLayoutAlign="center center">
+        <div style="width: 15%;margin: 0 2rem;">
+          <mat-form-field class="full" subscriptSizing="dynamic">
+            <mat-label>Status</mat-label>
+            <mat-select [(ngModel)]="statusOptions" (ngModelChange)="loadContacts()">
+              <mat-option *ngFor="let option of statusList" [value]="option">{{ option }}</mat-option>
+              <mat-option [value]="">All Status</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div style="width: 50%;text-align: center;">
           <button mat-raised-button color="primary" (click)="openAddContactDialog({})">ADD NEW CONTACT</button>
         </div>
+
       </div>
       <br>
       <div class="contact-list" fxLayout.lt-lg="column" fxLayout="row" *ngFor="let contactInfo of contacts"
@@ -38,8 +48,11 @@
             Gender: {{contactInfo?.gender }}
             {{contactInfo?.scholarLevel ? '| scholar Level:' + contactInfo?.scholarLevel : null}}
           </p>
-          <p class="mat-body-1" [ngStyle]="{'color': contactInfo?.status ? 'green' : 'red'}">
-            {{contactInfo?.status ? 'Active Account' : 'Inactive Account'}}
+          <p class="mat-body-1" [ngStyle]="{'color': contactInfo?.status == StatusEnum.ACTIVE ? 'green' : 'red'}">
+            {{contactInfo?.status === StatusEnum.ACTIVE ? 'Active Account' :
+            contactInfo?.status === StatusEnum.INACTIVE?'Inactive Account':
+            contactInfo?.status === StatusEnum.DELL?'Deleted Account':'OTHER'
+            }}
           </p>
         </div>
         <div fxFlex="10" fxLayoutAlign="start center">

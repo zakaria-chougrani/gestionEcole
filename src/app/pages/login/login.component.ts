@@ -10,15 +10,18 @@ import {MatButtonModule} from "@angular/material/button";
 import {AuthService} from "../../_shared/services/auth.service";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 
 @Component({
   selector: 'ec-login',
   standalone: true,
-  imports: [CommonModule, MatCardModule, FlexModule, MatFormFieldModule, RouterLink, ReactiveFormsModule, MatInputModule, MatButtonModule, NgOptimizedImage],
+    imports: [CommonModule, MatCardModule, FlexModule, MatFormFieldModule, RouterLink, ReactiveFormsModule, MatInputModule, MatButtonModule, NgOptimizedImage, MatProgressBarModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+  isLoading: boolean = false;
+
   userForm!: FormGroup;
   formErrors = {
     'username': '',
@@ -46,6 +49,7 @@ export class LoginComponent implements OnInit {
   login() {
     if (this.userForm.invalid)
       return;
+    this.isLoading = true;
     this.http.post<any>(environment.apiUrl+'v1/auth/signin', this.userForm.value)
       .subscribe({
         next: response => {
@@ -55,7 +59,9 @@ export class LoginComponent implements OnInit {
         },
         error: () => {
           this.message = "Invalid username or password.";
-        }
+          this.isLoading = false;
+        },
+        complete: () => this.isLoading = false
       });
 
   }
