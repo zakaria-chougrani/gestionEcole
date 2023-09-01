@@ -58,26 +58,23 @@
   }
   div{
     margin: 0 .7rem;
-    p{
-      margin: 0;
-    }
     .info{
-      font-size: 1.2rem;
+      font-size: 1rem;
       font-weight: bold;
     }
     .sub-info{
-      font-size: 1rem;
+      font-size: .7rem;
       font-weight: lighter;
     }
   }
 }
 .highlight-red {
-  background-color: red;
+  background-color: #fd3939;
   color: white;
 }
 
 .highlight-green {
-  background-color: green;
+  background-color: #3b883b;
   color: white;
 }
 
@@ -86,6 +83,10 @@
   display: flex;
   flex: 1;
   cursor: pointer;
+  &:hover{
+    scale: 1.1;
+    transition: all .3s;
+  }
 }
 .qrcodebox-zoomIn{
   position: fixed;

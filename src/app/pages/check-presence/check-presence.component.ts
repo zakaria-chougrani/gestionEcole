@@ -15,8 +15,9 @@ import {IMqttMessage, MqttService} from "ngx-mqtt";
 import {Subscription} from "rxjs";
 
 export interface StudentDto {
-  id: string,
-  name: string
+  id: string;
+  name: string;
+  imageByte?:string;
 }
 
 export interface SessionDto {

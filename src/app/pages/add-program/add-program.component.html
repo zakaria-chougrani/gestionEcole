@@ -1,4 +1,12 @@
 <mat-progress-bar mode="indeterminate" *ngIf="isLoading" style="width: 100%"></mat-progress-bar>
+<div mat-dialog-title style="padding: 5px">
+  <h3 class="mat-headline" fxFlex="80">{{programForm.controls['id'].value ? 'Update Program' : 'Add New Program'}}</h3>
+  <div fxLayout="row" fxLayoutAlign="end center" fxFlex="10">
+    <button mat-icon-button (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</div>
 <div mat-dialog-content>
   <form [formGroup]="programForm" (ngSubmit)="onSubmit()">
     <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center" class="mg-md-bt">

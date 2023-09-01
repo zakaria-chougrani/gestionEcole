@@ -5,6 +5,7 @@ import {Observable, Subject} from "rxjs";
 import {Page} from "../models/page";
 import {ContactInfo} from "../models/contact-info";
 import {Program} from "../models/program";
+import {StatusEnum} from "../enum";
 
 @Injectable({
   providedIn: 'root'
@@ -35,13 +36,14 @@ export class ProgramService {
   }
   constructor(private http: HttpClient) { }
 
-  getAllPrograms(pageIndex: number, pageSize: number,title:string,levelId:string,teacherId:string): Observable<Page<Program>> {
+  getAllPrograms(pageIndex: number, pageSize: number,title:string,levelId:string,teacherId:string,status:StatusEnum): Observable<Page<Program>> {
     const params = new HttpParams()
       .set('page', pageIndex.toString())
       .set('size', pageSize.toString())
       .set('title', title)
       .set('levelId', levelId)
       .set('teacherId', teacherId)
+      .set('status', status)
     ;
 
     return this.http.get<Page<Program>>(this.apiUrl, { params });
@@ -50,9 +52,11 @@ export class ProgramService {
     return this.http.get<Program>(`${this.apiUrl}/${programId}`);
   }
   deleteProgram(id: string): Observable<string> {
-    return this.http.delete<string>(`${this.apiUrl}/${id}`);
+    return this.http.post<string>(`${this.apiUrl}/delete/${id}`,null);
   }
-
+  recoverProgram(id: string): Observable<string> {
+    return this.http.post<string>(`${this.apiUrl}/recover/${id}`,null);
+  }
   addProgram(program: Program): Observable<Program> {
     return this.http.post<Program>(this.apiUrl, program);
   }

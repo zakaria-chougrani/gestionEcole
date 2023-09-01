@@ -11,10 +11,11 @@
     </h1>
     <p class="title desktop-only">{{session && !isCheckSuccess?'Welcome to the HighUp Academy Portal Of Presence':'Thank you for registering your presence'}}</p>
   </mat-toolbar>
+  <mat-progress-bar color="warn" mode="indeterminate" *ngIf="isLoading" style="width: 100%"></mat-progress-bar>
+
   <div class="content-container">
     <p class="title-body mobile-only">{{session && !isCheckSuccess?'Welcome to the HighUp Academy Portal Of Presence':'Thank you for registering your presence'}}</p>
-    <div class="container-card" *ngIf="session && !isCheckSuccess else checkSuccess">
-      <mat-progress-bar color="warn" mode="indeterminate" *ngIf="isLoading" style="width: 100%"></mat-progress-bar>
+    <div class="container-card" *ngIf="!isLoading && session && !isCheckSuccess else checkSuccess">
       <div class="pres-card black">
         <h2>Class:</h2>
         <div class="box-info mg-md-bt">
@@ -39,7 +40,13 @@
         <mat-form-field appearance="fill" class="form-group">
           <mat-label>Select your Name:</mat-label>
           <mat-select [(ngModel)]="student">
-            <mat-option *ngFor="let st of students" [value]="st">{{ st.name | titlecase }}</mat-option>
+            <mat-option *ngFor="let st of students" [value]="st">
+              <img class="option-img"
+                   [src]="st.imageByte?st.imageByte:'assets/images/avatars/students.png'"
+                   width="30" height="30" alt="task">
+              <span
+                class="studentSearch">{{ st.name | uppercase }}</span>
+            </mat-option>
           </mat-select>
         </mat-form-field>
         <button mat-raised-button color="primary"

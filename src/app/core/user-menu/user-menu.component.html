@@ -31,11 +31,11 @@
 
 <!--        <mat-divider></mat-divider>-->
 
-        <mat-list-item>
-          <a matLine (click)="logout()">Logout</a>
-          <button mat-icon-button (click)="logout()">
+        <mat-list-item (click)="logout()">
+          <p style="display: flex;align-items: center">
             <mat-icon>exit_to_app</mat-icon>
-          </button>
+            Logout
+          </p>
         </mat-list-item>
       </mat-nav-list>
     </div>

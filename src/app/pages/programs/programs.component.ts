@@ -21,11 +21,14 @@ import {ContactInfo} from "../../_shared/models/contact-info";
 import {ContactService} from "../../_shared/services/contact.service";
 import {Router} from "@angular/router";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {StatusEnum} from "../../_shared/enum";
+import {MatSelectModule} from "@angular/material/select";
+import {MatExpansionModule} from "@angular/material/expansion";
 
 @Component({
   selector: 'ec-programs',
   standalone: true,
-  imports: [CommonModule, FlexModule, MatButtonModule, MatDividerModule, MatIconModule, MatPaginatorModule, MatProgressBarModule, MatDialogModule, MatCardModule, FormsModule, MatAutocompleteModule, MatFormFieldModule, MatInputModule, MatOptionModule, MatTooltipModule],
+  imports: [CommonModule, FlexModule, MatButtonModule, MatDividerModule, MatIconModule, MatPaginatorModule, MatProgressBarModule, MatDialogModule, MatCardModule, FormsModule, MatAutocompleteModule, MatFormFieldModule, MatInputModule, MatOptionModule, MatTooltipModule, MatSelectModule, MatExpansionModule],
   templateUrl: './programs.component.html',
   styleUrls: ['./programs.component.scss']
 })
@@ -40,7 +43,8 @@ export class ProgramsComponent implements OnInit {
   levelId!: string;
   title!: string;
   teachers: ContactInfo[] = [];
-
+  statusList: StatusEnum[] = [StatusEnum.ACTIVE, StatusEnum.DELL,StatusEnum.ALL];
+  statusOption: StatusEnum = StatusEnum.ACTIVE;
   constructor(
     private programService: ProgramService,
     private contactService: ContactService,
@@ -59,7 +63,7 @@ export class ProgramsComponent implements OnInit {
   loadPrograms(): void {
     this.isLoading = true;
     let teacher = (this.teacherSearch as ContactInfo).id;
-    this.programService.getAllPrograms(this.currentPage, this.pageSize, this.title || '', this.levelId, teacher || '')
+    this.programService.getAllPrograms(this.currentPage, this.pageSize, this.title || '', this.levelId, teacher || '',this.statusOption)
       .subscribe({
         next: (page) => {
           this.programs = page.content;
@@ -110,7 +114,32 @@ export class ProgramsComponent implements OnInit {
       }
     });
   }
-
+  recoverItem(id: string) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won\'t be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, recover it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        this.programService.recoverProgram(id).subscribe({
+          next: () => {
+            this.programService.triggerRefreshProgram();
+            Swal.fire('Success', 'Class recover successfully', 'success').then();
+          },
+          error: err => {
+            console.log(err);
+          },
+          complete: () => {
+            this.isLoading = false;
+          }
+        });
+      }
+    });
+  }
   loadTeachers(): void {
     this.isLoading = true;
     this.teachers = [];
@@ -144,4 +173,6 @@ export class ProgramsComponent implements OnInit {
     this.router.navigateByUrl(`/history-sessions/${program.id}`).then();
 
   }
+
+  protected readonly StatusEnum = StatusEnum;
 }

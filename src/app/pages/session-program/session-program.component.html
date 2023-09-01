@@ -1,8 +1,7 @@
-<div fxLayout="column">
-  <div class="service-header" fxLayout="column" fxLayoutAlign="center stretch">
-    <div fxFlex class="content" fxLayout.lt-sm="column" style="padding: 20px" fxLayout="row"
-         fxLayoutAlign="space-around center">
-      <div fxFlex="50" fxFlex.lt-sm="100" fxLayout="column" fxLayoutAlign="start center" class="box" *ngIf="program">
+<div class="service-header">
+  <div class="content row">
+    <div class="col-4 justify-content-center">
+      <div class="box" *ngIf="program">
         <div class="box-title mg-md-bt">
           <p>{{program.title | uppercase}}</p>
           <p>{{program.schoolYear}}</p>
@@ -24,17 +23,21 @@
         </div>
         <h4 *ngIf="!noActiveSession && session"> Students In Class:
           <span *ngIf="session.students else noStudent">
-            {{program.students?(getCountStudentPresent(session.students)/program.students.length*100):0 | number:'1.0-2'}}%
-            ({{getCountStudentPresent(session.students)}}/{{program.students?program.students.length:0}})
+            {{(program.students ? (getCountStudentPresent(session.students) / program.students.length * 100) : 0) | number:'1.0-2'}}
+            %
+            ({{getCountStudentPresent(session.students)}}/{{program.students ? program.students.length : 0}})
           </span>
           <ng-template #noStudent>
-            0% (0/{{program.students?program.students.length:0}})
+            0% (0/{{program.students ? program.students.length : 0}})
           </ng-template>
         </h4>
-
       </div>
-      <div fxFlex="35" fxFlex.lt-sm="100" fxLayout="row" fxLayoutAlign="center center" class="box">
-        <div class="qrcodebox"  [ngClass]="{'qrcodebox-zoomIn':zoomState}" *ngIf="!noActiveSession" (click)="toggleZoomState()">
+
+    </div>
+    <div class="col-4 justify-content-center">
+      <div class="box">
+        <div class="qrcodebox" [ngClass]="{'qrcodebox-zoomIn':zoomState}" *ngIf="!noActiveSession"
+             (click)="toggleZoomState()">
           <div class="qrcodeImage">
             <qrcode
               [qrdata]="getCurrentUrl()"
@@ -47,37 +50,37 @@
             ></qrcode>
           </div>
         </div>
-        <div>
-          <h3 class="mat-display-1">{{noActiveSession ? 'open Session' : 'close Session'}}</h3>
-          <mat-divider></mat-divider>
-          <p class="mat-body-2">
-            <button mat-raised-button [color]="noActiveSession?'warn':'accent'"
-                    (click)="noActiveSession?createSession():deactivateSession()">{{noActiveSession ? 'open' : 'close'}}</button>
-          </p>
-        </div>
       </div>
-
+    </div>
+    <div class="col-4 justify-content-center">
+      <div class="box text-center">
+        <h3 class="mat-display-1">{{noActiveSession ? 'open Session' : 'close Session'}}</h3>
+        <mat-divider></mat-divider>
+        <p class="mat-body-2 text-center">
+          <button mat-raised-button [color]="noActiveSession?'warn':'accent'"
+                  (click)="noActiveSession?createSession():deactivateSession()">{{noActiveSession ? 'open' : 'close'}}</button>
+        </p>
+      </div>
     </div>
   </div>
+</div>
 
-  <mat-progress-bar mode="indeterminate" *ngIf="isLoading" style="width: 100%"></mat-progress-bar>
-
-  <div fxLayout="column" class="student-card-content" *ngIf="!noActiveSession && session">
-    <div fxLayout="row wrap" class="student-card-container" fxLayout.lt-md="column" fxLayoutGap="20px"
-         fxLayoutAlign="center stretch">
-      <div fxFlex="25%" fxFlex.gt-sm="20%" fxFlex.gt-md="10%" fxFlex.lt-md="100" fxLayout="column"
-           fxLayoutAlign="center center" fxLayoutGap="20px"
-           class="mat-elevation-z4 student-card "
-           *ngFor="let studentPre of program.students"
-           [ngClass]="getStatusStudent(studentPre) ?  'highlight-green':'highlight-red'"
-           (click)="checkStudent(studentPre.id || '')">
-        <div class="img-box">
-          <img [src]="studentPre.imageByte?studentPre.imageByte:'assets/images/avatars/students.png'" fxFlex alt="infor"
-               height="512" width="512">
-        </div>
-        <h3 class="mat-title" fxFlex>{{studentPre.lastName|titlecase}} {{studentPre.firstName|titlecase}}</h3>
+<mat-progress-bar mode="indeterminate" *ngIf="isLoading" style="width: 100%"></mat-progress-bar>
+<div fxLayout="column" class="student-card-content" *ngIf="!noActiveSession && session">
+  <div fxLayout="row wrap" class="student-card-container" fxLayout.lt-md="column" fxLayoutGap="20px"
+       fxLayoutAlign="center stretch">
+    <div fxFlex="25%" fxFlex.gt-sm="20%" fxFlex.gt-md="10%" fxFlex.lt-md="100" fxLayout="column"
+         fxLayoutAlign="center center" fxLayoutGap="20px"
+         class="mat-elevation-z4 student-card "
+         *ngFor="let studentPre of program.students"
+         [ngClass]="getStatusStudent(studentPre) ?  'highlight-green':'highlight-red'"
+         (click)="checkStudent(studentPre.id || '')">
+      <div class="img-box">
+        <img [src]="studentPre.imageByte?studentPre.imageByte:'assets/images/avatars/students.png'" fxFlex alt="infor"
+             height="512" width="512">
       </div>
-      <h1 *ngIf="!program.students || !program.students.length">No student assign to this program ! </h1>
+      <h3 class="mat-title" fxFlex>{{studentPre.lastName|titlecase}} {{studentPre.firstName|titlecase}}</h3>
     </div>
+    <h1 *ngIf="!program.students || !program.students.length">No student assign to this program ! </h1>
   </div>
 </div>
