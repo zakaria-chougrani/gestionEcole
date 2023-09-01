@@ -16,8 +16,7 @@ import {ContactService} from "../../_shared/services/contact.service";
 import {FormsModule} from "@angular/forms";
 import Swal from "sweetalert2";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
-import {GenderEnum, StatusEnum} from "../../_shared/enum";
-import {COMMA, ENTER} from "@angular/cdk/keycodes";
+import {StatusEnum, TaskEnum} from "../../_shared/enum";
 import {MatSelectModule} from "@angular/material/select";
 
 
@@ -36,8 +35,8 @@ export class ContactComponent implements OnInit {
   currentPage = 0;
   pageSizeOptions: number[] = [5, 10, 25, 50];
   searchValue = '';
-  statusList: StatusEnum[] = [StatusEnum.ACTIVE, StatusEnum.INACTIVE, StatusEnum.DELL];
-  statusOptions: StatusEnum = StatusEnum.ACTIVE;
+  statusList: StatusEnum[] = [StatusEnum.ACTIVE, StatusEnum.DELL,StatusEnum.ALL];
+  statusOption: StatusEnum = StatusEnum.ACTIVE;
 
   constructor(private dialog: MatDialog, private contactService: ContactService) {
   }
@@ -51,7 +50,8 @@ export class ContactComponent implements OnInit {
 
   loadContacts(): void {
     this.isLoading = true;
-    this.contactService.getAllContacts(this.currentPage, this.pageSize, this.searchValue,this.statusOptions.toString())
+    this.contacts = [];
+    this.contactService.getAllContacts(this.currentPage, this.pageSize, this.searchValue,this.statusOption)
       .subscribe({
         next: (page) => {
           this.contacts = page.content;
@@ -94,7 +94,7 @@ export class ContactComponent implements OnInit {
         this.contactService.deleteContact(id).subscribe({
           next: () => {
             this.contactService.triggerRefreshContacts();
-            Swal.fire('Success', 'Class deleted successfully', 'success').then();
+            Swal.fire('Success', 'Contact deleted successfully', 'success').then();
           },
           error: () => this.isLoading = false,
           complete: () => {
@@ -106,4 +106,32 @@ export class ContactComponent implements OnInit {
   }
 
   protected readonly StatusEnum = StatusEnum;
+
+  recoverItem(id: string) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won\'t be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, recover it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // User confirmed the deletion, proceed with the delete operation
+        this.isLoading = true;
+        this.contactService.recoverContact(id).subscribe({
+          next: () => {
+            this.contactService.triggerRefreshContacts();
+            Swal.fire('Success', 'Contact recover successfully', 'success').then();
+          },
+          error: () => this.isLoading = false,
+          complete: () => {
+            this.isLoading = false;
+          }
+        });
+      }
+    });
+  }
+
+  protected readonly TaskEnum = TaskEnum;
 }

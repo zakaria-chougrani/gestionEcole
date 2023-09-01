@@ -21,7 +21,7 @@ export class ContactService {
     this.refreshContacts$.next();
   }
   constructor(private http: HttpClient) { }
-  getAllContacts(pageIndex: number, pageSize: number, searchValue: string,status:string): Observable<Page<ContactInfo>> {
+  getAllContacts(pageIndex: number, pageSize: number, searchValue: string,status:StatusEnum): Observable<Page<ContactInfo>> {
     const params = new HttpParams()
       .set('page', pageIndex.toString())
       .set('size', pageSize.toString())
@@ -35,7 +35,7 @@ export class ContactService {
     return this.http.post<ContactInfo>(this.apiUrl, contact);
   }
   deleteContact(id: string): Observable<string> {
-    return this.http.delete<string>(`${this.apiUrl}/${id}`);
+    return this.http.post<string>(`${this.apiUrl}/delete/${id}`,null);
   }
   getActiveTeachersBySearchValue(pageIndex: number, pageSize: number, searchValue: string): Observable<Page<ContactInfo>>{
     const params = new HttpParams()
@@ -46,4 +46,7 @@ export class ContactService {
     return this.http.get<Page<ContactInfo>>(`${this.apiUrl}/teachers`, { params });
   }
 
+  recoverContact(id: string) {
+    return this.http.post<string>(`${this.apiUrl}/recover/${id}`,null);
+  }
 }

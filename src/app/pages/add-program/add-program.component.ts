@@ -29,6 +29,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {ProgramService} from "../../_shared/services/program.service";
 import {Program} from "../../_shared/models/program";
+import {StatusEnum} from "../../_shared/enum";
 
 @Component({
   selector: 'ec-add-program',
@@ -46,6 +47,10 @@ export class AddProgramComponent implements OnInit {
   teachers: ContactInfo[] = [];
   teacherSearch = new FormControl('');
   dayOptions: DayEnum[] = Object.values(DayEnum);
+  searchValue = '';
+  statusOption: StatusEnum = StatusEnum.ACTIVE;
+  pageSize = 20;
+  currentPage = 0;
 
   constructor(private formBuilder: FormBuilder,
               private schoolClassService: SchoolClassService,
@@ -76,7 +81,7 @@ export class AddProgramComponent implements OnInit {
 
   loadClasses(): void {
     this.isLoading = true;
-    this.schoolClassService.getAllClasses(0, 20)
+    this.schoolClassService.getAllClasses(this.currentPage, this.pageSize, this.searchValue,this.statusOption)
       .subscribe({
         next: (page) => {
           this.classes = page.content;

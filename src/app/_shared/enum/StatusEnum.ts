@@ -1,5 +1,6 @@
 export enum StatusEnum{
   ACTIVE='ACTIVE',
   INACTIVE='INACTIVE',
-  DELL='DELL'
+  DELL='DELL',
+  ALL='ALL',
 }

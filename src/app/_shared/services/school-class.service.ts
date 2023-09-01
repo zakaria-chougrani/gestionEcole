@@ -2,10 +2,8 @@ import { Injectable } from '@angular/core';
 import {environment} from "../../../environments/environment";
 import {Observable, Subject} from "rxjs";
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {SchoolClass} from "../models/school-class";
-import {Page} from "../models/page";
-import {ContactInfo} from "../models/contact-info";
-import {Level} from "../models/level";
+import {SchoolClass,Page,Level} from "../models";
+import {StatusEnum} from "../enum";
 
 @Injectable({
   providedIn: 'root'
@@ -30,24 +28,24 @@ export class SchoolClassService {
   }
   constructor(private http: HttpClient) { }
 
-  getAllClasses(pageIndex: number, pageSize: number): Observable<Page<SchoolClass>> {
+  getAllClasses(pageIndex: number, pageSize: number, searchValue: string,status:StatusEnum): Observable<Page<SchoolClass>> {
     const params = new HttpParams()
       .set('page', pageIndex.toString())
-      .set('size', pageSize.toString());
+      .set('size', pageSize.toString())
+      .set('search', searchValue)
+      .set('status', status);
 
     return this.http.get<Page<SchoolClass>>(this.apiUrl, { params });
   }
-  createClass(name: string, image: File): Observable<SchoolClass> {
-    const formData = new FormData();
-    formData.append('name', name);
-    formData.append('image', image);
-
-    return this.http.post<SchoolClass>(this.apiUrl, formData);
+  createClass(schoolClass:SchoolClass): Observable<SchoolClass> {
+    return this.http.post<SchoolClass>(this.apiUrl, schoolClass);
   }
   deleteClass(id: string): Observable<string> {
-    return this.http.delete<string>(`${this.apiUrl}/${id}`);
+    return this.http.post<string>(`${this.apiUrl}/delete/${id}`,null);
   }
-
+  recoverClass(id: string): Observable<string> {
+    return this.http.post<string>(`${this.apiUrl}/recover/${id}`,null);
+  }
   getLevelsBySchoolClass(schoolClassId: string, page: number, size: number): Observable<Page<Level>> {
     const params = new HttpParams()
       .set('page', page.toString())

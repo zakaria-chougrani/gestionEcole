@@ -1,89 +1,93 @@
 <mat-progress-bar mode="indeterminate" *ngIf="isLoading" style="width: 100%"></mat-progress-bar>
 
-<div fxLayout="column" fxLayoutAlign="space-between stretch" fxFill class="components-container-gt-xs">
-  <div fxLayout="row" fxLayoutAlign="space-between stretch" fxFill fxLayoutGap="20px">
-    <div fxFlex="100" fxLayout="column" class="mat-elevation-z2 contact-list-container">
-      <div fxFlex="10" fxLayoutAlign="start center" fxLayout="row">
-        <h3 class="mat-headline">Contacts</h3>
-        <h3 class="mat-headline">|</h3>
-        <h6 class="mat-title"> {{totalContacts}} contacts</h6>
+<div class="components-container-gt-xs">
+  <div class="mat-elevation-z2 contact-list-container">
+    <p class="card-head">Contacts | <span>{{totalContacts}} contacts</span></p>
+    <mat-divider></mat-divider>
+    <div class="row">
+      <div class="col-4">
+        <mat-form-field class="full" subscriptSizing="dynamic">
+          <input matInput [(ngModel)]="searchValue" name="search" (input)="search()" placeholder="Search contacts">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
       </div>
-      <mat-divider></mat-divider>
-      <br>
-      <div fxFlex="10" style="margin-bottom: 4rem;" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="space-between stretch">
-        <div style="width: 35%;margin: 0 2rem;">
-          <mat-form-field class="full" subscriptSizing="dynamic">
-            <input matInput [(ngModel)]="searchValue" name="search" (input)="search()" placeholder="Search contacts">
-            <mat-icon matSuffix>search</mat-icon>
-          </mat-form-field>
-        </div>
-        <div style="width: 15%;margin: 0 2rem;">
-          <mat-form-field class="full" subscriptSizing="dynamic">
-            <mat-label>Status</mat-label>
-            <mat-select [(ngModel)]="statusOptions" (ngModelChange)="loadContacts()">
-              <mat-option *ngFor="let option of statusList" [value]="option">{{ option }}</mat-option>
-              <mat-option [value]="">All Status</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div style="width: 50%;text-align: center;">
-          <button mat-raised-button color="primary" (click)="openAddContactDialog({})">ADD NEW CONTACT</button>
-        </div>
+      <div class="col-4">
+        <mat-form-field class="full" subscriptSizing="dynamic">
+          <mat-label>Status</mat-label>
+          <mat-select [(ngModel)]="statusOption" (ngModelChange)="loadContacts()">
+            <mat-option *ngFor="let option of statusList" [value]="option">{{ option }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-4 justify-content-center">
+        <button mat-raised-button color="primary" (click)="openAddContactDialog({})">ADD NEW CONTACT</button>
+      </div>
+    </div>
+    <div *ngIf="isLoading">
+      <h1 class="text-center">Wait ...</h1>
+    </div>
+    <div *ngIf="!isLoading && !contacts.length">
+      <h1 class="text-center">NO CONTACT FOUND !</h1>
+    </div>
+    <ng-container *ngIf="!isLoading && contacts.length">
+      <div class="row contact-list" [style.background-color]="contactInfo.status == StatusEnum.ACTIVE ? 'aliceblue' : 'rgb(255 228 228)'" *ngFor="let contactInfo of contacts">
 
-      </div>
-      <br>
-      <div class="contact-list" fxLayout.lt-lg="column" fxLayout="row" *ngFor="let contactInfo of contacts"
-           fxLayoutAlign="space-between stretche">
-        <div fxFlex="10" fxLayoutAlign="center center">
+        <div class="col-4">
           <img class="avatar" [src]="contactInfo.imageByte?contactInfo.imageByte:
-              contactInfo?.task=='staff'?'assets/images/avatars/staff.png':
-              contactInfo?.task=='teacher'?'assets/images/avatars/teacher.png':
-              contactInfo?.task=='student'?'assets/images/avatars/students.png':
-              contactInfo?.task=='trainee_student'?'assets/images/avatars/students.png':
+              contactInfo?.task==TaskEnum.Staff?'assets/images/avatars/staff.png':
+              contactInfo?.task==TaskEnum.Teacher?'assets/images/avatars/teacher.png':
+              contactInfo?.task==TaskEnum.Student?'assets/images/avatars/students.png':
+              contactInfo?.task==TaskEnum.trainee_staff?'assets/images/avatars/students.png':
               'assets/images/avatars/noavatar.png'" width="40" height="40" alt="task">
+          <div style="padding: 0 1rem">
+            <h3> {{contactInfo?.lastName |titlecase}} {{contactInfo?.firstName|titlecase}}</h3>
+            <p>
+              Gender: {{contactInfo?.gender |titlecase}}
+            </p>
+            <p>
+              {{contactInfo?.scholarLevel ? 'scholar Level:' + contactInfo?.scholarLevel : null}}
+            </p>
+            <p [ngStyle]="{'color': contactInfo?.status == StatusEnum.ACTIVE ? 'green' : 'red'}">
+              {{contactInfo?.status === StatusEnum.ACTIVE ? 'Active Account' :
+              contactInfo?.status === StatusEnum.DELL?'Deleted Account':'OTHER'
+              }}
+            </p>
+          </div>
+        </div >
+        <div class="col-6 justify-content-center">
+          <div style="padding: 0 1rem">
+            Tel:
+            <p style="padding: 0 1rem">{{contactInfo?.phoneNumber}}</p>
+          </div>
+          <div style="padding: 0 1rem">
+            Task:
+            <mat-chip-listbox>
+              <mat-chip>{{contactInfo?.task}}</mat-chip>
+            </mat-chip-listbox>
+          </div>
+          <div style="padding: 0 1rem">
+            Specialties:
+            <mat-chip-listbox>
+              <mat-chip *ngFor="let spe of contactInfo?.specialties">
+                {{spe|titlecase}}
+              </mat-chip>
+            </mat-chip-listbox>
+          </div>
         </div>
-        <div fxFlex="20">
-          <h3 class="mat-subheading-1"> {{contactInfo?.lastName}} {{contactInfo?.firstName}}</h3>
-          <p class="mat-body-1">
-            Gender: {{contactInfo?.gender }}
-            {{contactInfo?.scholarLevel ? '| scholar Level:' + contactInfo?.scholarLevel : null}}
-          </p>
-          <p class="mat-body-1" [ngStyle]="{'color': contactInfo?.status == StatusEnum.ACTIVE ? 'green' : 'red'}">
-            {{contactInfo?.status === StatusEnum.ACTIVE ? 'Active Account' :
-            contactInfo?.status === StatusEnum.INACTIVE?'Inactive Account':
-            contactInfo?.status === StatusEnum.DELL?'Deleted Account':'OTHER'
-            }}
-          </p>
-        </div>
-        <div fxFlex="10" fxLayoutAlign="start center">
-          Tel: {{contactInfo?.phoneNumber}}
-        </div>
-        <div fxFlex="10" fxLayoutAlign="center center">
-          <mat-chip-listbox>
-            <mat-chip *ngFor="let spe of contactInfo?.specialties">
-              {{spe|titlecase}}
-            </mat-chip>
-          </mat-chip-listbox>
-        </div>
-        <div fxFlex="15" fxLayoutAlign="center center">
-          <mat-chip-listbox>
-            <mat-chip>{{contactInfo?.task}}</mat-chip>
-          </mat-chip-listbox>
-        </div>
-        <hr>
-        <div fxFlex="10" fxLayoutAlign="center center">
-          <button mat-icon-button (click)="openAddContactDialog(contactInfo)">
-            <mat-icon>send</mat-icon>
+        <div class="col-2 justify-content-center">
+          <button mat-icon-button (click)="openAddContactDialog(contactInfo)" style="color: orange">
+            <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button aria-label="icon delete" class="btn-delete"
-                  (click)="deleteItem(contactInfo.id || '')">
-            <mat-icon>delete_outline</mat-icon>
+          <button mat-icon-button aria-label="icon delete" [ngClass]="contactInfo?.status==StatusEnum.ACTIVE?'btn-red':'btn-green'"
+                  (click)="contactInfo?.status==StatusEnum.ACTIVE?deleteItem(contactInfo.id || ''):recoverItem(contactInfo.id || '')">
+            <mat-icon>{{contactInfo?.status==StatusEnum.ACTIVE?'delete_outline':'undo'}}</mat-icon>
           </button>
         </div>
       </div>
-
       <mat-paginator [length]="totalContacts" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
                      (page)="onPageChanged($event)"></mat-paginator>
-    </div>
+    </ng-container>
   </div>
 </div>
+
+

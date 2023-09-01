@@ -12,11 +12,16 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import Swal from 'sweetalert2';
 import {Router} from "@angular/router";
+import {StatusEnum} from "../../_shared/enum";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatOptionModule} from "@angular/material/core";
+import {MatSelectModule} from "@angular/material/select";
+import {FormsModule} from "@angular/forms";
 
 @Component({
   selector: 'ec-classes',
   standalone: true,
-  imports: [CommonModule, FlexLayoutModule, MatDividerModule, MatButtonModule, NgOptimizedImage, MatDialogModule, MatPaginatorModule, MatIconModule, MatProgressBarModule],
+  imports: [CommonModule, FlexLayoutModule, MatDividerModule, MatButtonModule, NgOptimizedImage, MatDialogModule, MatPaginatorModule, MatIconModule, MatProgressBarModule, MatFormFieldModule, MatOptionModule, MatSelectModule, FormsModule],
   templateUrl: './classes.component.html',
   styleUrls: ['./classes.component.scss']
 })
@@ -27,6 +32,10 @@ export class ClassesComponent implements OnInit {
   currentPage = 0;
   pageSizeOptions: number[] = [4, 8, 12, 25, 50];
   isLoading: boolean = false;
+  searchValue = '';
+  statusList: StatusEnum[] = [StatusEnum.ACTIVE, StatusEnum.DELL,StatusEnum.ALL];
+
+  statusOption: StatusEnum = StatusEnum.ACTIVE;
 
   constructor(private dialog: MatDialog, private schoolClassService: SchoolClassService, private router: Router) {
   }
@@ -39,7 +48,7 @@ export class ClassesComponent implements OnInit {
   }
 
   loadClasses(): void {
-    this.schoolClassService.getAllClasses(this.currentPage, this.pageSize)
+    this.schoolClassService.getAllClasses(this.currentPage, this.pageSize, this.searchValue,this.statusOption)
       .subscribe({
         next: (page) => {
           this.classes = page.content;
@@ -94,4 +103,30 @@ export class ClassesComponent implements OnInit {
       }
     });
   }
+  recoverItem(id: string) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won\'t be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, recover it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // User confirmed the deletion, proceed with the delete operation
+        this.isLoading = true;
+        this.schoolClassService.recoverClass(id).subscribe({
+          next: () => {
+            this.schoolClassService.triggerRefreshSchoolClass();
+            Swal.fire('Success', 'Class recover successfully', 'success').then();
+          },
+          error: () => this.isLoading = false,
+          complete: () => {
+            this.isLoading = false;
+          }
+        });
+      }
+    });
+  }
+  protected readonly StatusEnum = StatusEnum;
 }

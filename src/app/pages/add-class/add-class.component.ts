@@ -1,7 +1,7 @@
 import {Component, Inject} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
-import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {MatIconModule} from "@angular/material/icon";
@@ -9,7 +9,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {SchoolClassService} from "../../_shared/services/school-class.service";
-import {SchoolClass} from "../../_shared/models/school-class";
+import {ImageCropperComponent} from "../../core/image-cropper/image-cropper.component";
 
 @Component({
   selector: 'ec-add-class',
@@ -21,16 +21,18 @@ import {SchoolClass} from "../../_shared/models/school-class";
 export class AddClassComponent {
   classForm!: FormGroup;
   isLoading: boolean = false;
-  selectedImage: File | null = null;
+  selectedFileDataURL: string | null = null;
+
 constructor(private formBuilder: FormBuilder,
             private schoolClassService: SchoolClassService,
+            private dialog: MatDialog,
             private dialogRef: MatDialogRef<AddClassComponent>,
             @Inject(MAT_DIALOG_DATA) public data: any) {
 
   this.classForm = this.formBuilder.group({
     id: [null],
     name: ['', Validators.required],
-    image: [null, Validators.required]
+    imageByte: [null, Validators.required]
   });
 
   if (this.data.id) {
@@ -42,14 +44,10 @@ constructor(private formBuilder: FormBuilder,
       alert('incorrect form');
       return;
     }
-    const name = this.classForm.controls['name'].value;
-    const image = this.classForm.controls['image'].value;
-
     this.isLoading = true;
-    this.schoolClassService.createClass(name, image).subscribe({
+    this.schoolClassService.createClass(this.classForm.value).subscribe({
       next: () => {
         this.classForm.reset();
-        this.selectedImage = null;
         this.schoolClassService.triggerRefreshSchoolClass();
         this.onCancel();
       },
@@ -61,10 +59,22 @@ constructor(private formBuilder: FormBuilder,
     this.dialogRef.close();
   }
 
-  onImageChange(event: any) {
-    if (event.target.files && event.target.files.length) {
-      this.selectedImage = event.target.files[0];
-      this.classForm.patchValue({ image: this.selectedImage });
-    }
+
+  onImageChange() {
+    const dialogRef = this.dialog.open(ImageCropperComponent, {
+      panelClass:'background-dialog-copper',
+      disableClose: true
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.selectedFileDataURL = reader.result as string;
+          this.classForm.patchValue({imageByte: this.selectedFileDataURL});
+
+        };
+        reader.readAsDataURL(result);
+      }
+    });
   }
 }
