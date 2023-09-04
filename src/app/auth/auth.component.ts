@@ -16,8 +16,8 @@ import {SidebarComponent} from "../core/sidebar/sidebar.component";
   styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent {
-  sideNavOpened: boolean = true;
-  matDrawerOpened: boolean = false;
+  sideNavOpened: boolean = false;
+  matDrawerOpened: boolean = true;
   matDrawerShow: boolean = true;
 
   sideNavMode: MatDrawerMode = 'side';

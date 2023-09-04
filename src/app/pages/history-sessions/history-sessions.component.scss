@@ -1,4 +1,12 @@
 .contact-list-container {
   background-color: white;
   padding: .7rem;
+  .card-head{
+    font-weight: bold;
+    font-size: 1.4rem;
+
+    span{
+      font-size: 1rem;
+    }
+  }
 }

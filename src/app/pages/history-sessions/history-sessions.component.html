@@ -1,4 +1,69 @@
-<!--<mat-progress-bar mode="indeterminate" *ngIf="isLoading" style="width: 100%"></mat-progress-bar>-->
+<button mat-fab color="primary" aria-label="previous page" style="margin: 1rem" (click)="previousPage()">
+  <mat-icon>undo</mat-icon>
+</button>
+<div class="components-container-gt-xs">
+  <mat-progress-bar mode="indeterminate" *ngIf="isLoading" style="width: 100%"></mat-progress-bar>
+
+  <div class="mat-elevation-z2 contact-list-container">
+
+    <p class="card-head">History of Sessions | <span> 10 sessions</span></p>
+    <mat-divider></mat-divider>
+
+    <table mat-table [dataSource]="dataSource" matSort>
+
+      <!-- Created-At Column -->
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> created At</th>
+        <td mat-cell *matCellDef="let row">aa</td>
+      </ng-container>
+
+      <!-- closed-At Column-->
+      <ng-container matColumnDef="closedAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> closed At</th>
+        <td mat-cell *matCellDef="let row">bb</td>
+      </ng-container>
+
+      <!-- Students present Column -->
+      <ng-container matColumnDef="stdPresent">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Students present</th>
+        <td mat-cell *matCellDef="let row">10</td>
+      </ng-container>
+      <!-- Students absent Column -->
+      <ng-container matColumnDef="stdAbsent">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Students absent</th>
+        <td mat-cell *matCellDef="let row">3</td>
+      </ng-container>
+      <!-- percent of presence Column -->
+      <ng-container matColumnDef="percentOfPresence">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> percent of presence</th>
+        <td mat-cell *matCellDef="let row">3</td>
+      </ng-container>
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Status</th>
+        <td mat-cell *matCellDef="let row">Active</td>
+      </ng-container>
+      <!-- actions Button Column -->
+      <ng-container matColumnDef="actionBtn">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> actions Button</th>
+        <td mat-cell *matCellDef="let row">Active</td>
+      </ng-container>
+
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <!-- Row shown when there is no matching data. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">No data matching the filter</td>
+      </tr>
+    </table>
+
+
+    <mat-paginator [length]="totalSessions" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+                   (page)="onPageChanged($event)"></mat-paginator>
+  </div>
+</div>
 
 <!--<div fxLayout="column" fxLayoutAlign="space-between stretch" fxFill class="components-container-gt-xs">-->
 <!--  <div fxLayout="row" fxLayoutAlign="space-between stretch" fxFill fxLayoutGap="20px">-->

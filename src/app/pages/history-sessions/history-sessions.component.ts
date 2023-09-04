@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {CommonModule, Location} from '@angular/common';
 import {FlexModule} from "@angular/flex-layout";
 import {MatButtonModule} from "@angular/material/button";
 import {MatChipsModule} from "@angular/material/chips";
@@ -10,9 +10,13 @@ import {MatInputModule} from "@angular/material/input";
 import {MatPaginator, MatPaginatorModule, PageEvent} from "@angular/material/paginator";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {Program} from "../../_shared/models/program";
+import {ProgramDto} from "../../_shared/models";
 import {MatTableDataSource, MatTableModule} from "@angular/material/table";
 import {MatSort, MatSortModule} from "@angular/material/sort";
+import {SessionProgramHistory} from "../../_shared/models/SessionProgramHistory";
+import {ProgramSessionService} from "../../_shared/services/program-session.service";
+import {StatusEnum} from "../../_shared/enum";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'ec-history-sessions',
@@ -23,36 +27,67 @@ import {MatSort, MatSortModule} from "@angular/material/sort";
 })
 export class HistorySessionsComponent implements OnInit{
   isLoading: boolean = false;
-
-  programs: Program[] = [];
-  totalPrograms = 0;
+  isError: boolean = false;
+  sessionHistories:SessionProgramHistory[] = [];
+  totalSessions = 0;
   pageSize = 5;
   currentPage = 0;
   pageSizeOptions: number[] = [5, 10, 25, 50];
-  searchValue = '';
 
-  displayedColumns: string[] = ['id', 'name', 'progress', 'fruit'];
-  dataSource!: MatTableDataSource<Program>;
+  programId: string | null = null;
+  status:StatusEnum = StatusEnum.ALL;
+  dateOpen!:Date;
+  dateClose!:Date;
+  displayedColumns: string[] = ['createdAt', 'closedAt', 'stdPresent', 'stdAbsent', 'percentOfPresence', 'status', 'actionBtn'];
+  dataSource!: MatTableDataSource<ProgramDto>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  constructor() {
-
+  constructor(
+    private _location:Location,
+    private programSessionService:ProgramSessionService,
+    private route: ActivatedRoute
+  ) {
+    this.route.paramMap.subscribe(params => {
+      this.programId = params.get('id');
+    });
   }
 
   ngOnInit(): void {
+    this.loadAllSessionOfProgram();
   }
 
   search(): void {
-    this.loadPrograms();
+    this.loadAllSessionOfProgram();
   }
 
-  private loadPrograms() {
-
+  loadAllSessionOfProgram(): void {
+    this.isError = false;
+    this.isLoading = true;
+    this.sessionHistories = [];
+    if (this.programId){
+      this.programSessionService.getAllSessionOfProgram(this.currentPage, this.pageSize, this.programId,this.status,this.dateOpen,this.dateClose)
+        .subscribe({
+          next: (page) => {
+            console.log(page);
+            this.sessionHistories = page.content;
+            this.totalSessions = page.totalElements;
+          },
+          error: () => {
+            this.isError = true;
+            this.isLoading = false;
+          },
+          complete: () => this.isLoading = false
+        });
+    }
   }
   onPageChanged(event: PageEvent): void {
     this.currentPage = event.pageIndex;
     this.pageSize = event.pageSize;
-    this.loadPrograms();
+    this.loadAllSessionOfProgram();
+  }
+
+  previousPage() {
+    this._location.back();
   }
 }

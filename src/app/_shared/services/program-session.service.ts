@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import {environment} from "../../../environments/environment";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable, Subject} from "rxjs";
-import {Page} from "../models/page";
-import {Program} from "../models/program";
-import {ProgramSession} from "../models/program-session";
-import {ContactInfo} from "../models/contact-info";
+import {Page} from "../models";
 import {SessionDto, StudentDto} from "../../pages/check-presence/check-presence.component";
+import {StatusEnum} from "../enum";
+import {SessionProgramHistory} from "../models/SessionProgramHistory";
+import {LastSessionActiveOfProgramDto} from "../models/LastSessionActiveOfProgramDto";
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -22,12 +24,20 @@ export class ProgramSessionService {
   triggerRefreshProgramSession(): void {
     this.refreshProgramSession$.next();
   }
-
-  getLastSessionActive(programId:string): Observable<ProgramSession|null> {
-    return this.http.get<ProgramSession|null>(`${this.apiUrl}/${programId}/last-session/active`);
+  getAllSessionOfProgram(pageIndex: number, pageSize: number, programId: string,status:StatusEnum,dateOpen?:Date,dateClose?:Date): Observable<Page<SessionProgramHistory>> {
+    const params = new HttpParams()
+      .set('page', pageIndex.toString())
+      .set('size', pageSize.toString())
+      .set('programId', programId)
+      .set('status', status)
+    ;
+    return this.http.get<Page<SessionProgramHistory>>(`${this.apiUrl}/${programId}/sessions`, { params });
   }
-  createProgramSession(programId:String): Observable<ProgramSession> {
-    return this.http.post<ProgramSession>(`${this.apiUrl}/${programId}`,null);
+  getLastSessionActive(programId:string): Observable<LastSessionActiveOfProgramDto|null> {
+    return this.http.get<LastSessionActiveOfProgramDto|null>(`${this.apiUrl}/${programId}/last-session/active`);
+  }
+  createProgramSession(programId:String): Observable<LastSessionActiveOfProgramDto> {
+    return this.http.post<LastSessionActiveOfProgramDto>(`${this.apiUrl}/${programId}`,null);
   }
   deactivateSession(sessionId:String): Observable<any> {
     return this.http.post(`${this.apiUrl}/deactivate/${sessionId}`,null);

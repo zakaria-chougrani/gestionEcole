@@ -8,7 +8,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatChipsModule} from "@angular/material/chips";
 import {FlexModule} from "@angular/flex-layout";
-import {ContactInfo} from "../../_shared/models/contact-info";
+import {ContactInfo} from "../../_shared/models";
 import {EditContactComponent} from "../edit-contact/edit-contact.component";
 import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {MatPaginatorModule, PageEvent} from "@angular/material/paginator";
@@ -35,9 +35,13 @@ export class ContactComponent implements OnInit {
   currentPage = 0;
   pageSizeOptions: number[] = [5, 10, 25, 50];
   searchValue = '';
-  statusList: StatusEnum[] = [StatusEnum.ACTIVE, StatusEnum.DELL,StatusEnum.ALL];
+  statusList: StatusEnum[] = [StatusEnum.ACTIVE, StatusEnum.DELL, StatusEnum.ALL];
   statusOption: StatusEnum = StatusEnum.ACTIVE;
-
+  isError: Boolean = false;
+  protected readonly StatusEnum = StatusEnum;
+  protected readonly TaskEnum = TaskEnum;
+  taskOption: TaskEnum = TaskEnum.ALL;
+  taskList: TaskEnum[] = [TaskEnum.ALL,TaskEnum.Staff, TaskEnum.Teacher, TaskEnum.Student,TaskEnum.trainee_staff,TaskEnum.trainee_student];
   constructor(private dialog: MatDialog, private contactService: ContactService) {
   }
 
@@ -49,17 +53,43 @@ export class ContactComponent implements OnInit {
   }
 
   loadContacts(): void {
+    this.isError = false;
     this.isLoading = true;
     this.contacts = [];
-    this.contactService.getAllContacts(this.currentPage, this.pageSize, this.searchValue,this.statusOption)
+    this.contactService.getAllContacts(this.currentPage, this.pageSize, this.searchValue, this.taskOption, this.statusOption)
       .subscribe({
         next: (page) => {
           this.contacts = page.content;
           this.totalContacts = page.totalElements;
+          this.loadContactsImage();
         },
-        error: () => this.isLoading = false,
+        error: () => {
+          this.isError = true;
+          this.isLoading = false;
+        },
         complete: () => this.isLoading = false
       });
+  }
+
+  loadImage(contactId: string) {
+    this.contactService.getImage(contactId)
+      .subscribe({
+        next: (value) => {
+          this.contacts.map((contact) => {
+            if (contact.id === contactId) {
+              contact.imageByte = value.imageByte;
+            }
+          });
+        }
+      });
+  }
+
+  loadContactsImage() {
+    this.contacts.forEach(contact => {
+      if (contact.id && !contact.imageByte){
+        this.loadImage(contact.id);
+      }
+    })
   }
 
   onPageChanged(event: PageEvent): void {
@@ -89,14 +119,17 @@ export class ContactComponent implements OnInit {
       cancelButtonText: 'Cancel'
     }).then((result) => {
       if (result.isConfirmed) {
-        // User confirmed the deletion, proceed with the delete operation
+        this.isError = false;
         this.isLoading = true;
         this.contactService.deleteContact(id).subscribe({
           next: () => {
             this.contactService.triggerRefreshContacts();
             Swal.fire('Success', 'Contact deleted successfully', 'success').then();
           },
-          error: () => this.isLoading = false,
+          error: () => {
+            this.isError = true;
+            this.isLoading = false;
+          },
           complete: () => {
             this.isLoading = false;
           }
@@ -105,7 +138,6 @@ export class ContactComponent implements OnInit {
     });
   }
 
-  protected readonly StatusEnum = StatusEnum;
 
   recoverItem(id: string) {
     Swal.fire({
@@ -117,14 +149,17 @@ export class ContactComponent implements OnInit {
       cancelButtonText: 'Cancel'
     }).then((result) => {
       if (result.isConfirmed) {
-        // User confirmed the deletion, proceed with the delete operation
+        this.isError = false;
         this.isLoading = true;
         this.contactService.recoverContact(id).subscribe({
           next: () => {
             this.contactService.triggerRefreshContacts();
             Swal.fire('Success', 'Contact recover successfully', 'success').then();
           },
-          error: () => this.isLoading = false,
+          error: () => {
+            this.isError = true;
+            this.isLoading = false;
+          },
           complete: () => {
             this.isLoading = false;
           }
@@ -133,5 +168,5 @@ export class ContactComponent implements OnInit {
     });
   }
 
-  protected readonly TaskEnum = TaskEnum;
+
 }

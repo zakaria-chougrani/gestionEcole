@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {CommonModule, NgOptimizedImage} from '@angular/common';
+import {CommonModule, Location, NgOptimizedImage} from '@angular/common';
 import {ActivatedRoute} from "@angular/router";
 import {FlexModule} from "@angular/flex-layout";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
@@ -12,10 +12,11 @@ import {MatOptionModule} from "@angular/material/core";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {ContactInfo} from "../../_shared/models/contact-info";
+import {ContactInfo} from "../../_shared/models";
 import {ProgramService} from "../../_shared/services/program.service";
 import {MatTableDataSource, MatTableModule} from "@angular/material/table";
 import Swal from 'sweetalert2';
+import {ContactService} from "../../_shared/services/contact.service";
 
 @Component({
   selector: 'ec-students-program',
@@ -35,7 +36,9 @@ export class StudentsProgramComponent implements OnInit {
 
   constructor(
     private programService: ProgramService,
+    private contactService: ContactService,
     private route: ActivatedRoute,
+    private _location:Location
   ) {
     this.route.paramMap.subscribe(params => {
       this.programId = params.get('id');
@@ -46,6 +49,7 @@ export class StudentsProgramComponent implements OnInit {
     if (this.programId) {
       this.loadStudentsNotInProgram();
       this.loadStudentsInProgram();
+
       this.programService.refreshStudentsInProgram.subscribe(() => {
         this.loadStudentsInProgram();
       });
@@ -60,7 +64,16 @@ export class StudentsProgramComponent implements OnInit {
     this.studentsNotInProgram = [];
     this.programService.getStudentsNotInProgram(0, 10, this.programId || '', this.studentSearch || '')
       .subscribe({
-        next: (page) => this.studentsNotInProgram = page.content,
+        next: (page) => {
+          this.studentsNotInProgram = page.content;
+          this.studentsNotInProgram.map(contact => {
+            if (contact.id && !contact.imageByte){
+              this.contactService.getImage(contact.id).subscribe({
+                next: (imageDto) => contact.imageByte = imageDto.imageByte
+              });
+            }
+          })
+        },
         error: () => this.isLoading = false,
         complete: () => this.isLoading = false
       });
@@ -70,7 +83,16 @@ export class StudentsProgramComponent implements OnInit {
     this.isLoading = true;
     this.programService.getStudentsInProgram(this.programId || '')
       .subscribe({
-        next: (data) => this.dataSource = new MatTableDataSource(data),
+        next: (data) => {
+          this.dataSource = new MatTableDataSource(data);
+          data.map(contact => {
+            if (contact.id && !contact.imageByte){
+              this.contactService.getImage(contact.id).subscribe({
+                next: (imageDto) => contact.imageByte = imageDto.imageByte
+              });
+            }
+          })
+        },
         error: () => this.isLoading = false,
         complete: () => this.isLoading = false
       });
@@ -80,6 +102,8 @@ export class StudentsProgramComponent implements OnInit {
     const student = this.studentSearch as ContactInfo;
     if (!this.programId || !student)
       return;
+
+    this.isLoading = true;
     this.programService.addStudentToProgram(student, this.programId).subscribe({
       next: () => {
         this.studentSearch = '';
@@ -103,6 +127,7 @@ export class StudentsProgramComponent implements OnInit {
       if (result.isConfirmed) {
         if (!this.programId || !studentId)
           return;
+        this.isLoading = true;
         this.programService.deleteStudent(this.programId, studentId).subscribe({
           next: () => {
             this.studentSearch = '';
@@ -137,5 +162,9 @@ export class StudentsProgramComponent implements OnInit {
     }
 
     return years;
+  }
+
+  previousPage() {
+    this._location.back();
   }
 }

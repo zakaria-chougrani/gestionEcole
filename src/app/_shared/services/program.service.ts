@@ -4,7 +4,7 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable, Subject} from "rxjs";
 import {Page} from "../models/page";
 import {ContactInfo} from "../models/contact-info";
-import {Program} from "../models/program";
+import {ProgramDto} from "../models/programDto";
 import {StatusEnum} from "../enum";
 
 @Injectable({
@@ -36,7 +36,7 @@ export class ProgramService {
   }
   constructor(private http: HttpClient) { }
 
-  getAllPrograms(pageIndex: number, pageSize: number,title:string,levelId:string,teacherId:string,status:StatusEnum): Observable<Page<Program>> {
+  getAllPrograms(pageIndex: number, pageSize: number,title:string,levelId:string,teacherId:string,status:StatusEnum): Observable<Page<ProgramDto>> {
     const params = new HttpParams()
       .set('page', pageIndex.toString())
       .set('size', pageSize.toString())
@@ -46,10 +46,10 @@ export class ProgramService {
       .set('status', status)
     ;
 
-    return this.http.get<Page<Program>>(this.apiUrl, { params });
+    return this.http.get<Page<ProgramDto>>(this.apiUrl, { params });
   }
-  getProgramById(programId:string): Observable<Program> {
-    return this.http.get<Program>(`${this.apiUrl}/${programId}`);
+  getProgramById(programId:string): Observable<ProgramDto> {
+    return this.http.get<ProgramDto>(`${this.apiUrl}/${programId}`);
   }
   deleteProgram(id: string): Observable<string> {
     return this.http.post<string>(`${this.apiUrl}/delete/${id}`,null);
@@ -57,8 +57,8 @@ export class ProgramService {
   recoverProgram(id: string): Observable<string> {
     return this.http.post<string>(`${this.apiUrl}/recover/${id}`,null);
   }
-  addProgram(program: Program): Observable<Program> {
-    return this.http.post<Program>(this.apiUrl, program);
+  addProgram(program: ProgramDto): Observable<ProgramDto> {
+    return this.http.post<ProgramDto>(this.apiUrl, program);
   }
   getStudentsInProgram(programId:string): Observable<ContactInfo[]> {
     return this.http.get<ContactInfo[]>(`${this.apiUrl}/${programId}/students`);
@@ -72,8 +72,8 @@ export class ProgramService {
 
     return this.http.get<Page<ContactInfo>>(`${this.apiUrl}/${programId}/studentsNotIn`, { params });
   }
-  addStudentToProgram(student:ContactInfo,programId:String): Observable<Program> {
-    return this.http.post<Program>(`${this.apiUrl}/${programId}/students`, student);
+  addStudentToProgram(student:ContactInfo,programId:String): Observable<ProgramDto> {
+    return this.http.post<ProgramDto>(`${this.apiUrl}/${programId}/students`, student);
   }
 
   deleteStudent(programId: string,studentId: string): Observable<string> {

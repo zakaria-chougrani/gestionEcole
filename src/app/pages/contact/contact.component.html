@@ -5,13 +5,21 @@
     <p class="card-head">Contacts | <span>{{totalContacts}} contacts</span></p>
     <mat-divider></mat-divider>
     <div class="row">
-      <div class="col-4">
+      <div class="col-3">
         <mat-form-field class="full" subscriptSizing="dynamic">
           <input matInput [(ngModel)]="searchValue" name="search" (input)="search()" placeholder="Search contacts">
           <mat-icon matSuffix>search</mat-icon>
         </mat-form-field>
       </div>
-      <div class="col-4">
+      <div class="col-3">
+        <mat-form-field class="full" subscriptSizing="dynamic">
+          <mat-label>Task</mat-label>
+          <mat-select [(ngModel)]="taskOption" (ngModelChange)="loadContacts()">
+            <mat-option *ngFor="let task of taskList" [value]="task">{{ task }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-3">
         <mat-form-field class="full" subscriptSizing="dynamic">
           <mat-label>Status</mat-label>
           <mat-select [(ngModel)]="statusOption" (ngModelChange)="loadContacts()">
@@ -19,15 +27,18 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <div class="col-4 justify-content-center">
+      <div class="col-3 justify-content-center">
         <button mat-raised-button color="primary" (click)="openAddContactDialog({})">ADD NEW CONTACT</button>
       </div>
     </div>
-    <div *ngIf="isLoading">
+    <div *ngIf="isLoading" style="margin: 1rem 0">
       <h1 class="text-center">Wait ...</h1>
     </div>
-    <div *ngIf="!isLoading && !contacts.length">
+    <div *ngIf="!isLoading && !contacts.length && !isError" style="margin: 1rem 0">
       <h1 class="text-center">NO CONTACT FOUND !</h1>
+    </div>
+    <div *ngIf="!isLoading && isError" style="margin: 1rem 0">
+      <h1 class="text-center">NO CONNECTION !!!</h1>
     </div>
     <ng-container *ngIf="!isLoading && contacts.length">
       <div class="row contact-list" [style.background-color]="contactInfo.status == StatusEnum.ACTIVE ? 'aliceblue' : 'rgb(255 228 228)'" *ngFor="let contactInfo of contacts">
@@ -54,18 +65,22 @@
             </p>
           </div>
         </div >
-        <div class="col-6 justify-content-center">
-          <div style="padding: 0 1rem">
+        <div class="col-2 justify-content-center">
+          <div style="padding: 0 1rem" *ngIf="contactInfo?.phoneNumber">
             Tel:
             <p style="padding: 0 1rem">{{contactInfo?.phoneNumber}}</p>
           </div>
-          <div style="padding: 0 1rem">
+        </div>
+        <div class="col-2 justify-content-center">
+          <div style="padding: 0 1rem" *ngIf="contactInfo?.task">
             Task:
             <mat-chip-listbox>
               <mat-chip>{{contactInfo?.task}}</mat-chip>
             </mat-chip-listbox>
           </div>
-          <div style="padding: 0 1rem">
+        </div>
+        <div class="col-2 justify-content-center">
+          <div style="padding: 0 1rem" *ngIf="contactInfo?.specialties?.length">
             Specialties:
             <mat-chip-listbox>
               <mat-chip *ngFor="let spe of contactInfo?.specialties">

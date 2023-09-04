@@ -6,7 +6,7 @@ import {MatDividerModule} from "@angular/material/divider";
 import {MatIconModule} from "@angular/material/icon";
 import {MatPaginatorModule, PageEvent} from "@angular/material/paginator";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
-import {Program} from "../../_shared/models/program";
+import {ProgramDto} from "../../_shared/models";
 import {ProgramService} from "../../_shared/services/program.service";
 import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {AddProgramComponent} from "../add-program/add-program.component";
@@ -17,13 +17,14 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatOptionModule} from "@angular/material/core";
-import {ContactInfo} from "../../_shared/models/contact-info";
+import {ContactInfo} from "../../_shared/models";
 import {ContactService} from "../../_shared/services/contact.service";
 import {Router} from "@angular/router";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {StatusEnum} from "../../_shared/enum";
 import {MatSelectModule} from "@angular/material/select";
 import {MatExpansionModule} from "@angular/material/expansion";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'ec-programs',
@@ -33,7 +34,7 @@ import {MatExpansionModule} from "@angular/material/expansion";
   styleUrls: ['./programs.component.scss']
 })
 export class ProgramsComponent implements OnInit {
-  programs: Program[] = [];
+  programs: ProgramDto[] = [];
   totalPrograms = 0;
   pageSize = 10;
   currentPage = 0;
@@ -43,8 +44,11 @@ export class ProgramsComponent implements OnInit {
   levelId!: string;
   title!: string;
   teachers: ContactInfo[] = [];
-  statusList: StatusEnum[] = [StatusEnum.ACTIVE, StatusEnum.DELL,StatusEnum.ALL];
+  statusList: StatusEnum[] = [StatusEnum.ACTIVE, StatusEnum.DELL, StatusEnum.ALL];
   statusOption: StatusEnum = StatusEnum.ACTIVE;
+  isError: Boolean = false;
+  protected readonly StatusEnum = StatusEnum;
+
   constructor(
     private programService: ProgramService,
     private contactService: ContactService,
@@ -61,32 +65,55 @@ export class ProgramsComponent implements OnInit {
   }
 
   loadPrograms(): void {
+    this.isError = false;
     this.isLoading = true;
     let teacher = (this.teacherSearch as ContactInfo).id;
-    this.programService.getAllPrograms(this.currentPage, this.pageSize, this.title || '', this.levelId, teacher || '',this.statusOption)
+    this.programs = [];
+    this.programService.getAllPrograms(this.currentPage, this.pageSize, this.title || '', this.levelId, teacher || '', this.statusOption)
       .subscribe({
         next: (page) => {
           this.programs = page.content;
           this.totalPrograms = page.totalElements;
         },
-        error: () => this.isLoading = false,
-        complete: () => this.isLoading = false
+        error: () => {
+          this.isLoading = false;
+          this.isError = true;
+        },
+        complete: () => {
+          this.isLoading = false;
+          if (!this.isError && this.programs.length){
+            this.programs.map(program => {
+              this.contactService.getImage(program.teacherId).subscribe({
+                next: (imageDto) => program.teacherImageByte = imageDto.imageByte
+              });
+            });
+          }
+        }
       });
   }
 
-  onPageChanged(event: PageEvent): void {
-    this.currentPage = event.pageIndex;
-    this.pageSize = event.pageSize;
-    this.loadPrograms();
+  loadTeachers(): void {
+    this.teachers = [];
+    this.contactService.getActiveTeachersBySearchValue(0, 20, this.teacherSearch || '')
+      .subscribe({
+        next: (page) => {
+          this.teachers = page.content;
+        },
+        error: () => {},
+        complete:() => {
+          if (this.teachers.length){
+            this.teachers.map(teacher => {
+              if (teacher.id) {
+                this.contactService.getImage(teacher.id).subscribe({
+                  next: (imageDto) => teacher.imageByte = imageDto.imageByte
+                });
+              }
+            });
+          }
+        }
+      });
   }
 
-  openAddProgramDialog(programDto: {}) {
-    this.dialog.open(AddProgramComponent, {
-      width: '800px',
-      data: programDto,
-      disableClose: true
-    });
-  }
 
   deleteItem(id: string) {
     Swal.fire({
@@ -104,8 +131,8 @@ export class ProgramsComponent implements OnInit {
             this.programService.triggerRefreshProgram();
             Swal.fire('Success', 'Class deleted successfully', 'success').then();
           },
-          error: err => {
-            console.log(err);
+          error: () => {
+            this.isLoading = false;
           },
           complete: () => {
             this.isLoading = false;
@@ -114,6 +141,7 @@ export class ProgramsComponent implements OnInit {
       }
     });
   }
+
   recoverItem(id: string) {
     Swal.fire({
       title: 'Are you sure?',
@@ -130,8 +158,8 @@ export class ProgramsComponent implements OnInit {
             this.programService.triggerRefreshProgram();
             Swal.fire('Success', 'Class recover successfully', 'success').then();
           },
-          error: err => {
-            console.log(err);
+          error: () => {
+            this.isLoading = false;
           },
           complete: () => {
             this.isLoading = false;
@@ -140,17 +168,19 @@ export class ProgramsComponent implements OnInit {
       }
     });
   }
-  loadTeachers(): void {
-    this.isLoading = true;
-    this.teachers = [];
-    this.contactService.getActiveTeachersBySearchValue(0, 20, this.teacherSearch || '')
-      .subscribe({
-        next: (page) => {
-          this.teachers = page.content;
-        },
-        error: () => this.isLoading = false,
-        complete: () => this.isLoading = false
-      });
+
+  onPageChanged(event: PageEvent): void {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadPrograms();
+  }
+
+  openAddProgramDialog(programDto: {}) {
+    this.dialog.open(AddProgramComponent, {
+      width: '800px',
+      data: programDto,
+      disableClose: true
+    });
   }
 
   displayTeacherFn(teacher: ContactInfo): string {
@@ -161,18 +191,17 @@ export class ProgramsComponent implements OnInit {
     this.programService.triggerRefreshProgram();
   }
 
-  navigateToStudents(program: Program) {
+  navigateToStudents(program: ProgramDto) {
     this.router.navigateByUrl(`/programs/${program.id}`).then();
   }
 
-  navigateToSessions(program: Program) {
+  navigateToSessions(program: ProgramDto) {
     this.router.navigateByUrl(`/sessions/${program.id}`).then();
   }
 
-  navigateToHistoryOfSession(program: Program) {
+  navigateToHistoryOfSession(program: ProgramDto) {
     this.router.navigateByUrl(`/history-sessions/${program.id}`).then();
 
   }
 
-  protected readonly StatusEnum = StatusEnum;
 }

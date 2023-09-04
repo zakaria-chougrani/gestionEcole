@@ -28,7 +28,7 @@ import {DayEnum} from "../../_shared/models/session";
 import {MatIconModule} from "@angular/material/icon";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {ProgramService} from "../../_shared/services/program.service";
-import {Program} from "../../_shared/models/program";
+import {ProgramDto} from "../../_shared/models/programDto";
 import {StatusEnum} from "../../_shared/enum";
 
 @Component({
@@ -57,7 +57,7 @@ export class AddProgramComponent implements OnInit {
               private contactService: ContactService,
               private programService: ProgramService,
               private dialogRef: MatDialogRef<AddProgramComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: Program) {
+              @Inject(MAT_DIALOG_DATA) public data: ProgramDto) {
     this.programForm = this.formBuilder.group({
       id: [null],
       title: [null, Validators.required],

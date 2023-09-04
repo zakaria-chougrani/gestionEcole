@@ -1,16 +1,19 @@
 import {Level} from "./level";
-import {ContactInfo} from "./contact-info";
 import {Session} from "./session";
 import {StatusEnum} from "../enum";
 
-export interface Program {
+export interface ProgramDto {
   id:string;
   title:string;
   schoolYear:string;
+  nbrStudent:number;
   classLevel:Level;
-  teacher:ContactInfo;
+  teacherId:string;
+  teacherFullName:string;
+  teacherPhoneNumber:string;
+  teacherImageByte:string;
   sessions:Session[];
-  students:ContactInfo[];
+  // students:ContactInfo[];
   status?:StatusEnum;
   createdAt?: Date;
   updatedAt?: Date;

@@ -4,7 +4,8 @@ import {ContactInfo} from "../models";
 import {Observable, Subject} from "rxjs";
 import {environment} from "../../../environments/environment";
 import {Page} from "../models";
-import {StatusEnum} from "../enum";
+import {StatusEnum, TaskEnum} from "../enum";
+import {ContactImageDto} from "../models/ContactImageDto";
 
 @Injectable({
   providedIn: 'root'
@@ -21,11 +22,16 @@ export class ContactService {
     this.refreshContacts$.next();
   }
   constructor(private http: HttpClient) { }
-  getAllContacts(pageIndex: number, pageSize: number, searchValue: string,status:StatusEnum): Observable<Page<ContactInfo>> {
+
+  getImage(contactId: string): Observable<ContactImageDto> {
+    return this.http.get<ContactImageDto>(`${this.apiUrl}/${contactId}/image`);
+  }
+  getAllContacts(pageIndex: number, pageSize: number, searchValue: string,task:TaskEnum,status:StatusEnum): Observable<Page<ContactInfo>> {
     const params = new HttpParams()
       .set('page', pageIndex.toString())
       .set('size', pageSize.toString())
       .set('search', searchValue)
+      .set('task', task)
       .set('status', status);
 
     return this.http.get<Page<ContactInfo>>(this.apiUrl, { params });

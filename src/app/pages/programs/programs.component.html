@@ -69,11 +69,10 @@
     </div>
   </div>
 </div>
-<div *ngIf="isLoading">
-  <h1 class="text-center">Wait ...</h1>
-</div>
-<div *ngIf="!isLoading && !programs.length">
-  <h1 class="text-center">NO PROGRAM FOUND !</h1>
+<div *ngIf="!programs.length" style="margin: 1rem 0">
+  <h1 class="text-center" *ngIf="isLoading">Wait ...</h1>
+  <h1 class="text-center" *ngIf="!isLoading && isError">NO CONNECTION !!!</h1>
+  <h1 class="text-center" *ngIf="!isLoading && !programs.length && !isError">NO PROGRAM FOUND !</h1>
 </div>
 <div fxLayout="column" *ngIf="!isLoading && programs.length">
   <div fxLayout="row wrap" class="program-card-container" fxLayout.lt-md="column" fxLayoutGap="20px"
@@ -97,17 +96,17 @@
         </div>
         <div class="box-info mg-md-bt">
           <img class="avatar"
-               [src]="program.teacher.imageByte?program.teacher.imageByte:'assets/images/avatars/teacher.png'"
+               [src]="program.teacherImageByte?program.teacherImageByte:'assets/images/avatars/teacher.png'"
                alt="imgT" width="50">
           <div>
-            <p class="info">{{program.teacher.lastName|uppercase}} {{program.teacher.firstName|titlecase}}</p>
-            <p class="sub-info">Tél: {{program.teacher.phoneNumber}}</p>
+            <p class="info">{{program.teacherFullName|titlecase}}</p>
+            <p class="sub-info">Tél: {{program.teacherPhoneNumber}}</p>
           </div>
         </div>
         <div class="box-info mg-md-bt">
           <mat-icon>groups</mat-icon>
           <div>
-            <p class="info">Count of Students : {{program.students ? program.students.length : 0}}</p>
+            <p class="info">Count of Students : {{program.nbrStudent}}</p>
           </div>
         </div>
         <div class="box-sessions" *ngFor="let session of program.sessions; let i = index">
@@ -142,7 +141,7 @@
         <hr>
         <button mat-mini-fab [ngClass]="program?.status==StatusEnum.ACTIVE?'btn-red':'btn-green'" style="background-color: white"
                 (click)="program?.status==StatusEnum.ACTIVE?deleteItem(program.id || ''):recoverItem(program.id || '')"
-                matTooltip="delete of program">
+                [matTooltip]="program?.status==StatusEnum.ACTIVE?'delete of program':'recover of program'">
           <mat-icon>{{program?.status==StatusEnum.ACTIVE?'delete_outline':'undo'}}</mat-icon>
         </button>
         <hr>

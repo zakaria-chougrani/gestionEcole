@@ -1,7 +1,7 @@
-<div class="service-header">
+<div class="service-header" *ngIf="program">
   <div class="content row">
     <div class="col-4 justify-content-center">
-      <div class="box" *ngIf="program">
+      <div class="box">
         <div class="box-title mg-md-bt">
           <p>{{program.title | uppercase}}</p>
           <p>{{program.schoolYear}}</p>
@@ -15,32 +15,27 @@
         </div>
         <div class="box-info mg-md-bt">
           <img class="avatar"
-               [src]="program.teacher.imageByte?program.teacher.imageByte:'assets/images/avatars/teacher.png'"
+               [src]="program.teacherImageByte?program.teacherImageByte:'assets/images/avatars/teacher.png'"
                alt="imgT" width="50">
           <div>
-            <p class="info">T. {{program.teacher.lastName|uppercase}} {{program.teacher.firstName|titlecase}}</p>
+            <p class="info">T. {{program.teacherFullName|titlecase}}</p>
           </div>
         </div>
         <h4 *ngIf="!noActiveSession && session"> Students In Class:
-          <span *ngIf="session.students else noStudent">
-            {{(program.students ? (getCountStudentPresent(session.students) / program.students.length * 100) : 0) | number:'1.0-2'}}
+          <span>
+            {{(session.students ? (getCountStudentPresent(session.students) / session.students.length * 100) : 0) | number:'1.0-2'}}
             %
-            ({{getCountStudentPresent(session.students)}}/{{program.students ? program.students.length : 0}})
+            ({{session.students?getCountStudentPresent(session.students):0}}/{{session.students ? session.students.length : 0}})
           </span>
-          <ng-template #noStudent>
-            0% (0/{{program.students ? program.students.length : 0}})
-          </ng-template>
         </h4>
       </div>
-
     </div>
     <div class="col-4 justify-content-center">
-      <div class="box">
-        <div class="qrcodebox" [ngClass]="{'qrcodebox-zoomIn':zoomState}" *ngIf="!noActiveSession"
-             (click)="toggleZoomState()">
-          <div class="qrcodeImage">
+      <div class="box" *ngIf="!noActiveSession && session && !isLoading">
+        <div class="qrcodebox" [ngClass]="{'qrcodebox-zoomIn':zoomState}" (click)="toggleZoomState()">
+          <div class="qrcodeImage" *ngIf="sessionId">
             <qrcode
-              [qrdata]="getCurrentUrl()"
+              [qrdata]="getCurrentUrl() || ''"
               [allowEmptyString]="true"
               [elementType]="'canvas'"
               [errorCorrectionLevel]="'M'"
@@ -66,21 +61,24 @@
 </div>
 
 <mat-progress-bar mode="indeterminate" *ngIf="isLoading" style="width: 100%"></mat-progress-bar>
+<button mat-fab color="primary" aria-label="previous page" style="margin: 1rem" (click)="previousPage()">
+  <mat-icon>undo</mat-icon>
+</button>
 <div fxLayout="column" class="student-card-content" *ngIf="!noActiveSession && session">
   <div fxLayout="row wrap" class="student-card-container" fxLayout.lt-md="column" fxLayoutGap="20px"
        fxLayoutAlign="center stretch">
     <div fxFlex="25%" fxFlex.gt-sm="20%" fxFlex.gt-md="10%" fxFlex.lt-md="100" fxLayout="column"
          fxLayoutAlign="center center" fxLayoutGap="20px"
          class="mat-elevation-z4 student-card "
-         *ngFor="let studentPre of program.students"
-         [ngClass]="getStatusStudent(studentPre) ?  'highlight-green':'highlight-red'"
+         *ngFor="let studentPre of session.students"
+         [ngClass]="studentPre.present ?  'highlight-green':'highlight-red'"
          (click)="checkStudent(studentPre.id || '')">
       <div class="img-box">
         <img [src]="studentPre.imageByte?studentPre.imageByte:'assets/images/avatars/students.png'" fxFlex alt="infor"
              height="512" width="512">
       </div>
-      <h3 class="mat-title" fxFlex>{{studentPre.lastName|titlecase}} {{studentPre.firstName|titlecase}}</h3>
+      <h3 class="mat-title" fxFlex>{{studentPre.fullName|titlecase}}</h3>
     </div>
-    <h1 *ngIf="!program.students || !program.students.length">No student assign to this program ! </h1>
+    <h1 *ngIf="!session.students || !session.students.length">No student assign to this program ! </h1>
   </div>
 </div>

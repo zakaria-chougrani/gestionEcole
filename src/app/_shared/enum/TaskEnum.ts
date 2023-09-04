@@ -3,5 +3,6 @@ export enum TaskEnum {
   trainee_staff = 'trainee_staff',
   Teacher = 'teacher',
   Student = 'student',
-  trainee_student = 'trainee_student'
+  trainee_student = 'trainee_student',
+  ALL = 'ALL'
 }
