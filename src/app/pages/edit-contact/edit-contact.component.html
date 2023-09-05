@@ -133,7 +133,7 @@
       </mat-form-field>
     </div>
     <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center" class="mg-md-bt">
-      <button mat-raised-button color="primary">{{ data.id ? 'Update' : 'Add' }} Contact</button>
+      <button mat-raised-button color="primary" [disabled]="isLoading">{{ data.id ? 'Update' : 'Add' }} Contact</button>
 
       <button mat-raised-button (click)="onCancel()">CANCEL</button>
     </div>

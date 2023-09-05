@@ -113,7 +113,18 @@ export class AddProgramComponent implements OnInit {
           this.teachers = page.content;
         },
         error: () => this.isLoading = false,
-        complete: () => this.isLoading = false
+        complete: () => {
+          this.isLoading = false;
+          if (this.teachers.length){
+            this.teachers.map(teacher => {
+              if (teacher.id) {
+                this.contactService.getImage(teacher.id).subscribe({
+                  next: (imageDto) => teacher.imageByte = imageDto.imageByte
+                });
+              }
+            });
+          }
+        }
       });
   }
 

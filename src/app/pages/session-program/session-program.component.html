@@ -32,7 +32,7 @@
     </div>
     <div class="col-4 justify-content-center">
       <div class="box" *ngIf="!noActiveSession && session && !isLoading">
-        <div class="qrcodebox" [ngClass]="{'qrcodebox-zoomIn':zoomState}" (click)="toggleZoomState()">
+        <div class="qrcodebox" [ngClass]="{'img-zoomIn':zoomState}" (click)="toggleZoomState()">
           <div class="qrcodeImage" *ngIf="sessionId">
             <qrcode
               [qrdata]="getCurrentUrl() || ''"

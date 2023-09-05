@@ -1,6 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ContactInfo} from "../../_shared/models";
+import {ContactImageDto, ContactInfo} from "../../_shared/models";
 import {FlexModule} from "@angular/flex-layout";
 import {MatButtonModule} from "@angular/material/button";
 import {MatDividerModule} from "@angular/material/divider";
@@ -76,7 +76,6 @@ export class EditContactComponent {
           reader.onload = () => {
             this.selectedFileDataURL = reader.result as string;
             this.contactForm.patchValue({imageByte: this.selectedFileDataURL});
-
           };
           reader.readAsDataURL(result);
       }
@@ -90,12 +89,14 @@ export class EditContactComponent {
     }
     let formFinal: ContactInfo = {
       id: this.contactForm.controls['id'].value,
-      imageByte: this.contactForm.controls['imageByte'].value,
       lastName: this.contactForm.controls['lastName'].value,
       firstName: this.contactForm.controls['firstName'].value,
       gender: this.contactForm.controls['gender'].value,
       phoneNumber: this.contactForm.controls['phoneNumber'].value,
-      task: this.contactForm.controls['task'].value
+      task: this.contactForm.controls['task'].value,
+      createdAt: this.data.createdAt,
+      status: this.data.status,
+      updatedAt: this.data.updatedAt
     };
     if (this.contactForm.controls['task'].value == 'staff' || this.contactForm.controls['task'].value == 'trainee_staff') {
       formFinal.email = this.contactForm.controls['email'].value;
@@ -105,20 +106,24 @@ export class EditContactComponent {
     } else if (this.contactForm.controls['task'].value == 'teacher') {
       formFinal.email = this.contactForm.controls['email'].value;
       formFinal.specialties = this.contactForm.controls['specialties'].value;
-
     } else if (this.contactForm.controls['task'].value == 'student' || this.contactForm.controls['task'].value == 'trainee_student') {
       formFinal.dateOfBirth = this.contactForm.controls['dateOfBirth'].value;
       formFinal.scholarLevel = this.contactForm.controls['scholarLevel'].value;
       formFinal.startOfInsurance = this.contactForm.controls['startOfInsurance'].value;
       formFinal.expirationOfInsurance = this.contactForm.controls['expirationOfInsurance'].value;
-
     } else return;
 
     this.isLoading = true;
+    let imageByte:ContactImageDto = {imageByte:this.contactForm.controls['imageByte'].value};
     this.contactService.saveContact(formFinal).subscribe({
-      next: () => {
-        this.contactService.triggerRefreshContacts();
-        this.onCancel();
+      next: savedContact => {
+        if (savedContact.id && imageByte.imageByte){
+          this.contactService.setImage(savedContact.id,imageByte).subscribe(value => {
+            this.dialogRef.close('ok');
+          });
+        }else{
+          this.dialogRef.close('ok');
+        }
       },
       error: () => this.isLoading = false,
       complete: () => this.isLoading = false

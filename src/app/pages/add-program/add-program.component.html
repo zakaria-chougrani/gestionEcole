@@ -25,7 +25,7 @@
         <mat-select formControlName="schoolclass" (selectionChange)="loadLevelsByClassId()" >
           <mat-option *ngFor="let schoolClass of classes" [value]="schoolClass">
             <img alt="" class="option-img" [src]="schoolClass.imageByte" height="25">
-            <span>{{schoolClass.name}}</span>
+            <span>{{schoolClass.name |titlecase}}</span>
           </mat-option>
         </mat-select>
       </mat-form-field>

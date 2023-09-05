@@ -85,13 +85,15 @@ export class StudentsProgramComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.dataSource = new MatTableDataSource(data);
-          data.map(contact => {
-            if (contact.id && !contact.imageByte){
-              this.contactService.getImage(contact.id).subscribe({
-                next: (imageDto) => contact.imageByte = imageDto.imageByte
-              });
-            }
-          })
+          if (data){
+            data.map(contact => {
+              if (contact.id && !contact.imageByte){
+                this.contactService.getImage(contact.id).subscribe({
+                  next: (imageDto) => contact.imageByte = imageDto.imageByte
+                });
+              }
+            })
+          }
         },
         error: () => this.isLoading = false,
         complete: () => this.isLoading = false

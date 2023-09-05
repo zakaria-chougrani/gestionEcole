@@ -103,10 +103,16 @@ export class ContactComponent implements OnInit {
   }
 
   openAddContactDialog(contact: ContactInfo) {
-    this.dialog.open(EditContactComponent, {
+    let dialogRef = this.dialog.open(EditContactComponent, {
       width: '600px',
       data: contact,
     });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.contactService.triggerRefreshContacts();
+      }
+    });
+
   }
 
   deleteItem(id: string) {

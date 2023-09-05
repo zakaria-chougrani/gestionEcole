@@ -5,7 +5,7 @@ import {MatDividerModule} from "@angular/material/divider";
 import {MatButtonModule} from "@angular/material/button";
 import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {AddClassComponent} from "../add-class/add-class.component";
-import {SchoolClass} from "../../_shared/models/school-class";
+import {SchoolClass} from "../../_shared/models";
 import {SchoolClassService} from "../../_shared/services/school-class.service";
 import {MatPaginatorModule, PageEvent} from "@angular/material/paginator";
 import {MatIconModule} from "@angular/material/icon";
@@ -48,6 +48,7 @@ export class ClassesComponent implements OnInit {
   }
 
   loadClasses(): void {
+    this.isLoading = true;
     this.schoolClassService.getAllClasses(this.currentPage, this.pageSize, this.searchValue,this.statusOption)
       .subscribe({
         next: (page) => {

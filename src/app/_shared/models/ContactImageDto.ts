@@ -1,4 +1,4 @@
 export interface ContactImageDto {
-  contactId: string;
-  imageByte: string;
+  contactId?: string;
+  imageByte?: string;
 }

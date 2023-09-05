@@ -84,7 +84,11 @@ export class ProgramsComponent implements OnInit {
           if (!this.isError && this.programs.length){
             this.programs.map(program => {
               this.contactService.getImage(program.teacherId).subscribe({
-                next: (imageDto) => program.teacherImageByte = imageDto.imageByte
+                next: (imageDto) => {
+                  if (imageDto.imageByte != null) {
+                    program.teacherImageByte = imageDto.imageByte;
+                  }
+                }
               });
             });
           }

@@ -64,6 +64,15 @@ export class SessionProgramComponent implements OnInit, OnDestroy {
     this.sessionService.refreshProgramSession.subscribe(() => {
       this.loadLastSessionActive();
     });
+
+    this.subscription = this._mqttService.observe(`highup/presence`).subscribe((message: IMqttMessage) => {
+      // console.log(message.payload.toString());
+      if (message.payload.toString() == this.session.id) {
+        this.sessionService.triggerRefreshProgramSession();
+        this.audio.play().then();
+      }
+
+    });
   }
 
   loadProgramById() {
@@ -74,13 +83,18 @@ export class SessionProgramComponent implements OnInit, OnDestroy {
       next: program => {
         this.program = program;
         this.contactService.getImage(this.program.teacherId).subscribe({
-          next: (imageDto) => this.program.teacherImageByte = imageDto.imageByte
+          next: (imageDto) => {
+            if (imageDto.imageByte != null) {
+              this.program.teacherImageByte = imageDto.imageByte;
+            }
+          }
         });
       },
       error: () => this.isLoading = false,
       complete: () => this.isLoading = false
     });
   }
+
   loadLastSessionActive() {
     if (!this.programId)
       return;
@@ -92,15 +106,7 @@ export class SessionProgramComponent implements OnInit, OnDestroy {
         } else {
           this.noActiveSession = false;
           this.session = session;
-          this.sessionId = this.session.id
-          if (this.cpt == 0) {
-            console.log('enter')
-            // this.subscription = this._mqttService.observe(`highup/presence/${this.session.id}`).subscribe((message: IMqttMessage) => {
-            //   console.log(message.payload.toString());
-            //   this.sessionService.triggerRefreshProgramSession();
-            //   this.audio.play().then();
-            // });
-          }
+          this.sessionId = this.session.id;
         }
       },
       error: () => this.isLoading = false,
@@ -129,16 +135,13 @@ export class SessionProgramComponent implements OnInit, OnDestroy {
     })
   }
 
-  cpt = 0;
-
   checkStudent(studentId: string) {
     this.isLoading = true;
     this.sessionService.checkStudent(this.session.id, studentId).subscribe({
       next: () => {
-        this.sessionService.triggerRefreshProgramSession();
-        this._mqttService.unsafePublish(`highup/presence/${this.session.id}`, 'msg ' + (this.cpt++).toString(), {
-          qos: 2,
-          retain: false
+        this._mqttService.unsafePublish(`highup/presence`, this.session.id, {
+          qos: 1,
+          retain: true
         });
       },
       error: () => this.isLoading = false,
@@ -160,7 +163,6 @@ export class SessionProgramComponent implements OnInit, OnDestroy {
         this.sessionService.deactivateSession(this.session.id).subscribe({
           next: () => {
             this.sessionService.triggerRefreshProgramSession();
-            this._mqttService.unsafePublish(`highup/presence/${this.session.id}`, 'true', {qos: 2, retain: false});
           },
           error: () => this.isLoading = false,
           complete: () => this.isLoading = false

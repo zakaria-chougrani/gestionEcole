@@ -26,6 +26,9 @@ export class ContactService {
   getImage(contactId: string): Observable<ContactImageDto> {
     return this.http.get<ContactImageDto>(`${this.apiUrl}/${contactId}/image`);
   }
+  setImage(contactId: string,imageDto:ContactImageDto): Observable<ContactImageDto> {
+    return this.http.post<ContactImageDto>(`${this.apiUrl}/${contactId}/image`,imageDto);
+  }
   getAllContacts(pageIndex: number, pageSize: number, searchValue: string,task:TaskEnum,status:StatusEnum): Observable<Page<ContactInfo>> {
     const params = new HttpParams()
       .set('page', pageIndex.toString())
