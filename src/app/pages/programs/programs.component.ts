@@ -44,7 +44,7 @@ export class ProgramsComponent implements OnInit {
   levelId!: string;
   title!: string;
   teachers: ContactInfo[] = [];
-  statusList: StatusEnum[] = [StatusEnum.ACTIVE, StatusEnum.DELL, StatusEnum.ALL];
+  statusList: StatusEnum[] = [StatusEnum.ACTIVE, StatusEnum.DEL, StatusEnum.ALL];
   statusOption: StatusEnum = StatusEnum.ACTIVE;
   isError: Boolean = false;
   protected readonly StatusEnum = StatusEnum;

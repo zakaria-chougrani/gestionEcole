@@ -18,11 +18,11 @@ import Swal from "sweetalert2";
 import {QRCodeModule} from "angularx-qrcode";
 import {IMqttMessage, MqttService} from "ngx-mqtt";
 import {Subscription} from "rxjs";
-import {ContactInfo, ProgramDto, StudentPresence} from "../../_shared/models";
+import {ContactInfo, ProgramDto} from "../../_shared/models";
 import {ContactService} from "../../_shared/services/contact.service";
-import {LastSessionActiveOfProgramDto, StudentSessionDto} from "../../_shared/models/LastSessionActiveOfProgramDto";
+import {LastSessionActiveOfProgramDto, StudentSessionDto} from "../../_shared/models";
 
-
+interface MqttMsg {sessionId?:string;studentId?:string}
 @Component({
   selector: 'ec-session-program',
   standalone: true,
@@ -40,8 +40,7 @@ export class SessionProgramComponent implements OnInit, OnDestroy {
   private subscription!: Subscription;
   private audio!: HTMLAudioElement;
   zoomState: boolean = false;
-  sessionId: string | null = null;
-
+  qrUrl!: string;
   constructor(
     private sessionService: ProgramSessionService,
     private programService: ProgramService,
@@ -64,14 +63,16 @@ export class SessionProgramComponent implements OnInit, OnDestroy {
     this.sessionService.refreshProgramSession.subscribe(() => {
       this.loadLastSessionActive();
     });
-
     this.subscription = this._mqttService.observe(`highup/presence`).subscribe((message: IMqttMessage) => {
-      // console.log(message.payload.toString());
-      if (message.payload.toString() == this.session.id) {
-        this.sessionService.triggerRefreshProgramSession();
+      let msg:MqttMsg = JSON.parse(message.payload.toString());
+      if (this.session && this.session.id == msg.sessionId){
         this.audio.play().then();
+        this.session.students.map(student => {
+          if (student.id === msg.studentId) {
+            student.present = !student.present;
+          }
+        });
       }
-
     });
   }
 
@@ -106,7 +107,22 @@ export class SessionProgramComponent implements OnInit, OnDestroy {
         } else {
           this.noActiveSession = false;
           this.session = session;
-          this.sessionId = this.session.id;
+          if (!this.qrUrl) {
+            this.qrUrl = `${window.location.protocol}${window.location.host}/check-presence/${session.id}`;
+            if (this.session.students) {
+              this.session.students.map(contact => {
+                if (contact.id && !contact.imageByte) {
+                  this.contactService.getImage(contact.id).subscribe({
+                    next: (imageDto) => {
+                      if (imageDto.imageByte != null) {
+                        contact.imageByte = imageDto.imageByte;
+                      }
+                    }
+                  });
+                }
+              })
+            }
+          }
         }
       },
       error: () => this.isLoading = false,
@@ -127,6 +143,20 @@ export class SessionProgramComponent implements OnInit, OnDestroy {
       next: session => {
         this.noActiveSession = false;
         this.session = session;
+        this.qrUrl = `${window.location.protocol}${window.location.host}/check-presence/${this.session.id}`;
+        if (this.session.students) {
+          this.session.students.map(student => {
+            if (student.id && !student.imageByte) {
+              this.contactService.getImage(student.id).subscribe({
+                next: (imageDto) => {
+                  if (imageDto.imageByte != null) {
+                    student.imageByte = imageDto.imageByte;
+                  }
+                }
+              });
+            }
+          })
+        }
       },
       error: () => {
         this.isLoading = false;
@@ -139,7 +169,8 @@ export class SessionProgramComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.sessionService.checkStudent(this.session.id, studentId).subscribe({
       next: () => {
-        this._mqttService.unsafePublish(`highup/presence`, this.session.id, {
+        let mqttMsg:MqttMsg = {sessionId:this.session.id,studentId:studentId};
+        this._mqttService.unsafePublish(`highup/presence`, JSON.stringify(mqttMsg), {
           qos: 1,
           retain: true
         });
@@ -163,6 +194,11 @@ export class SessionProgramComponent implements OnInit, OnDestroy {
         this.sessionService.deactivateSession(this.session.id).subscribe({
           next: () => {
             this.sessionService.triggerRefreshProgramSession();
+            let mqttMsg:MqttMsg = {sessionId:this.session.id};
+            this._mqttService.unsafePublish(`highup/presence`, JSON.stringify(mqttMsg), {
+              qos: 1,
+              retain: true
+            });
           },
           error: () => this.isLoading = false,
           complete: () => this.isLoading = false
@@ -172,12 +208,6 @@ export class SessionProgramComponent implements OnInit, OnDestroy {
 
   }
 
-  // getStatusStudent(studentPre: ContactInfo): boolean {
-  //   return this.session.students && this.session.students.some(s1 => {
-  //     return studentPre.id === s1.student.id && s1.present;
-  //   });
-  // }
-
   getCountStudentPresent(students: StudentSessionDto[]): number {
     let cpt = 0;
     students.forEach(value => {
@@ -185,12 +215,6 @@ export class SessionProgramComponent implements OnInit, OnDestroy {
         cpt++;
     })
     return cpt;
-  }
-
-  getCurrentUrl(): string | null {
-    if (this.sessionId)
-      return `${window.location.protocol}${window.location.host}/check-presence/${this.sessionId || ''}`;
-    return null;
   }
 
   toggleZoomState() {

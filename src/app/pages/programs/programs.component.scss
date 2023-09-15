@@ -4,13 +4,12 @@
 
 .program-card-container {
   padding: 1.4rem;
-
   .service-card {
     transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
     cursor: default;
     background-color: white;
     padding: 1.4rem;
-    margin: .7rem 0;
+    width: 100%;
     position: relative;
 
     &:hover {

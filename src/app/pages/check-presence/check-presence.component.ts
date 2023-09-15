@@ -7,7 +7,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatSelectModule} from "@angular/material/select";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {ProgramSessionService} from "../../_shared/services/program-session.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {MatCardModule} from "@angular/material/card";
 import {FlexModule} from "@angular/flex-layout";
@@ -50,15 +50,17 @@ export class CheckPresenceComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private sessionService: ProgramSessionService,
     private route: ActivatedRoute,
+    private router: Router,
     private _mqttService: MqttService
   ) {
     this.route.paramMap.subscribe(params => {
       this.sessionId = params.get('id');
     });
-
-    this.subscription = this._mqttService.observe(`highup/presence/${this.sessionId}`).subscribe((message: IMqttMessage) => {
-      // console.log(message.payload.toString());
-      this.loadStudent();
+    this.subscription = this._mqttService.observe(`highup/presence`).subscribe((message: IMqttMessage) => {
+      let msg:any = JSON.parse(message.payload.toString());
+      if (this.session && this.session.id == msg.sessionId){
+        this.loadStudent();
+      }
     });
   }
 
@@ -78,7 +80,11 @@ export class CheckPresenceComponent implements OnInit, OnDestroy {
     this.sessionService.checkStudent(this.sessionId, studentId).subscribe({
       next: () => {
         this.isCheckSuccess = true;
-        this._mqttService.unsafePublish(`highup/presence/${this.sessionId}`, 'true', {qos: 1, retain: true});
+        let mqttMsg:any = {sessionId:this.session.id,studentId:studentId};
+        this._mqttService.unsafePublish(`highup/presence`, JSON.stringify(mqttMsg), {
+          qos: 1,
+          retain: true
+        });
       },
       error: err => {
         this.isLoading = false;
@@ -93,8 +99,13 @@ export class CheckPresenceComponent implements OnInit, OnDestroy {
       return;
     this.isLoading = true;
     this.sessionService.getSession(this.sessionId).subscribe({
-      next: session => this.session = session,
-      error: () => this.isLoading = false,
+      next: session => {
+        this.session = session;
+      },
+      error: () => {
+        this.isLoading = false;
+        this.router.navigateByUrl("/login").then();
+      },
       complete: () => this.isLoading = false
     })
   }
@@ -105,7 +116,10 @@ export class CheckPresenceComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.sessionService.getStudentsNotCheck(this.sessionId).subscribe({
       next: students => this.students = students,
-      error: () => this.isLoading = false,
+      error: () => {
+        this.isLoading = false;
+        this.router.navigateByUrl("/login").then();
+      },
       complete: () => this.isLoading = false
     })
   }

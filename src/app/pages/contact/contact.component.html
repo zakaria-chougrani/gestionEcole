@@ -60,7 +60,7 @@
             </p>
             <p [ngStyle]="{'color': contactInfo?.status == StatusEnum.ACTIVE ? 'green' : 'red'}">
               {{contactInfo?.status === StatusEnum.ACTIVE ? 'Active Account' :
-              contactInfo?.status === StatusEnum.DELL?'Deleted Account':'OTHER'
+              contactInfo?.status === StatusEnum.DEL?'Deleted Account':'OTHER'
               }}
             </p>
           </div>
@@ -99,7 +99,7 @@
           </button>
         </div>
       </div>
-      <mat-paginator [length]="totalContacts" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+      <mat-paginator *ngIf="contacts" [length]="totalContacts" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
                      (page)="onPageChanged($event)"></mat-paginator>
     </ng-container>
   </div>

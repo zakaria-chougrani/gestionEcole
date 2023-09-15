@@ -33,7 +33,7 @@ export class ClassesComponent implements OnInit {
   pageSizeOptions: number[] = [4, 8, 12, 25, 50];
   isLoading: boolean = false;
   searchValue = '';
-  statusList: StatusEnum[] = [StatusEnum.ACTIVE, StatusEnum.DELL,StatusEnum.ALL];
+  statusList: StatusEnum[] = [StatusEnum.ACTIVE, StatusEnum.DEL,StatusEnum.ALL];
 
   statusOption: StatusEnum = StatusEnum.ACTIVE;
 

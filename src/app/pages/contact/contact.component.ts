@@ -35,7 +35,7 @@ export class ContactComponent implements OnInit {
   currentPage = 0;
   pageSizeOptions: number[] = [5, 10, 25, 50];
   searchValue = '';
-  statusList: StatusEnum[] = [StatusEnum.ACTIVE, StatusEnum.DELL, StatusEnum.ALL];
+  statusList: StatusEnum[] = [StatusEnum.ACTIVE, StatusEnum.DEL, StatusEnum.ALL];
   statusOption: StatusEnum = StatusEnum.ACTIVE;
   isError: Boolean = false;
   protected readonly StatusEnum = StatusEnum;
@@ -71,23 +71,20 @@ export class ContactComponent implements OnInit {
       });
   }
 
-  loadImage(contactId: string) {
-    this.contactService.getImage(contactId)
-      .subscribe({
-        next: (value) => {
-          this.contacts.map((contact) => {
-            if (contact.id === contactId) {
-              contact.imageByte = value.imageByte;
-            }
-          });
-        }
-      });
-  }
 
   loadContactsImage() {
     this.contacts.forEach(contact => {
       if (contact.id && !contact.imageByte){
-        this.loadImage(contact.id);
+        this.contactService.getImage(contact.id )
+          .subscribe({
+            next: (value) => {
+              this.contacts.map((contactImage) => {
+                if (contactImage.id === contact.id ) {
+                  contactImage.imageByte = value.imageByte;
+                }
+              });
+            }
+          });
       }
     })
   }
