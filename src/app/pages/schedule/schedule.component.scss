@@ -1,0 +1,9 @@
+h2{
+  margin: 1rem;
+}
+.calendar-container {
+  padding: 2rem;
+  height: 80vh; /* Adjust the height as per your requirements */
+  overflow-y: auto; /* Enable vertical scrolling when content exceeds the height */
+  border: 1px solid #ccc; /* Add a border for visualization, optional */
+}

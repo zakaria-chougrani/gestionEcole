@@ -5,6 +5,12 @@ export const menus = [
   //   'link': false
   // },
   {
+    name: 'schedule',
+    icon: 'schedule',
+    img:'./assets/images/sidebarmenu/schedule.png',
+    link: '/schedule'
+  },
+  {
     name: 'classes',
     icon: 'class',
     img:'./assets/images/sidebarmenu/class.png',

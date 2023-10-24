@@ -20,7 +20,7 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: '/programs',
+        redirectTo: '/schedule',
         pathMatch: 'full'
       },
       {
@@ -51,7 +51,11 @@ const routes: Routes = [
       {
         path: 'history-sessions/:id',
         loadComponent: () => import('./pages/history-sessions/history-sessions.component').then(m => m.HistorySessionsComponent)
-      }
+      },
+      {
+        path: 'schedule',
+        loadComponent: () => import('./pages/schedule/schedule.component').then(m => m.ScheduleComponent)
+      },
     ],
   },
   {

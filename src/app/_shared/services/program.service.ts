@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import {environment} from "../../../environments/environment";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable, Subject} from "rxjs";
-import {Page} from "../models/page";
-import {ContactInfo} from "../models/contact-info";
-import {ProgramDto} from "../models/programDto";
+import {Page,ContactInfo,ProgramDto} from "../models";
 import {StatusEnum} from "../enum";
 
 @Injectable({
@@ -47,6 +45,9 @@ export class ProgramService {
     ;
 
     return this.http.get<Page<ProgramDto>>(this.apiUrl, { params });
+  }
+  getProgramsSchedule(): Observable<ProgramDto[]> {
+    return this.http.get<ProgramDto[]>(`${this.apiUrl}/schedule`);
   }
   getProgramById(programId:string): Observable<ProgramDto> {
     return this.http.get<ProgramDto>(`${this.apiUrl}/${programId}`);

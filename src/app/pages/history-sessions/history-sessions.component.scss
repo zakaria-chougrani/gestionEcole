@@ -1,12 +1,22 @@
-.contact-list-container {
+.filterByDate{
+  padding: 0 2rem;
+}
+.session-list-container {
   background-color: white;
   padding: .7rem;
   .card-head{
     font-weight: bold;
     font-size: 1.4rem;
-
     span{
       font-size: 1rem;
     }
   }
+  th{
+    text-align: center;
+  }
+  [class*="mat-column-"] {
+    text-align: center;
+    border: 1px solid #b7b6b6;
+  }
+
 }

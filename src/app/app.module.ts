@@ -9,6 +9,8 @@ import {MatMomentDateModule} from "@angular/material-moment-adapter";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AuthInterceptor} from "./_shared/services/auth.interceptor";
 import {IMqttServiceOptions, MqttModule} from "ngx-mqtt";
+import {CalendarModule, DateAdapter} from "angular-calendar";
+import {adapterFactory} from "angular-calendar/date-adapters/date-fns";
 
 export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
   hostname: 'broker.hivemq.com',
@@ -25,7 +27,8 @@ export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
     BrowserAnimationsModule,
     HttpClientModule,
     MatMomentDateModule,
-    MqttModule.forRoot(MQTT_SERVICE_OPTIONS)
+    MqttModule.forRoot(MQTT_SERVICE_OPTIONS),
+    CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory})
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},

@@ -24,14 +24,14 @@ export class ProgramSessionService {
   triggerRefreshProgramSession(): void {
     this.refreshProgramSession$.next();
   }
-  getAllSessionOfProgram(pageIndex: number, pageSize: number, programId: string,status:StatusEnum,dateOpen?:Date,dateClose?:Date): Observable<Page<SessionProgramHistory>> {
+  getAllSessionOfProgram(pageIndex: number, pageSize: number, programId: string,status:StatusEnum,dateOpen?:Date,dateClose?:Date): Observable<any> {
     const params = new HttpParams()
       .set('page', pageIndex.toString())
       .set('size', pageSize.toString())
       .set('programId', programId)
       .set('status', status)
     ;
-    return this.http.get<Page<SessionProgramHistory>>(`${this.apiUrl}/${programId}/sessions`, { params });
+    return this.http.get(`${this.apiUrl}/${programId}/sessions`, { params });
   }
   getLastSessionActive(programId:string): Observable<LastSessionActiveOfProgramDto|null> {
     return this.http.get<LastSessionActiveOfProgramDto|null>(`${this.apiUrl}/${programId}/last-session/active`);

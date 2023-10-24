@@ -1,0 +1,16 @@
+<h2>Week Schedule</h2>
+<div class="calendar-container">
+  <mwl-calendar-week-view
+    [viewDate]="viewDate"
+    [events]="events"
+    [hourSegments]="hourSegments"
+    [dayStartHour]="8"
+    [dayEndHour]="24"
+    [excludeDays]="excludeDays"
+    [weekStartsOn]="weekStartsOn"
+    (eventClicked)="eventClicked($event.event)"
+  >
+
+  </mwl-calendar-week-view>
+
+</div>
