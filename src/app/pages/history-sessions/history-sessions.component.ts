@@ -14,7 +14,7 @@ import {MatTableModule} from "@angular/material/table";
 import {MatSort, MatSortModule} from "@angular/material/sort";
 import {ProgramSessionService} from "../../_shared/services/program-session.service";
 import {StatusEnum} from "../../_shared/enum";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, RouterLink} from "@angular/router";
 import {HistorySessionDataSourceService} from "../../_shared/datasource/history-session-data-source.service";
 import {tap} from "rxjs";
 import * as moment from 'moment';
@@ -23,7 +23,7 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
 @Component({
   selector: 'ec-history-sessions',
   standalone: true,
-  imports: [CommonModule, FlexModule, MatButtonModule, MatChipsModule, MatDividerModule, MatFormFieldModule, MatIconModule, MatInputModule, MatPaginatorModule, MatProgressBarModule, ReactiveFormsModule, FormsModule, MatTableModule, MatSortModule, MatDatepickerModule],
+  imports: [CommonModule, FlexModule, MatButtonModule, MatChipsModule, MatDividerModule, MatFormFieldModule, MatIconModule, MatInputModule, MatPaginatorModule, MatProgressBarModule, ReactiveFormsModule, FormsModule, MatTableModule, MatSortModule, MatDatepickerModule, RouterLink],
   templateUrl: './history-sessions.component.html',
   styleUrls: ['./history-sessions.component.scss']
 })
@@ -41,8 +41,8 @@ export class HistorySessionsComponent implements OnInit, AfterViewInit {
   status: StatusEnum = StatusEnum.ALL;
 
   dateFilter = new FormGroup({
-    dateOpen: new FormControl<any>(this.treeMonthAgo()),
-    dateClose: new FormControl<any>(new Date()),
+    dateOpen: new FormControl<any>(this.getMonthStartAndEndDates().start),
+    dateClose: new FormControl<any>(this.getMonthStartAndEndDates().end),
   });
   constructor(
     private _location: Location,
@@ -90,10 +90,6 @@ export class HistorySessionsComponent implements OnInit, AfterViewInit {
   previousPage() {
     this._location.back();
   }
-  treeMonthAgo():Date{
-    let dateString = moment().subtract(3, 'month').format('MMMM Do YYYY');
-    return moment(dateString, 'MMMM Do YYYY').toDate();
-  }
   formatDate(date: Date) {
     let d = new Date(date),
       month = '' + (d.getMonth() + 1),
@@ -104,5 +100,15 @@ export class HistorySessionsComponent implements OnInit, AfterViewInit {
     if (day.length < 2)
       day = '0' + day;
     return [year, month, day].join('-');
+  }
+  getMonthStartAndEndDates(): { start: Date, end: Date } {
+    const currentDate = moment();
+    const startOfMonth = currentDate.clone().startOf('month');
+    const endOfMonth = currentDate.clone().endOf('month');
+
+    return {
+      start: startOfMonth.toDate(),
+      end: endOfMonth.toDate()
+    };
   }
 }

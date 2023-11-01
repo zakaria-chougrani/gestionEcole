@@ -28,8 +28,8 @@ export class AuthInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401 || error.status === 403) {
           // Redirect to the login page if unauthorized
-          this.authService.removeToken();
-          this.router.navigateByUrl('login').then();
+          // this.authService.removeToken();
+          // this.router.navigateByUrl('login').then();
         }
         return throwError(() => error);
       })

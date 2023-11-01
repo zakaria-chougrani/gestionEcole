@@ -1,13 +1,29 @@
 <h2>Week Schedule</h2>
 <div class="calendar-container">
+  <mat-progress-bar mode="indeterminate" *ngIf="isLoading" style="width: 100%"></mat-progress-bar>
+
+  <mat-form-field class="full" subscriptSizing="dynamic">
+    <mat-label>Teacher</mat-label>
+    <input type="text" matInput [(ngModel)]="teacherSearch" [matAutocomplete]="auto"
+           (input)="loadTeachers()">
+    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayTeacherFn" (optionSelected)="filtrePrograms($event)">
+      <mat-option [value]="null">All</mat-option>
+      <mat-option *ngFor="let teacher of teachers " [value]="teacher">
+        <img class="option-img"
+             [src]="teacher.imageByte?teacher.imageByte:'assets/images/avatars/teacher.png'"
+             width="30" height="30" alt="task">
+        <span
+          class="teacherSearch">{{ teacher.lastName | uppercase }} {{ teacher.firstName | titlecase }}</span>
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
   <mwl-calendar-week-view
     [viewDate]="viewDate"
     [events]="events"
     [hourSegments]="hourSegments"
     [dayStartHour]="8"
     [dayEndHour]="24"
-    [excludeDays]="excludeDays"
-    [weekStartsOn]="weekStartsOn"
+    [excludeDays]="[0]"
     (eventClicked)="eventClicked($event.event)"
   >
 

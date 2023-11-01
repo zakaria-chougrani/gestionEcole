@@ -2,11 +2,9 @@ import { Injectable } from '@angular/core';
 import {environment} from "../../../environments/environment";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable, Subject} from "rxjs";
-import {Page} from "../models";
 import {SessionDto, StudentDto} from "../../pages/check-presence/check-presence.component";
 import {StatusEnum} from "../enum";
-import {SessionProgramHistory} from "../models/SessionProgramHistory";
-import {LastSessionActiveOfProgramDto} from "../models/LastSessionActiveOfProgramDto";
+import {LastSessionActiveOfProgramDto} from "../models";
 
 
 
@@ -25,12 +23,17 @@ export class ProgramSessionService {
     this.refreshProgramSession$.next();
   }
   getAllSessionOfProgram(pageIndex: number, pageSize: number, programId: string,status:StatusEnum,dateOpen?:Date,dateClose?:Date): Observable<any> {
-    const params = new HttpParams()
+    let params = new HttpParams()
       .set('page', pageIndex.toString())
       .set('size', pageSize.toString())
       .set('programId', programId)
       .set('status', status)
     ;
+    if (dateOpen && dateClose){
+      params = params
+        .set('dateOpen', dateOpen.toString())
+        .set('dateClose', dateClose.toString())
+    }
     return this.http.get(`${this.apiUrl}/${programId}/sessions`, { params });
   }
   getLastSessionActive(programId:string): Observable<LastSessionActiveOfProgramDto|null> {

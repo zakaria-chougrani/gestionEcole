@@ -151,6 +151,9 @@ export class AddProgramComponent implements OnInit {
       return;
     }
     this.isLoading = true;
+    this.programForm.patchValue({
+      schoolYear: `${this.currentYear}-${this.currentYear + 1}`
+    });
     this.programService.addProgram(this.programForm.value).subscribe({
       next: () => {
         this.programForm.reset();

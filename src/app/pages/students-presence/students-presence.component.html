@@ -1,0 +1,34 @@
+<div class="container">
+  <h1>students presence:</h1>
+
+  <table class="attendance-table">
+    <thead>
+    <tr>
+      <th></th>
+      <ng-container *ngFor="let week of weeks">
+        <th [attr.colspan]="week.days.length">{{ week.title }}</th>
+      </ng-container>
+    </tr>
+    <tr>
+      <th>Student's Name</th>
+      <ng-container *ngFor="let day of daysInCurrentMonth">
+        <td class="text-center">
+          <p>{{ day.dayNumber }}</p>
+        </td>
+      </ng-container>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let student of students">
+      <td>{{ student.name }}</td>
+      <ng-container *ngFor="let day of daysInCurrentMonth">
+        <td class="text-center">
+<!--          <input type="checkbox" [checked]="isDayPresent(student, day.dayNumber)" (change)="toggleAttendance(student, day.dayNumber)" />-->
+          <span [ngClass]="{ 'checked-icon': isDayPresent(student, day.dayNumber), 'unchecked-icon': !isDayPresent(student, day.dayNumber) }"></span>
+        </td>
+      </ng-container>
+    </tr>
+    </tbody>
+  </table>
+
+</div>

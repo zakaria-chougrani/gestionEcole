@@ -53,6 +53,10 @@ const routes: Routes = [
         loadComponent: () => import('./pages/history-sessions/history-sessions.component').then(m => m.HistorySessionsComponent)
       },
       {
+        path: 'history-sessions/:id/students-presence',
+        loadComponent: () => import('./pages/students-presence/students-presence.component').then(m => m.StudentsPresenceComponent)
+      },
+      {
         path: 'schedule',
         loadComponent: () => import('./pages/schedule/schedule.component').then(m => m.ScheduleComponent)
       },

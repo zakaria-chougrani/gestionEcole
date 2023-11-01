@@ -3,14 +3,21 @@ import {CommonModule} from "@angular/common";
 import * as moment from 'moment';
 import {CalendarEvent, CalendarWeekModule, DAYS_OF_WEEK} from "angular-calendar";
 import {ProgramService} from "../../_shared/services/program.service";
-import {ProgramDto} from "../../_shared/models";
+import {ContactInfo, ProgramDto} from "../../_shared/models";
 import {ColorUtilsService} from "../../_shared/utils/color-utils.service";
+import {FormsModule} from "@angular/forms";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {MatOptionModule} from "@angular/material/core";
+import {ContactService} from "../../_shared/services/contact.service";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 
 
 @Component({
   selector: 'ec-schedule',
   standalone: true,
-  imports: [CommonModule, CalendarWeekModule],
+  imports: [CommonModule, CalendarWeekModule, FormsModule, MatAutocompleteModule, MatFormFieldModule, MatInputModule, MatOptionModule, MatProgressBarModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './schedule.component.html',
   styleUrls: ['./schedule.component.scss']
@@ -18,12 +25,20 @@ import {ColorUtilsService} from "../../_shared/utils/color-utils.service";
 export class ScheduleComponent implements OnInit {
   viewDate: Date = moment().toDate(); // Start of the current week
   hourSegments: number = 2;
-  excludeDays: number[] = [0];
 
-  weekStartsOn = DAYS_OF_WEEK.MONDAY;
   events: CalendarEvent[] = [];
+  programs: ProgramDto[] = [];
+  teacherSearch: string = '';
+  teachers: ContactInfo[] = [];
+  isLoading: boolean = false;
 
-  constructor(private programService: ProgramService, private cdr: ChangeDetectorRef,private colorUtilsService:ColorUtilsService) {
+
+  constructor(
+    private contactService: ContactService,
+    private programService: ProgramService,
+    private cdr: ChangeDetectorRef,
+    private colorUtilsService: ColorUtilsService
+  ) {
   }
 
   eventClicked(event: any): void {
@@ -32,41 +47,23 @@ export class ScheduleComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.programService.getProgramsSchedule().subscribe(data => {
-      data.forEach(value => this.convertSessionsToEvents(value))
-    })
+    this.isLoading = true;
+    this.programService.getProgramsSchedule().subscribe(
+      {
+        next: data => {
+          this.programs = data;
+          this.filtrePrograms(null);
+
+          this.isLoading = false;
+        },
+        error: () => {
+          this.isLoading = false;
+        }
+      });
+    this.loadTeachers();
+
   }
 
-  convertSessionsToEvents(program: ProgramDto) {
-    const randomColor = this.colorUtilsService.getRandomColor();
-    const textColor = this.colorUtilsService.getContrastingTextColor(randomColor);
-    program.sessions.forEach((session: any) => {
-      const startDateTime = moment().day(this.getDayFromName(session.day)).set({
-        hour: parseInt(session.startOfSession.split(':')[0]),
-        minute: parseInt(session.startOfSession.split(':')[1])
-      });
-      const endDateTime = moment().day(this.getDayFromName(session.day)).set({
-        hour: parseInt(session.endOfSession.split(':')[0]),
-        minute: parseInt(session.endOfSession.split(':')[1])
-      });
-
-      this.events.push({
-        title: `
-                <div >
-                  <h5 class="text-center">${program.title.toUpperCase()} -- At: ${session.startOfSession} to ${session.endOfSession}</h5>
-                  <hr>
-                  <h6>Teacher: ${program.teacherFullName.toUpperCase()}</h6>
-                  <h6>Class: ${program.classLevel.schoolClass.name}</h6>
-                  <h6>Level: ${program.classLevel.name}</h6>
-                </div>
-          `,
-        start: startDateTime.toDate(),
-        end: endDateTime.toDate(),
-        color:{primary:'white',secondary:randomColor,secondaryText:textColor}
-      });
-    });
-    this.refresh();
-  }
 
   getDayFromName(dayName: string): number {
     switch (dayName) {
@@ -89,9 +86,79 @@ export class ScheduleComponent implements OnInit {
     }
   }
 
+  loadTeachers(): void {
+    this.isLoading = true;
+    this.teachers = [];
+    this.contactService.getActiveTeachersBySearchValue(0, 20, this.teacherSearch || '')
+      .subscribe({
+        next: (page) => {
+          this.teachers = page.content;
+          if (this.teachers.length) {
+            this.teachers.map(teacher => {
+              if (teacher.id) {
+                this.contactService.getImage(teacher.id).subscribe({
+                  next: (imageDto) => teacher.imageByte = imageDto.imageByte
+                });
+              }
+            });
+          }
+          this.isLoading = false;
+        },
+        error: () => this.isLoading = false
+      });
+  }
+
+  filtrePrograms(event: any){
+    let filtredPrograms:ProgramDto[] = this.programs;
+
+    if (event && event.option.value){
+      let currentTeacher:ContactInfo = event.option.value;
+      filtredPrograms = filtredPrograms.filter(item => item.teacherId === currentTeacher.id);
+    }
+    this.events = [];
+    filtredPrograms.forEach(value => {
+      this.convertSessionsToEvents(value);
+    });
+    this.refresh();
+  }
+  convertSessionsToEvents(program: ProgramDto) {
+    const randomColor = this.colorUtilsService.getRandomColor();
+    const textColor = this.colorUtilsService.getContrastingTextColor(randomColor);
+    program.sessions.forEach((session: any) => {
+      const startDateTime = moment().day(this.getDayFromName(session.day)).set({
+        hour: parseInt(session.startOfSession.split(':')[0]),
+        minute: parseInt(session.startOfSession.split(':')[1])
+      });
+      const endDateTime = moment().day(this.getDayFromName(session.day)).set({
+        hour: parseInt(session.endOfSession.split(':')[0]),
+        minute: parseInt(session.endOfSession.split(':')[1])
+      });
+
+      this.events.push({
+        title: `
+                <div >
+                  <h5 class="text-center">${program.title.toUpperCase()} -- At: ${session.startOfSession} to ${session.endOfSession}</h5>
+                  <hr>
+                  <p>Teacher: ${program.teacherFullName.toUpperCase()}</p>
+                  <p>Class: ${program.classLevel.schoolClass.name} -- Level: ${program.classLevel.name}</p>
+                </div>
+          `,
+        start: startDateTime.toDate(),
+        end: endDateTime.toDate(),
+        color: {primary: 'white', secondary: randomColor, secondaryText: textColor}
+      });
+    });
+  }
+
+  displayTeacherFn(teacher: ContactInfo): string {
+    return teacher && teacher.lastName && teacher.firstName ? teacher.lastName.toUpperCase() + ' ' + teacher.firstName.toLowerCase() : '';
+  }
+
   private refresh() {
     this.events = [...this.events];
     this.cdr.detectChanges();
   }
+
+
 }
 

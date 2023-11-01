@@ -7,3 +7,10 @@ h2{
   overflow-y: auto; /* Enable vertical scrolling when content exceeds the height */
   border: 1px solid #ccc; /* Add a border for visualization, optional */
 }
+.option-img {
+  vertical-align: middle;
+  margin: 2px 4px 2px 0;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
+}
