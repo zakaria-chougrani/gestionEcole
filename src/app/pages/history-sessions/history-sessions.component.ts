@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {CommonModule, Location} from '@angular/common';
+import {CommonModule} from '@angular/common';
 import {FlexModule} from "@angular/flex-layout";
 import {MatButtonModule} from "@angular/material/button";
 import {MatChipsModule} from "@angular/material/chips";
@@ -19,16 +19,22 @@ import {HistorySessionDataSourceService} from "../../_shared/datasource/history-
 import {tap} from "rxjs";
 import * as moment from 'moment';
 import {MatDatepickerModule} from "@angular/material/datepicker";
+import {ProgramService} from "../../_shared/services/program.service";
+import {ProgramDto} from "../../_shared/models";
+import {MatDialog, MatDialogModule} from "@angular/material/dialog";
+import {
+  StudentPresenceListDialogComponent
+} from "../../dialog/student-presence-list-dialog/student-presence-list-dialog.component";
 
 @Component({
   selector: 'ec-history-sessions',
   standalone: true,
-  imports: [CommonModule, FlexModule, MatButtonModule, MatChipsModule, MatDividerModule, MatFormFieldModule, MatIconModule, MatInputModule, MatPaginatorModule, MatProgressBarModule, ReactiveFormsModule, FormsModule, MatTableModule, MatSortModule, MatDatepickerModule, RouterLink],
+  imports: [CommonModule, FlexModule, MatButtonModule, MatChipsModule, MatDividerModule, MatFormFieldModule, MatIconModule, MatInputModule, MatPaginatorModule, MatProgressBarModule, ReactiveFormsModule, FormsModule, MatTableModule, MatSortModule, MatDatepickerModule, RouterLink,MatDialogModule],
   templateUrl: './history-sessions.component.html',
   styleUrls: ['./history-sessions.component.scss']
 })
 export class HistorySessionsComponent implements OnInit, AfterViewInit {
-  isError: boolean = false;
+  programDto!:ProgramDto;
 
   displayedColumns: string[] = ['createdAt', 'closedAt', 'stdPresent', 'stdAbsent', 'percentOfPresence', 'status', 'actionBtn'];
   dataSource!: HistorySessionDataSourceService;
@@ -45,9 +51,10 @@ export class HistorySessionsComponent implements OnInit, AfterViewInit {
     dateClose: new FormControl<any>(this.getMonthStartAndEndDates().end),
   });
   constructor(
-    private _location: Location,
     private programSessionService: ProgramSessionService,
-    private route: ActivatedRoute
+    private programService: ProgramService,
+    private route: ActivatedRoute,
+    private dialog: MatDialog
   ) {
     this.route.paramMap.subscribe(params => {
       this.programId = params.get('id');
@@ -55,10 +62,10 @@ export class HistorySessionsComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+
     this.dataSource = new HistorySessionDataSourceService(this.programSessionService);
-    if (this.programId){
-      this.loadDataSource();
-    }
+    this.loadDataSource();
+    this.loadProgram();
   }
 
   ngAfterViewInit(): void {
@@ -86,9 +93,14 @@ export class HistorySessionsComponent implements OnInit, AfterViewInit {
       this.dataSource.loadAllSessionOfProgram(this.paginator?.pageIndex, this.paginator?.pageSize, this.programId, this.status, dateOpen, dateClose);
     }
   }
-
-  previousPage() {
-    this._location.back();
+  loadProgram(){
+    if (this.programId){
+      this.programService.getProgramById(this.programId).subscribe({
+        next:value => {
+          this.programDto = value;
+        }
+      })
+    }
   }
   formatDate(date: Date) {
     let d = new Date(date),
@@ -110,5 +122,14 @@ export class HistorySessionsComponent implements OnInit, AfterViewInit {
       start: startOfMonth.toDate(),
       end: endOfMonth.toDate()
     };
+  }
+
+  showStudentDialog(id:string,present:boolean) {
+    alert(id+" "+ present);
+    let dialogRef = this.dialog.open(StudentPresenceListDialogComponent, {
+      height: '400px',
+      width: '600px',
+      data: { sessionId: id,present:present },
+    });
   }
 }

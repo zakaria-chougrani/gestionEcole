@@ -1,15 +1,26 @@
 .container{
   padding: 2rem;
+  .table-container{
+    overflow: auto;
+  }
   .attendance-table {
     border: 1px solid #000;
     border-collapse: collapse;
     width: 100%;
+    & th, & td {
+      border: 1px solid #000;
+      padding: 8px;
+    }
+    .gray-bg {
+      background-color: #4b4b4b;
+      color: white;
+    }
+    p{
+      font-size: .8rem;
+    }
   }
 
-  .attendance-table th, .attendance-table td {
-    border: 1px solid #000;
-    padding: 8px;
-  }
+
   .checked-icon::before {
     content: '\2713'; /* Unicode checkmark character */
     color: green; /* Change the color as needed */
@@ -20,6 +31,12 @@
   .unchecked-icon::before {
     content: '\2717'; /* Unicode cross character */
     color: red; /* Change the color as needed */
+    font-size: 24px; /* Adjust the size as needed */
+  }
+
+  .not-day-icon::before {
+    content: '-'; /* Unicode cross character */
+    color: grey; /* Change the color as needed */
     font-size: 24px; /* Adjust the size as needed */
   }
 }

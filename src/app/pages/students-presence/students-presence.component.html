@@ -1,34 +1,70 @@
-<div class="container">
-  <h1>students presence:</h1>
+<div class="container" *ngIf="programDto">
+  <div class="url-lien">
+    /<a [routerLink]="'/programs'">programs</a>/<a [routerLink]="'/history-sessions/'+programId">{{programDto.title}}</a>/students-presence
+  </div>
+  <h2>Students presence:</h2>
+  <br>
+  <p><strong>Class:</strong> {{programDto.classLevel.schoolClass.name |titlecase}} / Level: {{programDto.classLevel.name |titlecase}} </p>
+  <p><strong>Teacher:</strong> {{programDto.teacherFullName |titlecase}} </p>
+  <br>
+  <div class="row">
+    <div class="col-3">
+      <mat-form-field class="full" subscriptSizing="dynamic">
+        <mat-label>Select Year</mat-label>
+        <mat-select [(ngModel)]="yearValue" (ngModelChange)="generateDaysAndWeek();loadData();">
+          <mat-option *ngFor="let year of yearList" [value]="year">{{ year }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-3">
+      <mat-form-field class="full" subscriptSizing="dynamic">
+        <mat-label>Select Month</mat-label>
+        <mat-select [(ngModel)]="monthValue" (ngModelChange)="generateDaysAndWeek();loadData();">
+          <mat-option *ngFor="let month of months" [value]="month.value">
+            {{ month.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
 
-  <table class="attendance-table">
-    <thead>
-    <tr>
-      <th></th>
-      <ng-container *ngFor="let week of weeks">
-        <th [attr.colspan]="week.days.length">{{ week.title }}</th>
-      </ng-container>
-    </tr>
-    <tr>
-      <th>Student's Name</th>
-      <ng-container *ngFor="let day of daysInCurrentMonth">
-        <td class="text-center">
-          <p>{{ day.dayNumber }}</p>
+  <div class="table-container">
+    <table class="attendance-table">
+      <thead>
+      <tr>
+        <th style="border-top-color: transparent;border-left-color: transparent;"></th>
+        <ng-container *ngFor="let week of weeks">
+          <th class="gray-bg" [attr.colspan]="week.days.length">{{ week.title }}</th>
+        </ng-container>
+      </tr>
+      <tr class="gray-bg">
+        <th>Student's Name</th>
+        <ng-container *ngFor="let day of daysInCurrentMonth">
+          <td class="text-center">
+            <p>{{ day.dayNumber }}</p>
+          </td>
+        </ng-container>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let item of studentPresences">
+        <td class="gray-bg"><p>{{ item.lastName |titlecase}} {{item.firstName|titlecase}}</p></td>
+        <ng-container *ngFor="let day of daysInCurrentMonth">
+          <td class="text-center">
+            <span [ngClass]="isDayPresent(item.attendances, day.dayNumber)"></span>
+          </td>
+        </ng-container>
+      </tr>
+      <tr *ngIf="!studentPresences.length">
+        <td [attr.colspan]="daysInCurrentMonth.length + 1" class="text-center">
+          No Data Found !
         </td>
-      </ng-container>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let student of students">
-      <td>{{ student.name }}</td>
-      <ng-container *ngFor="let day of daysInCurrentMonth">
-        <td class="text-center">
-<!--          <input type="checkbox" [checked]="isDayPresent(student, day.dayNumber)" (change)="toggleAttendance(student, day.dayNumber)" />-->
-          <span [ngClass]="{ 'checked-icon': isDayPresent(student, day.dayNumber), 'unchecked-icon': !isDayPresent(student, day.dayNumber) }"></span>
-        </td>
-      </ng-container>
-    </tr>
-    </tbody>
-  </table>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 
+  <div style="margin: 2rem auto;text-align: center;">
+    <button mat-raised-button color="accent">Print</button>
+  </div>
 </div>

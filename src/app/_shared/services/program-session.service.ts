@@ -39,6 +39,13 @@ export class ProgramSessionService {
   getLastSessionActive(programId:string): Observable<LastSessionActiveOfProgramDto|null> {
     return this.http.get<LastSessionActiveOfProgramDto|null>(`${this.apiUrl}/${programId}/last-session/active`);
   }
+  getAllStudentsPresenceOfProgram(programId:string,year:string,month:string): Observable<any> {
+    const param = new HttpParams()
+      .set("year",year)
+      .set("month",month)
+    ;
+    return this.http.get<any>(`${this.apiUrl}/${programId}/students-presence`,{params:param});
+  }
   createProgramSession(programId:String): Observable<LastSessionActiveOfProgramDto> {
     return this.http.post<LastSessionActiveOfProgramDto>(`${this.apiUrl}/${programId}`,null);
   }

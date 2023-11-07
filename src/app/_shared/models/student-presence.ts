@@ -1,7 +1,11 @@
-import {ContactInfo} from "./contact-info";
-
 export interface StudentPresence {
-  student:ContactInfo;
-  present:boolean;
-  dateOfChecking:Date;
+  contactId:string;
+  lastName:string;
+  firstName:string;
+  attendances:Attendance[]
+}
+
+export interface Attendance {
+  date:Date;
+  presentStatus:boolean;
 }

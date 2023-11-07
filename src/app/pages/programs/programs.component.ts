@@ -208,4 +208,8 @@ export class ProgramsComponent implements OnInit {
 
   }
 
+  navigateToStudentsPresence(program: ProgramDto) {
+    this.router.navigateByUrl(`/history-sessions/${program.id}/students-presence`).then();
+
+  }
 }
