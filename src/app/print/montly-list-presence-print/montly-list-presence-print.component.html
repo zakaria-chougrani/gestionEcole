@@ -1,0 +1,59 @@
+<div #page>
+  <div style="display: flex;justify-content: space-between;align-items: center">
+    <div>
+
+    </div>
+    <div *ngIf="month" class="text-center">
+      <p>Month:</p>
+      <p>{{month.name}}</p>
+    </div>
+    <div  class="text-center">
+      <p>Teacher: {{data.programDto.teacherFullName}}</p>
+      <p>Level: {{data.programDto.classLevel.schoolClass.name}} {{data.programDto.classLevel.name}}</p>
+    </div>
+  </div>
+  <div>
+    <p>Days:
+      <ng-container *ngFor="let session of data.programDto.sessions">
+        <span style="margin: 0 5px">{{session.day}} at {{session.startOfSession}} To {{session.endOfSession}}</span>
+      </ng-container>
+    </p>
+  </div>
+  <div class="table-container">
+    <table class="attendance-table">
+      <thead>
+      <tr>
+        <th style="border-top-color: transparent;border-left-color: transparent;"></th>
+        <ng-container *ngFor="let week of data.weeks">
+          <th class="gray-bg" [attr.colspan]="week.days.length">{{ week.title }}</th>
+        </ng-container>
+      </tr>
+      <tr class="gray-bg">
+        <th>Student's Name</th>
+        <ng-container *ngFor="let day of data.daysInCurrentMonth">
+          <td class="text-center">
+            <p>{{ day.dayNumber }}</p>
+          </td>
+        </ng-container>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let item of data.studentPresences">
+        <td class="gray-bg"><p>{{ item.lastName |titlecase}} {{item.firstName|titlecase}}</p></td>
+        <ng-container *ngFor="let day of data.daysInCurrentMonth">
+          <td class="text-center">
+            <span [ngClass]="isDayPresent(item.attendances, day.dayNumber)"></span>
+          </td>
+        </ng-container>
+      </tr>
+      <tr *ngIf="!data.studentPresences.length">
+        <td [attr.colspan]="data.daysInCurrentMonth.length + 1" class="text-center">
+          No Data Found !
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<iframe #printFrame></iframe>

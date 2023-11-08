@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {CommonModule, Location} from '@angular/common';
+import {CommonModule} from '@angular/common';
 import {ActivatedRoute, RouterLink} from "@angular/router";
 import {ProgramSessionService} from "../../_shared/services/program-session.service";
 import {Attendance, ProgramDto, StudentPresence} from "../../_shared/models";
@@ -10,16 +10,20 @@ import {FormsModule} from "@angular/forms";
 import * as moment from 'moment';
 import {MatButtonModule} from "@angular/material/button";
 import {ProgramService} from "../../_shared/services/program.service";
+import {MatDialog, MatDialogModule} from "@angular/material/dialog";
+import {
+  MontlyListPresencePrintComponent
+} from "../../print/montly-list-presence-print/montly-list-presence-print.component";
 
 @Component({
   selector: 'ec-students-presence',
   standalone: true,
-  imports: [CommonModule, MatFormFieldModule, MatOptionModule, MatSelectModule, FormsModule, MatButtonModule, RouterLink],
+  imports: [CommonModule, MatFormFieldModule, MatOptionModule, MatSelectModule, FormsModule, MatButtonModule, MatDialogModule, RouterLink],
   templateUrl: './students-presence.component.html',
   styleUrls: ['./students-presence.component.scss']
 })
 export class StudentsPresenceComponent {
-  programDto!:ProgramDto;
+  programDto!: ProgramDto;
   studentPresences: StudentPresence[] = [];
   weeks: { title: string; days: { weekNumber: number, dayNumber: number }[] }[] = [];
   daysInCurrentMonth: { weekNumber: number; dayNumber: number }[] = [];
@@ -43,7 +47,7 @@ export class StudentsPresenceComponent {
   ];
 
   constructor(
-    private _location: Location,
+    public dialog: MatDialog,
     private programSessionService: ProgramSessionService,
     private programService: ProgramService,
     private route: ActivatedRoute
@@ -58,18 +62,20 @@ export class StudentsPresenceComponent {
     this.loadData();
     this.generateDaysAndWeek();
   }
-  loadProgram(){
-    if (this.programId){
+
+  loadProgram() {
+    if (this.programId) {
       this.programService.getProgramById(this.programId).subscribe({
-        next:value => {
+        next: value => {
           this.programDto = value;
         }
       })
     }
   }
+
   loadData() {
-    if (this.programId){
-      this.programSessionService.getAllStudentsPresenceOfProgram(this.programId, this.yearValue.toString(), (this.monthValue+1).toString()).subscribe(data => {
+    if (this.programId) {
+      this.programSessionService.getAllStudentsPresenceOfProgram(this.programId, this.yearValue.toString(), (this.monthValue + 1).toString()).subscribe(data => {
         this.studentPresences = data;
         this.studentPresences = this.studentPresences.map(value => {
           value.attendances = this.retrieveLastRecordForEachDay(value.attendances);
@@ -79,11 +85,11 @@ export class StudentsPresenceComponent {
     }
   }
 
-  generateDaysAndWeek(){
+  generateDaysAndWeek() {
     this.daysInCurrentMonth = [];
     this.weeks = [];
 
-    const startDate = moment({ year:this.yearValue, month: this.monthValue, day: 1 });
+    const startDate = moment({year: this.yearValue, month: this.monthValue, day: 1});
     const endDate = startDate.clone().endOf('month');
     let currentWeek = 1;
     for (let day = 1; day <= endDate.date(); day++) {
@@ -99,6 +105,7 @@ export class StudentsPresenceComponent {
       this.weeks.push({title: weekTitle, days: weekDays});
     }
   }
+
   generateYearList(startYear: number, endYear: number): number[] {
     const years: number[] = [];
     const currentYear = new Date().getFullYear();
@@ -112,10 +119,10 @@ export class StudentsPresenceComponent {
     let className = 'not-day-icon';
     attendances.forEach(attendance => {
       let dateTocheck = new Date(attendance.date);
-      if (dateTocheck.getUTCDate() === dayNumber){
-        if (attendance.presentStatus){
+      if (dateTocheck.getUTCDate() === dayNumber) {
+        if (attendance.presentStatus) {
           className = 'checked-icon';
-        }else{
+        } else {
           className = 'unchecked-icon';
         }
       }
@@ -139,4 +146,18 @@ export class StudentsPresenceComponent {
     return lastRecordsForEachDay;
   }
 
+  print() {
+    this.dialog.open(MontlyListPresencePrintComponent, {
+      width: '21cm',
+      height: '29.7cm',
+      data: {
+        yearValue: this.yearValue,
+        monthValue: this.monthValue,
+        weeks: this.weeks,
+        daysInCurrentMonth: this.daysInCurrentMonth,
+        programDto: this.programDto,
+        studentPresences: this.studentPresences
+      }
+    });
+  }
 }
