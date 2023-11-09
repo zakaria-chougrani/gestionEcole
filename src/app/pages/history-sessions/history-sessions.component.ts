@@ -36,7 +36,7 @@ import {
 export class HistorySessionsComponent implements OnInit, AfterViewInit {
   programDto!:ProgramDto;
 
-  displayedColumns: string[] = ['createdAt', 'closedAt', 'stdPresent', 'stdAbsent', 'percentOfPresence', 'status', 'actionBtn'];
+  displayedColumns: string[] = ['createdAt', 'closedAt', 'stdPresent', 'stdAbsent', 'percentOfPresence', 'status'];
   dataSource!: HistorySessionDataSourceService;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -125,10 +125,7 @@ export class HistorySessionsComponent implements OnInit, AfterViewInit {
   }
 
   showStudentDialog(id:string,present:boolean) {
-    alert(id+" "+ present);
-    let dialogRef = this.dialog.open(StudentPresenceListDialogComponent, {
-      height: '400px',
-      width: '600px',
+    this.dialog.open(StudentPresenceListDialogComponent, {
       data: { sessionId: id,present:present },
     });
   }

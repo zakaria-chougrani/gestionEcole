@@ -5,6 +5,7 @@ import {Observable, Subject} from "rxjs";
 import {SessionDto, StudentDto} from "../../pages/check-presence/check-presence.component";
 import {StatusEnum} from "../enum";
 import {LastSessionActiveOfProgramDto} from "../models";
+import {StudentSessionDto} from "../models";
 
 
 
@@ -60,5 +61,8 @@ export class ProgramSessionService {
   }
   getSession(sessionId:string): Observable<SessionDto> {
     return this.http.get<SessionDto>(`${this.apiUrl}/${sessionId}`);
+  }
+  getSessionStudent(sessionId:string): Observable<StudentSessionDto[]> {
+    return this.http.get<StudentSessionDto[]>(`${this.apiUrl}/${sessionId}/students`);
   }
 }

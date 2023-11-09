@@ -12,6 +12,7 @@ import {MatInputModule} from "@angular/material/input";
 import {MatOptionModule} from "@angular/material/core";
 import {ContactService} from "../../_shared/services/contact.service";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {Router} from "@angular/router";
 
 
 @Component({
@@ -37,13 +38,13 @@ export class ScheduleComponent implements OnInit {
     private contactService: ContactService,
     private programService: ProgramService,
     private cdr: ChangeDetectorRef,
-    private colorUtilsService: ColorUtilsService
+    private colorUtilsService: ColorUtilsService,
+    private router:Router
   ) {
   }
 
   eventClicked(event: any): void {
-    // Handle event click
-    console.log('Event clicked:', event);
+    this.router.navigateByUrl(`/history-sessions/${event.meta.programId}/students-presence`).then();
   }
 
   ngOnInit(): void {
@@ -108,11 +109,11 @@ export class ScheduleComponent implements OnInit {
       });
   }
 
-  filtrePrograms(event: any){
-    let filtredPrograms:ProgramDto[] = this.programs;
+  filtrePrograms(event: any) {
+    let filtredPrograms: ProgramDto[] = this.programs;
 
-    if (event && event.option.value){
-      let currentTeacher:ContactInfo = event.option.value;
+    if (event && event.option.value) {
+      let currentTeacher: ContactInfo = event.option.value;
       filtredPrograms = filtredPrograms.filter(item => item.teacherId === currentTeacher.id);
     }
     this.events = [];
@@ -121,6 +122,7 @@ export class ScheduleComponent implements OnInit {
     });
     this.refresh();
   }
+
   convertSessionsToEvents(program: ProgramDto) {
     const randomColor = this.colorUtilsService.getRandomColor();
     const textColor = this.colorUtilsService.getContrastingTextColor(randomColor);
@@ -145,7 +147,10 @@ export class ScheduleComponent implements OnInit {
           `,
         start: startDateTime.toDate(),
         end: endDateTime.toDate(),
-        color: {primary: 'white', secondary: randomColor, secondaryText: textColor}
+        color: {primary: 'white', secondary: randomColor, secondaryText: textColor},
+        meta: {
+          programId: program.id
+        }
       });
     });
   }

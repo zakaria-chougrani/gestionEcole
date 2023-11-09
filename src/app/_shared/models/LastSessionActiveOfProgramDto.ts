@@ -1,10 +1,4 @@
-export interface StudentSessionDto {
-  id:string;
-  fullName:string;
-  present:boolean;
-  dateOfChecking:Date;
-  imageByte:string;
-}
+import {StudentSessionDto} from "./student-session-dto";
 
 export interface LastSessionActiveOfProgramDto {
   id:string;

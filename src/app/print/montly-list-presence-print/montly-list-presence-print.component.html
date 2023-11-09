@@ -1,21 +1,22 @@
 <div #page>
+
   <div style="display: flex;justify-content: space-between;align-items: center">
     <div>
-
+      <img src="/assets/images/logo-print_presence.webp" alt="logo">
     </div>
-    <div *ngIf="month" class="text-center">
-      <p>Month:</p>
-      <p>{{month.name}}</p>
+    <div *ngIf="month" class="text-center" style="padding: 5px;border: 2px dashed gray;">
+      <p><strong>Month:</strong></p>
+      <p style="padding: 2px 20px;background-color: black;color: white">{{month.name |titlecase}}</p>
     </div>
-    <div  class="text-center">
-      <p>Teacher: {{data.programDto.teacherFullName}}</p>
-      <p>Level: {{data.programDto.classLevel.schoolClass.name}} {{data.programDto.classLevel.name}}</p>
+    <div style="padding: 2px 8px;border: 2px dashed gray;">
+      <p><strong>Teacher:</strong> {{data.programDto.teacherFullName |titlecase}}</p>
+      <p><strong>Level:</strong> {{data.programDto.classLevel.schoolClass.name |titlecase}} / {{data.programDto.classLevel.name |titlecase}}</p>
     </div>
   </div>
   <div>
-    <p>Days:
-      <ng-container *ngFor="let session of data.programDto.sessions">
-        <span style="margin: 0 5px">{{session.day}} at {{session.startOfSession}} To {{session.endOfSession}}</span>
+    <p style="padding: 5px;border: 1px solid gray;">Days:
+      <ng-container *ngFor="let session of data.programDto.sessions;last as isLast">
+        <span style="margin: 0 5px">{{session.day}} at {{session.startOfSession}} To {{session.endOfSession}}</span><span>{{!isLast?',':'.'}}</span>
       </ng-container>
     </p>
   </div>

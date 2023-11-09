@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ActivatedRoute, RouterLink} from "@angular/router";
 import {ProgramSessionService} from "../../_shared/services/program-session.service";
-import {Attendance, ProgramDto, StudentPresence} from "../../_shared/models";
+import {Attendance, ProgramDto, StudentPresenceAttendance} from "../../_shared/models";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatOptionModule} from "@angular/material/core";
 import {MatSelectModule} from "@angular/material/select";
@@ -24,7 +24,7 @@ import {
 })
 export class StudentsPresenceComponent {
   programDto!: ProgramDto;
-  studentPresences: StudentPresence[] = [];
+  studentPresences: StudentPresenceAttendance[] = [];
   weeks: { title: string; days: { weekNumber: number, dayNumber: number }[] }[] = [];
   daysInCurrentMonth: { weekNumber: number; dayNumber: number }[] = [];
   programId: string | null = null;

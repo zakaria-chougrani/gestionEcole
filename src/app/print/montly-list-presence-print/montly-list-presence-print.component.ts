@@ -66,6 +66,7 @@ export class MontlyListPresencePrintComponent implements AfterViewInit,OnInit {
           @page {
             size: landscape;
           }
+
         .table-container{
           overflow: auto;
         }
@@ -100,6 +101,9 @@ export class MontlyListPresencePrintComponent implements AfterViewInit,OnInit {
           content: '-';
           color: grey;
           font-size: 24px;
+        }
+        .text-center{
+            text-align: center;
         }
         </style>
     `;

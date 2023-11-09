@@ -24,8 +24,19 @@ export class UtilsService {
           </body>
         </html>
       `);
-      iframeElement.contentWindow.print();
-      iframeDocument.close();
+
+      const images = iframeDocument.getElementsByTagName('img');
+      let loadedImages = 0;
+
+      for (let i = 0; i < images.length; i++) {
+        images[i].onload = () => {
+          loadedImages++;
+          if (loadedImages === images.length) {
+            iframeElement.contentWindow.print();
+            iframeDocument.close();
+          }
+        };
+      }
     }
     let timeOut = setTimeout(() => {
       dialogRef.close();

@@ -1,2 +1,16 @@
-{{data.sessionId}}
-{{data.present}}
+<mat-card style="padding: 2rem">
+  <mat-card-header>
+    <mat-card-title>List of Students</mat-card-title>
+    <mat-card-subtitle>{{data.present?'Presents':'Absents'}}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <br>
+    <mat-progress-bar mode="indeterminate" *ngIf="isLoading" style="width: 100%"></mat-progress-bar>
+    <br>
+    <ol>
+      <li *ngFor="let item of studentsPresence">
+        {{item.fullName |titlecase}}
+      </li>
+    </ol>
+  </mat-card-content>
+</mat-card>

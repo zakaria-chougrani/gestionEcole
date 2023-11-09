@@ -4,5 +4,6 @@ export enum TaskEnum {
   Teacher = 'teacher',
   Student = 'student',
   trainee_student = 'trainee_student',
+  OTHER = 'OTHER',
   ALL = 'ALL'
 }
