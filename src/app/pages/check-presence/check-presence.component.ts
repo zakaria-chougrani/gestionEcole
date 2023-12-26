@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {FormsModule} from "@angular/forms";
-import {MatSnackBar, MatSnackBarModule} from "@angular/material/snack-bar";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatButtonModule} from "@angular/material/button";
 import {MatSelectModule} from "@angular/material/select";
@@ -33,7 +33,7 @@ export interface SessionDto {
 @Component({
   selector: 'ec-check-presence',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatFormFieldModule, MatButtonModule, MatSelectModule, MatSnackBarModule, MatToolbarModule, NgOptimizedImage, MatProgressBarModule, MatCardModule, FlexModule],
+  imports: [CommonModule, FormsModule, MatFormFieldModule, MatButtonModule, MatSelectModule, MatToolbarModule, NgOptimizedImage, MatProgressBarModule, MatCardModule, FlexModule],
   templateUrl: './check-presence.component.html',
   styleUrls: ['./check-presence.component.scss']
 })
@@ -47,7 +47,6 @@ export class CheckPresenceComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
 
   constructor(
-    private snackBar: MatSnackBar,
     private sessionService: ProgramSessionService,
     private route: ActivatedRoute,
     private router: Router,
@@ -81,10 +80,7 @@ export class CheckPresenceComponent implements OnInit, OnDestroy {
       next: () => {
         this.isCheckSuccess = true;
         let mqttMsg:any = {sessionId:this.session.id,studentId:studentId};
-        this._mqttService.unsafePublish(`highup/presence`, JSON.stringify(mqttMsg), {
-          qos: 1,
-          retain: true
-        });
+        this._mqttService.unsafePublish(`highup/presence`, JSON.stringify(mqttMsg));
       },
       error: err => {
         this.isLoading = false;

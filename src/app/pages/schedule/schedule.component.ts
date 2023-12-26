@@ -19,7 +19,6 @@ import {Router} from "@angular/router";
   selector: 'ec-schedule',
   standalone: true,
   imports: [CommonModule, CalendarWeekModule, FormsModule, MatAutocompleteModule, MatFormFieldModule, MatInputModule, MatOptionModule, MatProgressBarModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './schedule.component.html',
   styleUrls: ['./schedule.component.scss']
 })

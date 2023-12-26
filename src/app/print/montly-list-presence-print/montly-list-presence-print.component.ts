@@ -44,7 +44,9 @@ export class MontlyListPresencePrintComponent implements AfterViewInit,OnInit {
   ngAfterViewInit(): void {
     this.print();
   }
-
+  getPrecedentMonth(currentMonthIndex:number){
+    return this.months.find(month => month.value === currentMonthIndex);
+  }
   isDayPresent(attendances: Attendance[], dayNumber: number) {
     let className = 'not-day-icon';
     attendances.forEach(attendance => {
@@ -89,12 +91,12 @@ export class MontlyListPresencePrintComponent implements AfterViewInit,OnInit {
         .checked-icon::before {
           content: '\\2713';
           color: green;
-          font-size: 24px;
+          font-size: 14px;
         }
         .unchecked-icon::before {
           content: '\\2717';
           color: red;
-          font-size: 24px;
+          font-size: 14px;
         }
 
         .not-day-icon::before {
@@ -104,6 +106,13 @@ export class MontlyListPresencePrintComponent implements AfterViewInit,OnInit {
         }
         .text-center{
             text-align: center;
+        }
+        .no-border{
+          border-color: transparent!important;
+        }
+        .day-row th{
+          font-size: 10px;
+          min-width: 5px;
         }
         </style>
     `;

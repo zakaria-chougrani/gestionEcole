@@ -6,6 +6,7 @@ export interface ContactInfo {
   tagId?: string;
   firstName?: string;
   lastName?: string;
+  cin?: string;
   gender?: GenderEnum;
   email?: string;
   phoneNumber?: string;

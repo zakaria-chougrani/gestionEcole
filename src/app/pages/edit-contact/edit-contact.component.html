@@ -61,12 +61,17 @@
       </mat-form-field>
     </div>
     <div fxLayoutGap="10px" fxLayout.lt-lg="column" fxLayout="row" fxLayoutAlign="center center" class="mg-md-bt">
-      <mat-form-field class="full"
-                      *ngIf="contactForm.controls['task'].value == 'staff' || contactForm.controls['task'].value == 'teacher'"
-                      subscriptSizing="dynamic">
-        <mat-label>Email</mat-label>
-        <input matInput type="email" formControlName="email" name="email">
-      </mat-form-field>
+      <ng-container *ngIf="contactForm.controls['task'].value == 'staff' || contactForm.controls['task'].value == 'teacher'">
+        <mat-form-field class="full" subscriptSizing="dynamic">
+          <mat-label>CIN</mat-label>
+          <input matInput formControlName="cin" name="cin">
+        </mat-form-field>
+        <mat-form-field class="full" subscriptSizing="dynamic">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email" name="email">
+        </mat-form-field>
+      </ng-container>
+
       <mat-form-field class="full" *ngIf="contactForm.controls['task'].value === 'teacher'"
                       subscriptSizing="dynamic">
         <mat-label>Specialties</mat-label>

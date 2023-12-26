@@ -170,10 +170,7 @@ export class SessionProgramComponent implements OnInit, OnDestroy {
     this.sessionService.checkStudent(this.session.id, studentId).subscribe({
       next: () => {
         let mqttMsg:MqttMsg = {sessionId:this.session.id,studentId:studentId};
-        this._mqttService.unsafePublish(`highup/presence`, JSON.stringify(mqttMsg), {
-          qos: 1,
-          retain: true
-        });
+        this._mqttService.unsafePublish(`highup/presence`, JSON.stringify(mqttMsg));
       },
       error: () => this.isLoading = false,
       complete: () => this.isLoading = false
@@ -195,10 +192,7 @@ export class SessionProgramComponent implements OnInit, OnDestroy {
           next: () => {
             this.sessionService.triggerRefreshProgramSession();
             let mqttMsg:MqttMsg = {sessionId:this.session.id};
-            this._mqttService.unsafePublish(`highup/presence`, JSON.stringify(mqttMsg), {
-              qos: 1,
-              retain: true
-            });
+            this._mqttService.unsafePublish(`highup/presence`, JSON.stringify(mqttMsg));
           },
           error: () => this.isLoading = false,
           complete: () => this.isLoading = false

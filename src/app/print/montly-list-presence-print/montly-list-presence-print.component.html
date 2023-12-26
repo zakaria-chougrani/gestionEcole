@@ -24,23 +24,38 @@
     <table class="attendance-table">
       <thead>
       <tr>
+        <th class="no-border"></th>
+        <th class="no-border"></th>
+        <th class="no-border"></th>
+        <th class="no-border"></th>
+        <th class="no-border"></th>
         <th style="border-top-color: transparent;border-left-color: transparent;"></th>
         <ng-container *ngFor="let week of data.weeks">
           <th class="gray-bg" [attr.colspan]="week.days.length">{{ week.title }}</th>
         </ng-container>
       </tr>
-      <tr class="gray-bg">
+      <tr class="gray-bg day-row">
         <th>Student's Name</th>
+        <th style="text-decoration: underline;">LD</th>
+        <th></th>
+        <th></th>
+        <th style="text-decoration: underline;">{{(getPrecedentMonth((month?.value || 1) - 1)?.name|lowercase)?.substring(0, 3)}}</th>
+        <th style="text-decoration: underline;">{{(month?.name|lowercase)?.substring(0, 3)}}</th>
         <ng-container *ngFor="let day of data.daysInCurrentMonth">
-          <td class="text-center">
-            <p>{{ day.dayNumber }}</p>
-          </td>
+          <th class="text-center">
+            {{ day.dayNumber }}
+          </th>
         </ng-container>
       </tr>
       </thead>
       <tbody>
       <tr *ngFor="let item of data.studentPresences">
-        <td class="gray-bg"><p>{{ item.lastName |titlecase}} {{item.firstName|titlecase}}</p></td>
+        <td class="gray-bg" style="font-size: 12px;"><p>{{ item.lastName |titlecase}} {{item.firstName|titlecase}}</p></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
         <ng-container *ngFor="let day of data.daysInCurrentMonth">
           <td class="text-center">
             <span [ngClass]="isDayPresent(item.attendances, day.dayNumber)"></span>

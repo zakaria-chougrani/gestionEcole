@@ -48,6 +48,7 @@ export class EditContactComponent {
       email: ['', Validators.compose([Validators.email])],
       phoneNumber: ['', Validators.required],
       task: ['', Validators.required],
+      cin: [''],
       scholarLevel: [''],
       dateOfBirth: [''],
       typeOfContract: [''],
@@ -100,11 +101,13 @@ export class EditContactComponent {
     };
     if (this.contactForm.controls['task'].value == 'staff' || this.contactForm.controls['task'].value == 'trainee_staff') {
       formFinal.email = this.contactForm.controls['email'].value;
+      formFinal.cin = this.contactForm.controls['cin'].value;
       formFinal.typeOfContract = this.contactForm.controls['typeOfContract'].value;
       formFinal.contractStartDate = this.contactForm.controls['contractStartDate'].value;
       formFinal.contractEndDate = this.contactForm.controls['contractEndDate'].value;
     } else if (this.contactForm.controls['task'].value == 'teacher') {
       formFinal.email = this.contactForm.controls['email'].value;
+      formFinal.cin = this.contactForm.controls['cin'].value;
       formFinal.specialties = this.contactForm.controls['specialties'].value;
     } else if (this.contactForm.controls['task'].value == 'student' || this.contactForm.controls['task'].value == 'trainee_student') {
       formFinal.dateOfBirth = this.contactForm.controls['dateOfBirth'].value;
