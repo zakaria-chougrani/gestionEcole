@@ -37,7 +37,7 @@ export class ProgramsComponent implements OnInit {
   programs: ProgramDto[] = [];
   totalPrograms = 0;
   pageSize = 10;
-  currentPage = 0;
+  pageIndex = 0;
   pageSizeOptions: number[] = [10, 15, 25, 50];
   isLoading: boolean = false;
   teacherSearch: string = '';
@@ -69,7 +69,7 @@ export class ProgramsComponent implements OnInit {
     this.isLoading = true;
     let teacher = (this.teacherSearch as ContactInfo).id;
     this.programs = [];
-    this.programService.getAllPrograms(this.currentPage, this.pageSize, this.title || '', this.levelId, teacher || '', this.statusOption)
+    this.programService.getAllPrograms(this.pageIndex, this.pageSize, this.title || '', this.levelId, teacher || '', this.statusOption)
       .subscribe({
         next: (page) => {
           this.programs = page.content;
@@ -174,7 +174,7 @@ export class ProgramsComponent implements OnInit {
   }
 
   onPageChanged(event: PageEvent): void {
-    this.currentPage = event.pageIndex;
+    this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.loadPrograms();
   }

@@ -28,7 +28,7 @@ export class ClasseLevelsComponent implements OnInit {
   levels: Level[] = [];
   totalLevels = 0;
   pageSize = 4;
-  currentPage = 0;
+  pageIndex = 0;
   pageSizeOptions: number[] = [4, 8, 12, 25, 50];
   isLoading: boolean = false;
   classDto!: SchoolClass;
@@ -58,7 +58,7 @@ export class ClasseLevelsComponent implements OnInit {
   }
 
   loadLevels(): void {
-    this.schoolClassService.getLevelsBySchoolClass(this.classDto.id, this.currentPage, this.pageSize)
+    this.schoolClassService.getLevelsBySchoolClass(this.classDto.id, this.pageIndex, this.pageSize)
       .subscribe({
         next: (page) => {
           this.levels = page.content;
@@ -70,7 +70,7 @@ export class ClasseLevelsComponent implements OnInit {
   }
 
   onPageChanged(event: PageEvent): void {
-    this.currentPage = event.pageIndex;
+    this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.loadLevels();
   }

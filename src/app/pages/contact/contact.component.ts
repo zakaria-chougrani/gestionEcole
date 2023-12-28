@@ -32,7 +32,7 @@ export class ContactComponent implements OnInit {
   contacts: ContactInfo[] = [];
   totalContacts = 0;
   pageSize = 5;
-  currentPage = 0;
+  pageIndex = 0;
   pageSizeOptions: number[] = [5, 10, 25, 50];
   searchValue = '';
   statusList: StatusEnum[] = [StatusEnum.ACTIVE, StatusEnum.DEL, StatusEnum.ALL];
@@ -56,7 +56,7 @@ export class ContactComponent implements OnInit {
     this.isError = false;
     this.isLoading = true;
     this.contacts = [];
-    this.contactService.getAllContacts(this.currentPage, this.pageSize, this.searchValue, this.taskOption, this.statusOption)
+    this.contactService.getAllContacts(this.pageIndex, this.pageSize, this.searchValue, this.taskOption, this.statusOption)
       .subscribe({
         next: (page) => {
           this.contacts = page.content;
@@ -90,15 +90,10 @@ export class ContactComponent implements OnInit {
   }
 
   onPageChanged(event: PageEvent): void {
-    this.currentPage = event.pageIndex;
+    this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.loadContacts();
   }
-
-  search(): void {
-    this.loadContacts();
-  }
-
   openAddContactDialog(contact: ContactInfo) {
     let dialogRef = this.dialog.open(EditContactComponent, {
       width: '600px',

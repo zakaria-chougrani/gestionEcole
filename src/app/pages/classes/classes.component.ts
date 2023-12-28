@@ -29,7 +29,7 @@ export class ClassesComponent implements OnInit {
   classes: SchoolClass[] = [];
   totalContacts = 0;
   pageSize = 4;
-  currentPage = 0;
+  pageIndex = 0;
   pageSizeOptions: number[] = [4, 8, 12, 25, 50];
   isLoading: boolean = false;
   searchValue = '';
@@ -49,7 +49,7 @@ export class ClassesComponent implements OnInit {
 
   loadClasses(): void {
     this.isLoading = true;
-    this.schoolClassService.getAllClasses(this.currentPage, this.pageSize, this.searchValue,this.statusOption)
+    this.schoolClassService.getAllClasses(this.pageIndex, this.pageSize, this.searchValue,this.statusOption)
       .subscribe({
         next: (page) => {
           this.classes = page.content;
@@ -61,7 +61,7 @@ export class ClassesComponent implements OnInit {
   }
 
   onPageChanged(event: PageEvent): void {
-    this.currentPage = event.pageIndex;
+    this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.loadClasses();
   }

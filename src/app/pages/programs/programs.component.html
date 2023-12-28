@@ -156,8 +156,13 @@
 
   </div>
 
-  <mat-paginator style="margin-bottom: 50px;" [length]="totalPrograms" [pageSize]="pageSize"
+  <mat-paginator *ngIf="totalPrograms" style="margin-bottom: 50px;"
+                 (page)="onPageChanged($event)"
+                 [length]="totalPrograms"
+                 [pageSize]="pageSize"
                  [pageSizeOptions]="pageSizeOptions"
-                 (page)="onPageChanged($event)" *ngIf="totalPrograms"></mat-paginator>
+                 [pageIndex]="pageIndex"
+                 [showFirstLastButtons]="true"
+  ></mat-paginator>
 </div>
 

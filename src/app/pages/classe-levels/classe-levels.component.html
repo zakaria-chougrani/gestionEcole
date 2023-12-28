@@ -42,9 +42,14 @@
 
     </div>
 
-    <mat-paginator style="margin-bottom: 50px;" [length]="totalLevels" [pageSize]="pageSize"
+    <mat-paginator style="margin-bottom: 50px;"
+                   (page)="onPageChanged($event)"
+                   [length]="totalLevels"
+                   [pageSize]="pageSize"
                    [pageSizeOptions]="pageSizeOptions"
-                   (page)="onPageChanged($event)"></mat-paginator>
+                   [pageIndex]="pageIndex"
+                   [showFirstLastButtons]="true"
+    ></mat-paginator>
   </div>
 </div>
 
