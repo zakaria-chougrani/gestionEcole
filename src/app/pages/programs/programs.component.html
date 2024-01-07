@@ -79,7 +79,7 @@
        fxLayoutAlign="center stretch">
     <div fxFlex fxFlex.gt-sm="50%" fxFlex.gt-md="30%" fxLayout="row"
          fxLayoutAlign="start start"
-         style="padding: .2rem" *ngFor="let program of programs"
+         style="padding: 10px" *ngFor="let program of programs"
          [style.background-color]="program.status == StatusEnum.ACTIVE ? 'white' : 'rgb(255 228 228)'">
       <div class="mat-elevation-z4 service-card">
         <div class="left-sid">

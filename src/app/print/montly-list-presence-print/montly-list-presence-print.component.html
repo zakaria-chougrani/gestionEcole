@@ -39,7 +39,7 @@
         <th style="text-decoration: underline;">LD</th>
         <th></th>
         <th></th>
-        <th style="text-decoration: underline;">{{(getPrecedentMonth((month?.value || 1) - 1)?.name|lowercase)?.substring(0, 3)}}</th>
+        <th style="text-decoration: underline;">{{(getPrecedentMonth(month?.value == 0 ? 11:((month?.value || 1 )- 1 ))?.name|lowercase)?.substring(0, 3)}}</th>
         <th style="text-decoration: underline;">{{(month?.name|lowercase)?.substring(0, 3)}}</th>
         <ng-container *ngFor="let day of data.daysInCurrentMonth">
           <th class="text-center">

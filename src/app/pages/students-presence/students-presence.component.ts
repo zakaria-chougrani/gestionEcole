@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ActivatedRoute, RouterLink} from "@angular/router";
+import {ActivatedRoute, RouterLink, RouterOutlet} from "@angular/router";
 import {ProgramSessionService} from "../../_shared/services/program-session.service";
 import {Attendance, ProgramDto, StudentPresenceAttendance} from "../../_shared/models";
 import {MatFormFieldModule} from "@angular/material/form-field";
@@ -14,11 +14,12 @@ import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {
   MontlyListPresencePrintComponent
 } from "../../print/montly-list-presence-print/montly-list-presence-print.component";
+import {NgScrollbarModule} from "ngx-scrollbar";
 
 @Component({
   selector: 'ec-students-presence',
   standalone: true,
-  imports: [CommonModule, MatFormFieldModule, MatOptionModule, MatSelectModule, FormsModule, MatButtonModule, MatDialogModule, RouterLink],
+  imports: [CommonModule, MatFormFieldModule, MatOptionModule, MatSelectModule, FormsModule, MatButtonModule, MatDialogModule, RouterLink, NgScrollbarModule, RouterOutlet],
   templateUrl: './students-presence.component.html',
   styleUrls: ['./students-presence.component.scss']
 })

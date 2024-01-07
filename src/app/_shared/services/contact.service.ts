@@ -5,7 +5,7 @@ import {Observable, Subject} from "rxjs";
 import {environment} from "../../../environments/environment";
 import {Page} from "../models";
 import {StatusEnum, TaskEnum} from "../enum";
-import {ContactImageDto} from "../models/ContactImageDto";
+import {ContactImageDto} from "../models";
 
 @Injectable({
   providedIn: 'root'
@@ -43,9 +43,7 @@ export class ContactService {
   saveContact(contact: ContactInfo): Observable<ContactInfo> {
     return this.http.post<ContactInfo>(this.apiUrl, contact);
   }
-  deleteContact(id: string): Observable<string> {
-    return this.http.post<string>(`${this.apiUrl}/delete/${id}`,null);
-  }
+
   getActiveTeachersBySearchValue(pageIndex: number, pageSize: number, searchValue: string): Observable<Page<ContactInfo>>{
     const params = new HttpParams()
       .set('page', pageIndex.toString())
@@ -57,5 +55,11 @@ export class ContactService {
 
   recoverContact(id: string) {
     return this.http.post<string>(`${this.apiUrl}/recover/${id}`,null);
+  }
+  deleteContact(id: string): Observable<string> {
+    return this.http.post<string>(`${this.apiUrl}/delete/${id}`,null);
+  }
+  deleteDefinitelyItem(id: string): Observable<string> {
+    return this.http.delete<string>(`${this.apiUrl}/delete-definitely/${id}`);
   }
 }

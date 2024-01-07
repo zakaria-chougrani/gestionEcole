@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {CommonModule, DatePipe} from '@angular/common';
 import {FlexModule} from "@angular/flex-layout";
 import {MatButtonModule} from "@angular/material/button";
 import {MatChipsModule} from "@angular/material/chips";
@@ -29,7 +29,10 @@ import {
 @Component({
   selector: 'ec-history-sessions',
   standalone: true,
-  imports: [CommonModule, FlexModule, MatButtonModule, MatChipsModule, MatDividerModule, MatFormFieldModule, MatIconModule, MatInputModule, MatPaginatorModule, MatProgressBarModule, ReactiveFormsModule, FormsModule, MatTableModule, MatSortModule, MatDatepickerModule, RouterLink,MatDialogModule],
+  imports: [CommonModule, FlexModule, MatButtonModule, MatChipsModule, MatDividerModule, MatFormFieldModule,
+    MatIconModule, MatInputModule, MatPaginatorModule, MatProgressBarModule, ReactiveFormsModule, FormsModule,
+    MatTableModule, MatSortModule, MatDatepickerModule, RouterLink,MatDialogModule],
+  providers: [DatePipe],
   templateUrl: './history-sessions.component.html',
   styleUrls: ['./history-sessions.component.scss']
 })
@@ -54,7 +57,8 @@ export class HistorySessionsComponent implements OnInit, AfterViewInit {
     private programSessionService: ProgramSessionService,
     private programService: ProgramService,
     private route: ActivatedRoute,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private datePipe: DatePipe
   ) {
     this.route.paramMap.subscribe(params => {
       this.programId = params.get('id');
@@ -62,7 +66,6 @@ export class HistorySessionsComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-
     this.dataSource = new HistorySessionDataSourceService(this.programSessionService);
     this.loadDataSource();
     this.loadProgram();

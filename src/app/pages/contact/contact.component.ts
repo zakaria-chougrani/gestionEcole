@@ -42,6 +42,8 @@ export class ContactComponent implements OnInit {
   protected readonly TaskEnum = TaskEnum;
   taskOption: TaskEnum = TaskEnum.ALL;
   taskList: TaskEnum[] = [TaskEnum.ALL,TaskEnum.Staff, TaskEnum.Teacher, TaskEnum.Student,TaskEnum.trainee_staff,TaskEnum.trainee_student];
+
+
   constructor(private dialog: MatDialog, private contactService: ContactService) {
   }
 
@@ -50,6 +52,11 @@ export class ContactComponent implements OnInit {
     this.contactService.refreshContacts.subscribe(() => {
       this.loadContacts();
     });
+  }
+  onPageChanged(event: PageEvent): void {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadContacts();
   }
 
   loadContacts(): void {
@@ -71,7 +78,6 @@ export class ContactComponent implements OnInit {
       });
   }
 
-
   loadContactsImage() {
     this.contacts.forEach(contact => {
       if (contact.id && !contact.imageByte){
@@ -89,11 +95,6 @@ export class ContactComponent implements OnInit {
     })
   }
 
-  onPageChanged(event: PageEvent): void {
-    this.pageIndex = event.pageIndex;
-    this.pageSize = event.pageSize;
-    this.loadContacts();
-  }
   openAddContactDialog(contact: ContactInfo) {
     let dialogRef = this.dialog.open(EditContactComponent, {
       width: '600px',
@@ -104,7 +105,6 @@ export class ContactComponent implements OnInit {
         this.contactService.triggerRefreshContacts();
       }
     });
-
   }
 
   deleteItem(id: string) {
@@ -136,7 +136,6 @@ export class ContactComponent implements OnInit {
     });
   }
 
-
   recoverItem(id: string) {
     Swal.fire({
       title: 'Are you sure?',
@@ -166,5 +165,29 @@ export class ContactComponent implements OnInit {
     });
   }
 
-
+  deleteDefinitelyItem(id: string) {
+    Swal.fire({
+      title: 'Are you sure you want delete this Definitely?',
+      text: 'You won\'t be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        this.contactService.deleteDefinitelyItem(id).subscribe({
+          next: () => {
+            this.contactService.triggerRefreshContacts();
+            this.isLoading = false;
+            Swal.fire('Success', 'Contact deleted definitely successfully', 'success').then();
+          },
+          error: () => {
+            this.isLoading = false;
+            Swal.fire('Error', 'Error the Contact has related by Program !', 'error').then();
+          }
+        });
+      }
+    });
+  }
 }

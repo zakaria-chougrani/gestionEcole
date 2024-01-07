@@ -7,14 +7,14 @@
     <div class="row">
       <div class="col-3">
         <mat-form-field class="full" subscriptSizing="dynamic">
-          <input matInput [(ngModel)]="searchValue" name="search-highUp" (input)="loadContacts()" placeholder="Search contacts">
+          <input matInput [(ngModel)]="searchValue" name="search-highUp" (input)="pageIndex = 0;loadContacts()" placeholder="Search contacts">
           <mat-icon matSuffix>search</mat-icon>
         </mat-form-field>
       </div>
       <div class="col-3">
         <mat-form-field class="full" subscriptSizing="dynamic">
           <mat-label>Task</mat-label>
-          <mat-select [(ngModel)]="taskOption" (ngModelChange)="loadContacts()">
+          <mat-select [(ngModel)]="taskOption" (ngModelChange)="pageIndex = 0;loadContacts()">
             <mat-option *ngFor="let task of taskList" [value]="task">{{ task }}</mat-option>
           </mat-select>
         </mat-form-field>
@@ -22,7 +22,7 @@
       <div class="col-3">
         <mat-form-field class="full" subscriptSizing="dynamic">
           <mat-label>Status</mat-label>
-          <mat-select [(ngModel)]="statusOption" (ngModelChange)="loadContacts()">
+          <mat-select [(ngModel)]="statusOption" (ngModelChange)="pageIndex = 0;loadContacts()">
             <mat-option *ngFor="let option of statusList" [value]="option">{{ option }}</mat-option>
           </mat-select>
         </mat-form-field>
@@ -97,6 +97,12 @@
                   (click)="contactInfo?.status==StatusEnum.ACTIVE?deleteItem(contactInfo.id || ''):recoverItem(contactInfo.id || '')">
             <mat-icon>{{contactInfo?.status==StatusEnum.ACTIVE?'delete_outline':'undo'}}</mat-icon>
           </button>
+          <button mat-icon-button aria-label="icon delete definitely" *ngIf="contactInfo?.status==StatusEnum.DEL" class="btn-red"
+                  (click)="deleteDefinitelyItem(contactInfo.id || '')">
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+
+
         </div>
       </div>
       <mat-paginator *ngIf="contacts"

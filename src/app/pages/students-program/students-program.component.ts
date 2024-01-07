@@ -17,6 +17,7 @@ import {ProgramService} from "../../_shared/services/program.service";
 import {MatTableDataSource, MatTableModule} from "@angular/material/table";
 import Swal from 'sweetalert2';
 import {ContactService} from "../../_shared/services/contact.service";
+import {StatusEnum} from "../../_shared/enum";
 
 @Component({
   selector: 'ec-students-program',
@@ -169,4 +170,6 @@ export class StudentsProgramComponent implements OnInit {
   previousPage() {
     this._location.back();
   }
+
+  protected readonly StatusEnum = StatusEnum;
 }

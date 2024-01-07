@@ -68,10 +68,6 @@ export class MontlyListPresencePrintComponent implements AfterViewInit,OnInit {
           @page {
             size: landscape;
           }
-
-        .table-container{
-          overflow: auto;
-        }
         .attendance-table {
           border: 1px solid #000;
           border-collapse: collapse;
@@ -79,30 +75,30 @@ export class MontlyListPresencePrintComponent implements AfterViewInit,OnInit {
         }
         .attendance-table th, .attendance-table td {
             border: 1px solid #000;
-            padding: 8px;
+            padding: 6px;
         }
         .gray-bg {
           background-color: #4b4b4b;
           color: white;
         }
         p{
-          font-size: .8rem;
+          font-size: 10px;
         }
         .checked-icon::before {
           content: '\\2713';
           color: green;
-          font-size: 14px;
+          font-size: 12px;
         }
         .unchecked-icon::before {
           content: '\\2717';
           color: red;
-          font-size: 14px;
+          font-size: 12px;
         }
 
         .not-day-icon::before {
           content: '-';
           color: grey;
-          font-size: 24px;
+          font-size: 22px;
         }
         .text-center{
             text-align: center;
@@ -111,7 +107,7 @@ export class MontlyListPresencePrintComponent implements AfterViewInit,OnInit {
           border-color: transparent!important;
         }
         .day-row th{
-          font-size: 10px;
+          font-size: 8px;
           min-width: 5px;
         }
         </style>
