@@ -1,7 +1,7 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {CommonModule} from "@angular/common";
 import * as moment from 'moment';
-import {CalendarEvent, CalendarWeekModule, DAYS_OF_WEEK} from "angular-calendar";
+import {CalendarEvent, CalendarWeekModule} from "angular-calendar";
 import {ProgramService} from "../../_shared/services/program.service";
 import {ContactInfo, ProgramDto} from "../../_shared/models";
 import {ColorUtilsService} from "../../_shared/utils/color-utils.service";
